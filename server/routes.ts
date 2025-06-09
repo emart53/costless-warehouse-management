@@ -759,11 +759,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const transferResult = await pool.query(`
         SELECT 
           product_transfer_id as id,
-          transfer_case_qty as transferCaseQty,
-          transfer_unit_ct as transferUnitCt,
-          transfer_weight as transferWeight,
-          transfer_crv as transferCrv,
-          trans_cfg as transferCfg
+          CAST(COALESCE(transfer_case_qty, 1) AS INTEGER) as "transferCaseQty",
+          CAST(COALESCE(transfer_unit_ct, 1) AS INTEGER) as "transferUnitCt",
+          CAST(COALESCE(transfer_weight, 0) AS FLOAT) as "transferWeight",
+          CAST(COALESCE(transfer_crv, 0) AS FLOAT) as "transferCrv",
+          COALESCE(trans_cfg, 'Case') as "transferCfg"
         FROM product_transfers 
         WHERE product_id = $1
       `, [id]);
@@ -792,20 +792,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(result || null);
       } else {
         const result = transferResult.rows[0];
-        if (result) {
-          // Create a properly formatted response object with camelCase fields
-          const formattedResult = {
-            id: result.id,
-            transferCaseQty: parseInt(result.transferCaseQty) || 1,
-            transferUnitCt: parseInt(result.transferUnitCt) || 1, 
-            transferWeight: parseFloat(result.transferWeight) || 0,
-            transferCrv: parseFloat(result.transferCrv) || 0,
-            transferCfg: result.transferCfg
-          };
-          res.json(formattedResult);
-        } else {
-          res.json(null);
-        }
+        console.log('Transfer result from database:', result);
+        res.json(result || null);
       }
     } catch (error) {
       console.error('Product transfer API error:', error);
