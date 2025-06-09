@@ -278,7 +278,7 @@ export default function PurchaseOrderViewLegacy() {
                 <div className="col-span-1">{quantity}</div>
                 <div className="col-span-1">{item.product?.caseUpc || ''}</div>
                 <div className="col-span-3">
-              {item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
+              {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
             </div>
                 <div className="col-span-1 text-right">${listCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">${offInvoice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>

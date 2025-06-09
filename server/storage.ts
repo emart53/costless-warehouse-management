@@ -536,10 +536,11 @@ export class DatabaseStorage implements IStorage {
     const result = await db.execute(sql`
       SELECT 
         poi.*,
-        COALESCE(p.product_description, p.name, 'Product ' || poi.product_id::text) as product_name,
+        COALESCE(p.name, p.product_description, 'Product ' || poi.product_id::text) as product_name,
         COALESCE(p.product_description, p.name, 'Product ' || poi.product_id::text) as product_description,
         COALESCE(p.case_pack, 1) as case_pack,
-        COALESCE(p.size, '') as size
+        COALESCE(p.size, '') as size,
+        p.case_upc
       FROM purchase_order_items poi
       LEFT JOIN products p ON poi.product_id = p.product_id
       WHERE poi.po_id = ${poId}
@@ -560,9 +561,10 @@ export class DatabaseStorage implements IStorage {
         id: row.product_id,
         productId: row.product_id,
         name: row.product_name,
-        description: row.product_description,
+        productDescription: row.product_description,
         casePack: row.case_pack,
-        size: row.size
+        size: row.size,
+        caseUpc: row.case_upc
       }
     }));
   }
