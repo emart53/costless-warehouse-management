@@ -1,41 +1,47 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { db, pool } from "./db";
+import { db, pool, withRetry } from "./db";
 import { sql } from "drizzle-orm";
 import { insertProductSchema, insertLocationSchema, insertTransactionSchema, insertScheduleSchema, insertNotificationSchema, insertDepartmentSchema, insertCategorySchema, insertStandingOrderSchema, insertStandingOrderItemSchema } from "@shared/schema";
 import { z } from "zod";
 import { csvDataService } from "./csvDataService";
 
+// Helper function for database queries with error handling
+async function executeQuery(query: string, params: any[] = []) {
+  return await withRetry(async () => {
+    const { pool } = await import("./db.js");
+    return await pool.query(query, params);
+  });
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Dashboard metrics
   app.get("/api/dashboard/metrics", async (req, res) => {
     try {
-      const { pool } = await import("./db.js");
-      
       // Get total active products
-      const productsResult = await pool.query(`
+      const productsResult = await executeQuery(`
         SELECT COUNT(*) as count 
         FROM products 
         WHERE LOWER(status) = 'active' AND product_id IS NOT NULL
       `);
       
       // Get purchase orders count
-      const poResult = await pool.query(`
+      const poResult = await executeQuery(`
         SELECT COUNT(*) as count 
         FROM purchase_orders 
         WHERE status IN ('pending', 'ordered', 'shipped')
       `);
       
       // Get transfer orders count  
-      const toResult = await pool.query(`
+      const toResult = await executeQuery(`
         SELECT COUNT(*) as count 
         FROM transfer_orders 
         WHERE status IN ('pending', 'shipped')
       `);
       
       // Get vendors count
-      const vendorsResult = await pool.query(`
+      const vendorsResult = await executeQuery(`
         SELECT COUNT(*) as count 
         FROM vendors 
         WHERE is_active = true
