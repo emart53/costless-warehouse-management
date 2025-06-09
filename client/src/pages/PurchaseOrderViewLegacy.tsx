@@ -256,9 +256,8 @@ export default function PurchaseOrderViewLegacy() {
             <div className="col-span-3">Item Description</div>
             <div className="col-span-1 text-right">List Cost</div>
             <div className="col-span-1 text-right">Off Invoice</div>
-            {hasBillBackValues && <div className="col-span-1 text-right">Bill Back</div>}
-            {hasCrvValues && <div className="col-span-1 text-right">CRV</div>}
-            <div className="col-span-1 text-right">Total Weight</div>
+            <div className="col-span-1 text-right">Bill Back</div>
+            <div className="col-span-1 text-right">Weight</div>
             <div className="col-span-1 text-right">Billed Cost</div>
             <div className="col-span-1 text-right">Extended Cost</div>
           </div>
@@ -286,12 +285,7 @@ export default function PurchaseOrderViewLegacy() {
             </div>
                 <div className="col-span-1 text-right">${listCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">${offInvoice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                {hasBillBackValues && (
-                  <div className="col-span-1 text-right">${billBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                )}
-                {hasCrvValues && (
-                  <div className="col-span-1 text-right">${crv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                )}
+                <div className="col-span-1 text-right">${billBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">{weight.toFixed(2)}</div>
                 <div className="col-span-1 text-right">${netCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">${extendedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
