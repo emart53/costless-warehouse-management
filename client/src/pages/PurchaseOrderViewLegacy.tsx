@@ -151,11 +151,7 @@ export default function PurchaseOrderViewLegacy() {
         {/* Header Row - Matches PO-20929 exactly */}
         <div className="grid grid-cols-12 items-start mb-4 print:mb-2">
           <div className="col-span-3">
-            <img src="/attached_assets/logo_1749078044715.png" alt="Cost Less Food Company" className="h-16 mb-2" />
-            <div className="text-base">2905 Railroad Avenue</div>
-            <div className="text-base">Ceres, CA 95307</div>
-            <div className="text-sm">209-537-4472</div>
-            <div className="text-sm">209-537-4689 fax</div>
+            <div className="text-2xl font-bold">COST LESS FOOD COMPANY</div>
           </div>
           
           <div className="col-span-6"></div>
