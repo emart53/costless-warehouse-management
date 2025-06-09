@@ -137,7 +137,7 @@ export function ComprehensiveProductEdit({
               transferCaseQty: Number(transferConfig?.transferCaseQty || 1),
               transferUnitCt: Number(transferConfig?.transferUnitCt || 1),
               transferWeight: Number(transferConfig?.transferWeight || 0),
-              transferCost: Number(overrideData?.override_cost || 0),
+              transferCost: Number(overrideData?.override_cost || pricingData?.transferCost || 0),
               transferCrv: Number(transferConfig?.transferCrv || 0),
               transferCostOverride: !!overrideData?.override_cost,
               overrideReason: overrideData?.reason || '',
@@ -150,7 +150,7 @@ export function ComprehensiveProductEdit({
             purchaseCost: Number(pricingData?.purchaseCost || 0),
             offInvoice: Number(pricingData?.offInvoice || 0),
             billBack: Number(pricingData?.billBack || 0),
-            listCost: Number(pricingData?.listCost || 0),
+            listCost: Number(pricingData?.unitCost || 0),
             retailPrice: Number(pricingData?.retailPrice || 0)
           });
         } catch (error) {
