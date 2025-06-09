@@ -100,6 +100,13 @@ export function ComprehensiveProductEdit({
           const pricingData = configData?.pricing;
           const overrideData = configData?.override;
           
+          console.log('Product Config Data for', product.productId, ':', {
+            purchaseConfig,
+            transferConfig, 
+            pricingData,
+            overrideData
+          });
+          
           // Determine configuration names based on business logic
           const determinePurchaseConfig = (config: any) => {
             if (config?.purchaseCfg) return config.purchaseCfg;
@@ -137,7 +144,7 @@ export function ComprehensiveProductEdit({
               transferCaseQty: Number(transferConfig?.transferCaseQty || 1),
               transferUnitCt: Number(transferConfig?.transferUnitCt || 1),
               transferWeight: Number(transferConfig?.transferWeight || 0),
-              transferCost: Number(overrideData?.override_cost || pricingData?.transferCost || 0),
+              transferCost: parseFloat(overrideData?.override_cost || pricingData?.transferCost) || 0,
               transferCrv: Number(transferConfig?.transferCrv || 0),
               transferCostOverride: !!overrideData?.override_cost,
               overrideReason: overrideData?.reason || '',
@@ -146,12 +153,29 @@ export function ComprehensiveProductEdit({
               overrideCreatedDate: overrideData?.created_at || ''
             } as any,
             
-            // Product Pricing - using fetched pricing data
-            purchaseCost: Number(pricingData?.purchaseCost || 0),
-            offInvoice: Number(pricingData?.offInvoice || 0),
-            billBack: Number(pricingData?.billBack || 0),
-            listCost: Number(pricingData?.unitCost || 0),
-            retailPrice: Number(pricingData?.retailPrice || 0)
+            // Product Pricing - using fetched pricing data with correct field names
+            purchaseCost: parseFloat(pricingData?.purchasecost) || 0,
+            offInvoice: parseFloat(pricingData?.offinvoice) || 0,
+            billBack: parseFloat(pricingData?.billback) || 0,
+            listCost: parseFloat(pricingData?.unitcost) || 0,
+            retailPrice: parseFloat(pricingData?.retailprice) || 0
+          });
+          
+          console.log('Raw pricing data types:', {
+            purchaseCost: typeof pricingData?.purchaseCost,
+            offInvoice: typeof pricingData?.offInvoice,
+            billBack: typeof pricingData?.billBack,
+            unitCost: typeof pricingData?.unitCost,
+            retailPrice: typeof pricingData?.retailPrice
+          });
+          
+          console.log('Form pricing values set:', {
+            purchaseCost: parseFloat(pricingData?.purchaseCost) || 0,
+            offInvoice: parseFloat(pricingData?.offInvoice) || 0,
+            billBack: parseFloat(pricingData?.billBack) || 0,
+            listCost: parseFloat(pricingData?.unitCost) || 0,
+            retailPrice: parseFloat(pricingData?.retailPrice) || 0,
+            transferCost: parseFloat(overrideData?.override_cost || pricingData?.transferCost) || 0
           });
         } catch (error) {
           console.error('Error fetching product configurations:', error);
