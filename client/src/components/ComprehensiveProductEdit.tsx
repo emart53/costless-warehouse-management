@@ -670,7 +670,6 @@ export function ComprehensiveProductEdit({
                     className="pl-8"
                   />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.purchaseCost)}</div>
               </div>
 
               <div>
@@ -687,7 +686,6 @@ export function ComprehensiveProductEdit({
                     className="pl-8"
                   />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.offInvoice)}</div>
               </div>
 
               <div>
@@ -704,7 +702,6 @@ export function ComprehensiveProductEdit({
                     className="pl-8"
                   />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.billBack)}</div>
               </div>
 
               <div>
@@ -753,16 +750,7 @@ export function ComprehensiveProductEdit({
                     placeholder="0.00"
                   />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {formatCurrency(formData.transferConfig.transferCostOverride ? 
-                    formData.transferConfig.transferCost : 
-                    (() => {
-                      const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
-                      const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                      return netCost * ratio;
-                    })()
-                  )}
-                </div>
+
                 {formData.transferConfig.transferCostOverride && (
                   <div className="text-xs text-red-600 mt-1 font-semibold">⚠️ Manual override enabled - custom cost active</div>
                 )}
@@ -770,23 +758,47 @@ export function ComprehensiveProductEdit({
 
               <div>
                 <Label htmlFor="retailPrice">Retail Price</Label>
-                <Input
-                  id="retailPrice"
-                  type="number"
-                  step="0.01"
-                  value={formData.retailPrice}
-                  onChange={(e) => setFormData({...formData, retailPrice: parseFloat(e.target.value) || 0})}
-                  placeholder="$0.00"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="retailPrice"
+                    type="number"
+                    step="0.01"
+                    value={formData.retailPrice}
+                    onChange={(e) => setFormData({...formData, retailPrice: parseFloat(e.target.value) || 0})}
+                    placeholder="0.00"
+                    className="pl-8"
+                  />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.retailPrice)}</div>
               </div>
 
               <div>
                 <Label htmlFor="unitCost">Unit Cost</Label>
-                <Input
-                  id="unitCost"
-                  type="number"
-                  step="0.0001"
-                  value={(() => {
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="unitCost"
+                    type="number"
+                    step="0.0001"
+                    value={(() => {
+                      const transferCost = formData.transferConfig.transferCostOverride ? 
+                        formData.transferConfig.transferCost :
+                        (() => {
+                          const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                          const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                          return netCost * ratio;
+                        })();
+                      const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
+                      return unitCount > 0 ? (transferCost / unitCount).toFixed(4) : transferCost.toFixed(4);
+                    })()}
+                    readOnly
+                    className="bg-gray-50 pl-8"
+                    placeholder="0.0000"
+                  />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {(() => {
                     const transferCost = formData.transferConfig.transferCostOverride ? 
                       formData.transferConfig.transferCost :
                       (() => {
@@ -795,12 +807,10 @@ export function ComprehensiveProductEdit({
                         return netCost * ratio;
                       })();
                     const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
-                    return unitCount > 0 ? (transferCost / unitCount).toFixed(4) : transferCost.toFixed(4);
+                    const unitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
+                    return formatCurrency(unitCost);
                   })()}
-                  readOnly
-                  className="bg-gray-50"
-                  placeholder="$0.0000"
-                />
+                </div>
               </div>
 
               <div>
