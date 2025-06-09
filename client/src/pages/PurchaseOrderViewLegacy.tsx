@@ -43,6 +43,15 @@ export default function PurchaseOrderViewLegacy() {
     window.print();
   };
 
+  // Check if any items have bill back or CRV data for conditional column display
+  const hasBillBack = purchaseOrder?.items?.some(item => 
+    item.billBack && parseFloat(item.billBack.toString()) > 0
+  ) || false;
+  
+  const hasCRV = purchaseOrder?.items?.some(item => 
+    item.product?.crv && parseFloat(item.product.crv.toString()) > 0
+  ) || false;
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -250,17 +259,19 @@ export default function PurchaseOrderViewLegacy() {
 
         {/* Line Items Table Header */}
         <div className="border border-gray-400 bg-gray-100 text-center">
-          <div className="grid grid-cols-12 gap-0 text-sm font-bold py-2">
+          <div className={`grid gap-0 text-sm font-bold py-2 ${hasCRV ? 'grid-cols-12' : hasBillBack ? 'grid-cols-11' : 'grid-cols-10'}`}>
             <div className="border-r border-gray-400 px-2">Quantity</div>
-            <div className="border-r border-gray-400 px-2 col-span-3">Product</div>
+            <div className="border-r border-gray-400 px-2 col-span-2">Product</div>
             <div className="border-r border-gray-400 px-2">Config</div>
             <div className="border-r border-gray-400 px-2">List Cost</div>
             <div className="border-r border-gray-400 px-2">Off Invoice</div>
-            <div className="border-r border-gray-400 px-2">Bill Back</div>
+            {hasBillBack && <div className="border-r border-gray-400 px-2">Bill Back</div>}
             <div className="border-r border-gray-400 px-2">Weight</div>
             <div className="border-r border-gray-400 px-2">Ext Weight</div>
             <div className="border-r border-gray-400 px-2">Billed Cost</div>
-            <div className="px-2">Ext Cost</div>
+            <div className={`border-r border-gray-400 px-2 ${hasCRV ? '' : 'border-r-0'}`}>Ext Cost</div>
+            {hasCRV && <div className="border-r border-gray-400 px-2">CRV</div>}
+            {hasCRV && <div className="px-2">Ext CRV</div>}
           </div>
         </div>
 

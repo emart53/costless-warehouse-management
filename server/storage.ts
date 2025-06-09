@@ -532,7 +532,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Purchase Order Items
-  async getPurchaseOrderItems(poId: number): Promise<(PurchaseOrderItem & { product: Product })[]> {
+  async getPurchaseOrderItems(poId: number): Promise<(PurchaseOrderItem & { product: Product; configuration?: { configurationName: string } })[]> {
     const result = await db.execute(sql`
       SELECT 
         poi.*,
@@ -541,9 +541,12 @@ export class DatabaseStorage implements IStorage {
         COALESCE(p.case_pack, 1) as case_pack,
         COALESCE(p.size, '') as size,
         p.case_upc,
-        COALESCE(p.crv, 0) as crv
+        COALESCE(p.crv, 0) as crv,
+        COALESCE(p.weight, 0) as weight,
+        c.configuration_name
       FROM purchase_order_items poi
       LEFT JOIN products p ON poi.product_id = p.product_id
+      LEFT JOIN configurations c ON poi.purchase_cfg = c.id
       WHERE poi.po_id = ${poId}
       ORDER BY poi.id
     `);
@@ -555,6 +558,9 @@ export class DatabaseStorage implements IStorage {
       quantityOrdered: row.quantity_ordered,
       quantityReceived: row.quantity_received || 0,
       listCost: row.list_cost,
+      offInvoice: row.off_invoice || 0,
+      billBack: row.bill_back || 0,
+      purchaseWeight: row.purchase_weight || row.weight,
       lineTotal: row.line_total,
       netCost: row.net_cost,
       notes: row.notes,
@@ -566,8 +572,12 @@ export class DatabaseStorage implements IStorage {
         casePack: row.case_pack,
         size: row.size,
         caseUpc: row.case_upc,
-        crv: row.crv
-      }
+        crv: row.crv,
+        weight: row.weight
+      },
+      configuration: row.configuration_name ? {
+        configurationName: row.configuration_name
+      } : undefined
     }));
   }
 
