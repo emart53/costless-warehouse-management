@@ -283,7 +283,7 @@ export default function PurchaseOrderViewLegacy() {
                 <div className="border-r border-gray-300 px-2 col-span-3">
                   {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
                 </div>
-                <div className="border-r border-gray-300 px-2 text-center">Default</div>
+                <div className="border-r border-gray-300 px-2 text-center">{item.configuration?.configurationName || 'Default'}</div>
                 <div className="border-r border-gray-300 px-2 text-right">${listCost.toFixed(2)}</div>
                 <div className="border-r border-gray-300 px-2 text-right">${offInvoice.toFixed(2)}</div>
                 <div className="border-r border-gray-300 px-2 text-right">${billBack.toFixed(2)}</div>
