@@ -231,8 +231,16 @@ export default function ProductsEnhanced() {
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (updatedProduct) => {
+      // Invalidate all related queries to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/products/${updatedProduct.id}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/products/${updatedProduct.productId}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/products/${updatedProduct.productId}/config`] });
+      
+      // Force a refetch of the products list
+      queryClient.refetchQueries({ queryKey: ['/api/products'] });
+      
       setIsEditDialogOpen(false);
       toast({
         title: "Product Updated",
