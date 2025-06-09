@@ -231,20 +231,24 @@ export default function ProductsEnhanced() {
       }
       return response.json();
     },
-    onSuccess: (updatedProduct) => {
-      // Invalidate all related queries to ensure fresh data
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      queryClient.invalidateQueries({ queryKey: [`/api/products/${updatedProduct.id}`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/products/${updatedProduct.productId}`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/products/${updatedProduct.productId}/config`] });
+    onSuccess: async (updatedProduct) => {
+      // Aggressively clear all product-related cache
+      await queryClient.cancelQueries({ queryKey: ['/api/products'] });
+      queryClient.removeQueries({ queryKey: ['/api/products'] });
+      queryClient.removeQueries({ queryKey: [`/api/products/${updatedProduct.id}`] });
+      queryClient.removeQueries({ queryKey: [`/api/products/${updatedProduct.productId}`] });
       
-      // Force a refetch of the products list
-      queryClient.refetchQueries({ queryKey: ['/api/products'] });
+      // Immediately fetch fresh data
+      await queryClient.fetchQuery({
+        queryKey: ['/api/products'],
+        queryFn: () => fetch('/api/products').then(res => res.json()),
+        staleTime: 0
+      });
       
       setIsEditDialogOpen(false);
       toast({
         title: "Product Updated",
-        description: "Product configuration has been updated successfully with corrected unit conversions.",
+        description: "Product has been updated successfully.",
       });
     },
     onError: (error: any) => {
