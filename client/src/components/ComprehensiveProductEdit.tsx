@@ -105,6 +105,9 @@ export function ComprehensiveProductEdit({
           const overrideArray = overrideResponse.ok ? await overrideResponse.json() : null;
           const overrideData = overrideArray && overrideArray.length > 0 ? overrideArray[0] : null;
           
+          // Debug logging to see actual transfer config data
+          console.log('Transfer Config Data:', transferConfig);
+          
           // Determine configuration names based on business logic
           const determinePurchaseConfig = (config: any) => {
             if (config?.purchaseCfg) return config.purchaseCfg;
@@ -114,7 +117,9 @@ export function ComprehensiveProductEdit({
           
           const determineTransferConfig = (config: any) => {
             if (config?.transferCfg) return config.transferCfg;
+            if (config?.transfer_cfg) return config.transfer_cfg;
             const caseQty = config?.transferCaseQty || 1;
+            if (caseQty >= 8 && caseQty <= 24) return 'Layer';
             return caseQty > 24 ? 'Pallet' : 'Case';
           };
           
