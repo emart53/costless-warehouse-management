@@ -520,14 +520,18 @@ export function ComprehensiveProductEdit({
               
               <div>
                 <Label htmlFor="crv">Purchase CRV</Label>
-                <Input
-                  id="crv"
-                  type="number"
-                  step="0.01"
-                  value={formData.crv}
-                  onChange={(e) => setFormData({...formData, crv: parseFloat(e.target.value) || 0})}
-                  placeholder="$0.00"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="crv"
+                    type="number"
+                    step="0.01"
+                    value={formData.crv}
+                    onChange={(e) => setFormData({...formData, crv: parseFloat(e.target.value) || 0})}
+                    placeholder="0.00"
+                    className="pl-8"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -644,15 +648,17 @@ export function ComprehensiveProductEdit({
 
               <div>
                 <Label htmlFor="transferCrv">Transfer CRV</Label>
-                <Input
-                  id="transferCrv"
-                  type="number"
-                  step="0.01"
-                  value={(formData.crv || 0) * formData.transferConfig.transferCaseQty}
-                  disabled
-                  className="bg-gray-50"
-                  title="Calculated: CRV × Transfer Case Qty"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="transferCrv"
+                    type="text"
+                    value={formatCurrency((formData.crv || 0) * formData.transferConfig.transferCaseQty).replace('$', '')}
+                    disabled
+                    className="bg-gray-50 pl-8"
+                    title="Calculated: CRV × Transfer Case Qty"
+                  />
+                </div>
               </div>
 
             </CardContent>
