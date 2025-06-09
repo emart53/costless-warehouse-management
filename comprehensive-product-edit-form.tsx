@@ -142,6 +142,7 @@ export function ComprehensiveProductEdit({
             purchaseCost: Number(pricingData?.purchaseCost || 0),
             offInvoice: Number(pricingData?.offInvoice || 0),
             billBack: Number(pricingData?.billBack || 0),
+            listCost: Number(pricingData?.listCost || 0),
             retailPrice: Number(pricingData?.retailPrice || 0)
           });
         } catch (error) {
@@ -165,6 +166,7 @@ export function ComprehensiveProductEdit({
               purchaseCaseQty: 1,
               purchaseUnitCt: 0,
               purchaseWeight: 0,
+              purchaseCrv: 0
             },
             transferConfig: {
               configName: 'Case',
@@ -172,11 +174,13 @@ export function ComprehensiveProductEdit({
               transferUnitCt: 0,
               transferWeight: 0,
               transferCost: 0,
-              transferCrv: 0
+              transferCrv: 0,
+              transferCostOverride: false
             },
             purchaseCost: Number(product.purchaseCost || 0),
             offInvoice: Number(product.offInvoice || 0),
             billBack: Number(product.billBack || 0),
+            listCost: Number(product.listCost || 0),
             retailPrice: Number(product.retailPrice || 0)
           });
         }
@@ -825,10 +829,13 @@ export function ComprehensiveProductEdit({
               <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Pricing Analysis</h4>
               <div className="text-xs space-y-1">
                 <div>Transfer Cost: <span className="font-medium">${(() => {
+                  if (formData.transferConfig.transferCostOverride) {
+                    return formData.transferConfig.transferCost.toFixed(2);
+                  }
                   const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                   const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
                   return (netCost * ratio).toFixed(2);
-                })()}</span></div>
+                })()}</span> {formData.transferConfig.transferCostOverride && <span className="text-orange-600 text-xs">(Override)</span>}</div>
                 <div>Unit Cost: <span className="font-medium">${(() => {
                   const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                   const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
