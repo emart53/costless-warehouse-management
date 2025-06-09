@@ -13,7 +13,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Package, ShoppingCart, Truck, Calculator, DollarSign, TrendingUp } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Package, ShoppingCart, Truck, Calculator, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface ComprehensiveProductEditProps {
   product: any;
@@ -78,6 +79,8 @@ export function ComprehensiveProductEdit({
   });
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
+  const [tempOverrideValue, setTempOverrideValue] = useState(0);
 
   // Fetch configuration data when product changes
   useEffect(() => {
@@ -658,16 +661,13 @@ export function ComprehensiveProductEdit({
                     type="button"
                     variant={formData.transferConfig.transferCostOverride ? "destructive" : "outline"}
                     size="sm"
-                    onClick={() => setFormData({
-                      ...formData,
-                      transferConfig: {
-                        ...formData.transferConfig,
-                        transferCostOverride: !formData.transferConfig.transferCostOverride
-                      }
-                    })}
+                    onClick={() => {
+                      setTempOverrideValue(formData.transferConfig.transferCost);
+                      setIsOverrideModalOpen(true);
+                    }}
                     className="h-6 px-2 text-xs ml-2"
                   >
-                    {formData.transferConfig.transferCostOverride ? 'MANUAL OVERRIDE ACTIVE' : 'Enable Override'}
+                    {formData.transferConfig.transferCostOverride ? 'MANUAL OVERRIDE ACTIVE' : 'Override Cost'}
                   </Button>
                 </Label>
                 <Input
@@ -868,6 +868,105 @@ export function ComprehensiveProductEdit({
             {isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
+
+        {/* Transfer Cost Override Modal */}
+        <Dialog open={isOverrideModalOpen} onOpenChange={setIsOverrideModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-orange-500" />
+                Transfer Cost Override
+              </DialogTitle>
+              <DialogDescription>
+                Set a custom transfer cost that overrides the automatic calculation based on purchase cost and configuration ratios.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <h4 className="text-sm font-medium text-yellow-800 mb-2">Current Calculation</h4>
+                <div className="text-xs text-yellow-700 space-y-1">
+                  <div>Purchase Cost: ${formData.purchaseCost.toFixed(2)}</div>
+                  <div>Less Off Invoice: -${formData.offInvoice.toFixed(2)}</div>
+                  <div>Less Bill Back: -${formData.billBack.toFixed(2)}</div>
+                  <div className="border-t pt-1 font-medium">
+                    Auto Calculated: ${(() => {
+                      const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                      const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                      return (netCost * ratio).toFixed(2);
+                    })()}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="overrideValue">Custom Transfer Cost</Label>
+                <Input
+                  id="overrideValue"
+                  type="number"
+                  step="0.01"
+                  value={tempOverrideValue}
+                  onChange={(e) => setTempOverrideValue(parseFloat(e.target.value) || 0)}
+                  placeholder="Enter custom cost"
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-red-700">
+                    <div className="font-medium mb-1">Warning: Manual Override</div>
+                    <div>This will override automatic cost calculations. Unit costs and margins will be based on your custom value.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setIsOverrideModalOpen(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setFormData({
+                    ...formData,
+                    transferConfig: {
+                      ...formData.transferConfig,
+                      transferCostOverride: false,
+                      transferCost: 0
+                    }
+                  });
+                  setIsOverrideModalOpen(false);
+                }}
+                className="flex-1"
+              >
+                Reset to Auto
+              </Button>
+              <Button
+                onClick={() => {
+                  setFormData({
+                    ...formData,
+                    transferConfig: {
+                      ...formData.transferConfig,
+                      transferCostOverride: true,
+                      transferCost: tempOverrideValue
+                    }
+                  });
+                  setIsOverrideModalOpen(false);
+                }}
+                className="flex-1"
+              >
+                Apply Override
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
     </div>
   );
 }
