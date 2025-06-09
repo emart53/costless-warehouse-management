@@ -87,7 +87,8 @@ export default function PurchaseOrderViewLegacy() {
         const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
         const billBack = parseFloat(item.billBack?.toString() || '0');
         const weight = parseFloat(item.purchaseWeight?.toString() || '0');
-        const crv = parseFloat(item.purchaseCrv?.toString() || '0');
+        const productCrv = parseFloat(item.product?.crv?.toString() || '0');
+        const crv = quantity * productCrv;
 
         const netCost = listCost - offInvoice;
         const extendedCost = quantity * netCost;
