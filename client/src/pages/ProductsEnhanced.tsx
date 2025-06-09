@@ -110,8 +110,13 @@ export default function ProductsEnhanced() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   
+  // Add cache-busting timestamp for fresh data
+  const [refreshTimestamp, setRefreshTimestamp] = useState(Date.now());
+  
   const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ['/api/products'],
+    queryKey: ['/api/products', refreshTimestamp],
+    staleTime: 0,
+    gcTime: 0,
   });
 
   const { data: vendors = [] } = useQuery({
@@ -232,18 +237,8 @@ export default function ProductsEnhanced() {
       return response.json();
     },
     onSuccess: async (updatedProduct) => {
-      // Aggressively clear all product-related cache
-      await queryClient.cancelQueries({ queryKey: ['/api/products'] });
-      queryClient.removeQueries({ queryKey: ['/api/products'] });
-      queryClient.removeQueries({ queryKey: [`/api/products/${updatedProduct.id}`] });
-      queryClient.removeQueries({ queryKey: [`/api/products/${updatedProduct.productId}`] });
-      
-      // Immediately fetch fresh data
-      await queryClient.fetchQuery({
-        queryKey: ['/api/products'],
-        queryFn: () => fetch('/api/products').then(res => res.json()),
-        staleTime: 0
-      });
+      // Force immediate refresh by updating timestamp
+      setRefreshTimestamp(Date.now());
       
       setIsEditDialogOpen(false);
       toast({
