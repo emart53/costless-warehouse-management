@@ -238,7 +238,7 @@ export function ComprehensiveProductEdit({
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Calculator className="h-4 w-4" />
-          <span>Auto-calculating unit conversions</span>
+          <span>Enhanced Form Active - Auto-calculating unit conversions</span>
         </div>
       </div>
 
@@ -484,7 +484,6 @@ export function ComprehensiveProductEdit({
             </CardContent>
           </Card>
 
-          {/* Transfer Configuration Card */}
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
