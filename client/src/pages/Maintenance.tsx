@@ -510,11 +510,17 @@ export default function Maintenance() {
       vendor.code.toLowerCase().includes(vendorSearchTerm.toLowerCase()) ||
       (vendor.contactName || '').toLowerCase().includes(vendorSearchTerm.toLowerCase());
     
+    // If there's a search term, show both active and inactive results
+    // Otherwise, apply the status filter
+    if (vendorSearchTerm.trim()) {
+      return matchesSearch;
+    }
+    
     const matchesStatus = vendorStatusFilter === 'all' ||
       (vendorStatusFilter === 'active' && vendor.isActive) ||
       (vendorStatusFilter === 'inactive' && !vendor.isActive);
     
-    return matchesSearch && matchesStatus;
+    return matchesStatus;
   });
 
   // Pagination for categories
