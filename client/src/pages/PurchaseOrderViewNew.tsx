@@ -305,7 +305,7 @@ export default function PurchaseOrderViewNew() {
                     {purchaseOrder.deliveryCharge && parseFloat(purchaseOrder.deliveryCharge) !== 0 && (
                       <div>
                         <span className="text-gray-500">Delivery Charge:</span><br />
-                        <span className="font-medium text-red-600">${parseFloat(purchaseOrder.deliveryCharge).toFixed(2)}</span>
+                        <span className="font-medium text-red-600">${parseFloat(purchaseOrder.deliveryCharge).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
                     )}
                   </div>
@@ -465,7 +465,7 @@ export default function PurchaseOrderViewNew() {
                       <div className="flex justify-between">
                         <span>CRV Fees:</span>
                         <span className="font-medium text-red-600">
-                          +${totalCrv.toFixed(2)}
+                          +${totalCrv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                       </div>
                     );
@@ -476,7 +476,7 @@ export default function PurchaseOrderViewNew() {
                   <div className="flex justify-between">
                     <span>Lump Sum {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'Charge' : 'Allowance'}:</span>
                     <span className={`font-medium ${parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}${parseFloat(purchaseOrder.lumpSumAllowance).toFixed(2)}
+                      {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}${Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 )}
@@ -484,7 +484,7 @@ export default function PurchaseOrderViewNew() {
                   <div className="flex justify-between">
                     <span>Delivery Charge:</span>
                     <span className="font-medium text-red-600">
-                      +${parseFloat(purchaseOrder.deliveryCharge).toFixed(2)}
+                      +${parseFloat(purchaseOrder.deliveryCharge).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 )}
