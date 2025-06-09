@@ -973,11 +973,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pool.query(`
           SELECT 
             product_purchase_id as id,
-            purchase_case_qty as purchaseCaseQty,
-            purchase_unit_ct as purchaseUnitCt,
-            purchase_weight as purchaseWeight,
-            purchase_crv as purchaseCrv,
-            purchase_cfg as purchaseCfg
+            purchase_case_qty as purchasecaseqty,
+            purchase_unit_ct as purchaseunitct,
+            purchase_weight as purchaseweight,
+            purchase_crv as purchasecrv,
+            purchase_cfg as purchasecfg
           FROM product_purchases 
           WHERE product_id = $1
         `, [id]),
@@ -985,11 +985,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pool.query(`
           SELECT 
             product_transfer_id as id,
-            transfer_case_qty as transferCaseQty,
-            transfer_unit_ct as transferUnitCt,
-            transfer_weight as transferWeight,
-            transfer_crv as transferCrv,
-            trans_cfg as transferCfg
+            transfer_case_qty as transfercaseqty,
+            transfer_unit_ct as transferunitct,
+            transfer_weight as transferweight,
+            transfer_crv as transfercrv,
+            trans_cfg as transfercfg
           FROM product_transfers 
           WHERE product_id = $1
         `, [id]),

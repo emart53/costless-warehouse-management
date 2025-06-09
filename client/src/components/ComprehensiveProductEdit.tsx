@@ -109,14 +109,16 @@ export function ComprehensiveProductEdit({
           
           // Determine configuration names based on business logic
           const determinePurchaseConfig = (config: any) => {
-            if (config?.purchaseCfg) return config.purchaseCfg;
-            const caseQty = config?.purchaseCaseQty || 1;
+            if (config?.purchasecfg) return config.purchasecfg;
+            const caseQty = config?.purchasecaseqty || 1;
             return caseQty > 24 ? 'Pallet' : 'Case';
           };
           
           const determineTransferConfig = (config: any) => {
             // Use the actual configuration set by the user
-            return config?.transferCfg || config?.transfer_cfg || 'Case';
+            if (config?.transfercfg) return config.transfercfg;
+            const caseQty = config?.transfercaseqty || 1;
+            return caseQty > 24 ? 'Pallet' : 'Case';
           };
           
           setFormData({
@@ -134,18 +136,18 @@ export function ComprehensiveProductEdit({
             crv: Number(product.crv || 0),
             purchaseConfig: {
               configName: determinePurchaseConfig(purchaseConfig),
-              purchaseCaseQty: purchaseConfig?.purchaseCaseQty || 1,
-              purchaseUnitCt: purchaseConfig?.purchaseUnitCt || product.casePack || 1,
-              purchaseWeight: Number(purchaseConfig?.purchaseWeight || 0),
-              purchaseCrv: Number(purchaseConfig?.purchaseCrv || 0)
+              purchaseCaseQty: purchaseConfig?.purchasecaseqty || 1,
+              purchaseUnitCt: purchaseConfig?.purchaseunitct || product.casePack || 1,
+              purchaseWeight: Number(purchaseConfig?.purchaseweight || 0),
+              purchaseCrv: Number(purchaseConfig?.purchasecrv || 0)
             },
             transferConfig: {
               configName: determineTransferConfig(transferConfig),
-              transferCaseQty: Number(transferConfig?.transferCaseQty || 1),
-              transferUnitCt: Number(transferConfig?.transferUnitCt || 1),
-              transferWeight: Number(transferConfig?.transferWeight || 0),
+              transferCaseQty: Number(transferConfig?.transfercaseqty || 1),
+              transferUnitCt: Number(transferConfig?.transferunitct || 1),
+              transferWeight: Number(transferConfig?.transferweight || 0),
               transferCost: parseFloat(overrideData?.override_cost || pricingData?.transfercost) || 0,
-              transferCrv: Number(transferConfig?.transferCrv || 0),
+              transferCrv: Number(transferConfig?.transfercrv || 0),
               transferCostOverride: !!overrideData?.override_cost,
               overrideReason: overrideData?.reason || '',
               overrideEndDate: overrideData?.end_date || '',
