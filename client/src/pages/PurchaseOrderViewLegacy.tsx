@@ -249,21 +249,18 @@ export default function PurchaseOrderViewLegacy() {
         </div>
 
         {/* Line Items Table Header */}
-        <div className="border-t border-b border-gray-800 py-1 mb-2">
-          <div className="grid grid-cols-16 gap-1 text-sm font-bold">
-            <div className="col-span-1">Qty</div>
-            <div className="col-span-1">UPC</div>
-            <div className="col-span-3">Item Description</div>
-            <div className="col-span-1 text-right">List Cost</div>
-            <div className="col-span-1 text-right">Off Invoice</div>
-            <div className="col-span-1 text-right">Bill Back</div>
-            <div className="col-span-1 text-right">Weight</div>
-            <div className="col-span-1 text-right">Ext Weight</div>
-            <div className="col-span-1 text-right">Billed Cost</div>
-            <div className="col-span-1 text-right">Ext Cost</div>
-            <div className="col-span-1 text-right">CRV</div>
-            <div className="col-span-1 text-right">Ext CRV</div>
-            <div className="col-span-1 text-right">Extended List Cost</div>
+        <div className="border border-gray-400 bg-gray-100 text-center">
+          <div className="grid grid-cols-12 gap-0 text-sm font-bold py-2">
+            <div className="border-r border-gray-400 px-2">Quantity</div>
+            <div className="border-r border-gray-400 px-2 col-span-3">Product</div>
+            <div className="border-r border-gray-400 px-2">Config</div>
+            <div className="border-r border-gray-400 px-2">List Cost</div>
+            <div className="border-r border-gray-400 px-2">Off Invoice</div>
+            <div className="border-r border-gray-400 px-2">Bill Back</div>
+            <div className="border-r border-gray-400 px-2">Weight</div>
+            <div className="border-r border-gray-400 px-2">Ext Weight</div>
+            <div className="border-r border-gray-400 px-2">Billed Cost</div>
+            <div className="px-2">Ext Cost</div>
           </div>
         </div>
 
@@ -280,27 +277,52 @@ export default function PurchaseOrderViewLegacy() {
           const extendedCost = quantity * netCost;
 
           return (
-            <div key={item.id || index} className="mb-1">
-              <div className="grid grid-cols-16 gap-1 text-sm">
-                <div className="col-span-1">{quantity}</div>
-                <div className="col-span-1">{item.product?.caseUpc || ''}</div>
-                <div className="col-span-3">
-              {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
-            </div>
-                <div className="col-span-1 text-right">${listCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">${offInvoice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">${billBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">{weight.toFixed(2)}</div>
-                <div className="col-span-1 text-right">{(weight * quantity).toFixed(2)}</div>
-                <div className="col-span-1 text-right">${netCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">${extendedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">${crv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">${(crv * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="col-span-1 text-right">${(listCost * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            <div key={item.id || index} className="border-b border-gray-300">
+              <div className="grid grid-cols-12 gap-0 text-sm py-2">
+                <div className="border-r border-gray-300 px-2 text-center">{quantity}</div>
+                <div className="border-r border-gray-300 px-2 col-span-3">
+                  {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
+                </div>
+                <div className="border-r border-gray-300 px-2 text-center">Default</div>
+                <div className="border-r border-gray-300 px-2 text-right">${listCost.toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">${offInvoice.toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">${billBack.toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">{weight.toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">{(weight * quantity).toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">${netCost.toFixed(2)}</div>
+                <div className="px-2 text-right">${extendedCost.toFixed(2)}</div>
               </div>
             </div>
           );
         })}
+
+        {/* Total Row */}
+        <div className="border-b border-gray-400 bg-gray-50">
+          <div className="grid grid-cols-12 gap-0 text-sm font-bold py-2">
+            <div className="col-span-9 px-2 text-right">Total:</div>
+            <div className="border-r border-gray-300 px-2 text-right">
+              {purchaseOrder.items?.reduce((sum, item) => sum + (parseFloat(item.purchaseWeight?.toString() || '0') * (item.quantityOrdered || 0)), 0).toFixed(2)}
+            </div>
+            <div className="border-r border-gray-300 px-2 text-right">
+              ${purchaseOrder.items?.reduce((sum, item) => {
+                const quantity = item.quantityOrdered || 0;
+                const listCost = parseFloat(item.listCost?.toString() || '0');
+                const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
+                const netCost = listCost - offInvoice;
+                return sum + netCost;
+              }, 0).toFixed(2)}
+            </div>
+            <div className="px-2 text-right">
+              ${purchaseOrder.items?.reduce((sum, item) => {
+                const quantity = item.quantityOrdered || 0;
+                const listCost = parseFloat(item.listCost?.toString() || '0');
+                const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
+                const netCost = listCost - offInvoice;
+                return sum + (quantity * netCost);
+              }, 0).toFixed(2)}
+            </div>
+          </div>
+        </div>
 
         {/* Signature and Totals Section */}
         <div className="mt-8 print:mt-6">
