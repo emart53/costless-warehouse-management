@@ -269,7 +269,7 @@ export default function PurchaseOrderViewLegacy() {
 
         {/* Line Items Table Header */}
         <div className="border border-gray-400 bg-gray-100 text-center">
-          <div className={`grid gap-0 text-base font-bold py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px 2fr 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
+          <div className={`grid gap-0 text-base font-bold py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px ${hasCRV ? '1fr' : hasBillBack ? '1.2fr' : '1.5fr'} 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
             <div className="border-r border-gray-400 px-1">QTY</div>
             <div className="border-r border-gray-400 px-1">Product</div>
             <div className="border-r border-gray-400 px-1">Config</div>
@@ -302,7 +302,7 @@ export default function PurchaseOrderViewLegacy() {
 
           return (
             <div key={item.id || index} className="border-b border-gray-300">
-              <div className={`grid gap-0 text-base py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px 2fr 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
+              <div className={`grid gap-0 text-base py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px ${hasCRV ? '1fr' : hasBillBack ? '1.2fr' : '1.5fr'} 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
                 <div className="border-r border-gray-300 px-1 text-center">{quantity}</div>
                 <div className="border-r border-gray-300 px-1">
                   {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
