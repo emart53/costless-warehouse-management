@@ -242,11 +242,11 @@ export function ComprehensiveProductEdit({
         </div>
       </div>
 
-      {/* Responsive Card Layout - Equal width containers with proper flex */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      {/* ENHANCED RESPONSIVE LAYOUT - NO FIXED WIDTHS */}
+      <div className="flex flex-col lg:flex-row gap-4 w-full">
           
           {/* Product Information Card */}
-          <Card className="w-full">
+          <Card className="flex-1 min-w-0">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Package className="h-5 w-5" />
@@ -396,7 +396,7 @@ export function ComprehensiveProductEdit({
           </Card>
 
           {/* Purchase Configuration Card */}
-          <Card className="w-full">
+          <Card className="flex-1 min-w-0">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
@@ -484,7 +484,7 @@ export function ComprehensiveProductEdit({
             </CardContent>
           </Card>
 
-          <Card className="w-full border-2 border-blue-200 bg-blue-50">
+          <Card className="flex-1 min-w-0 border-2 border-blue-200 bg-blue-50">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Truck className="h-5 w-5" />
@@ -619,7 +619,7 @@ export function ComprehensiveProductEdit({
           </Card>
 
           {/* Product Pricing Card */}
-          <Card className="w-full">
+          <Card className="flex-1 min-w-0">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <DollarSign className="h-5 w-5" />
