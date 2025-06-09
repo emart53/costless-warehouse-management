@@ -143,7 +143,7 @@ export function ComprehensiveProductEdit({
               transferCaseQty: transferConfig?.transferCaseQty || 1,
               transferUnitCt: transferConfig?.transferUnitCt || 1,
               transferWeight: Number(transferConfig?.transferWeight || 0),
-              transferCost: overrideData?.override_cost || 0,
+              transferCost: Number(overrideData?.override_cost || 0),
               transferCrv: Number(transferConfig?.transferCrv || 0),
               transferCostOverride: !!overrideData?.override_cost,
               overrideReason: overrideData?.reason || '',
