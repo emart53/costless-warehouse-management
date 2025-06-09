@@ -264,16 +264,26 @@ export default function PurchaseOrderViewNew() {
                     Store #{purchaseOrder.defaultShipToStore.storeNumber}
                   </div>
                 )}
-                <div className="text-gray-600">
-                  2905 Railroad Ave<br />
-                  Ceres, CA 95307
-                </div>
-                <div>
-                  <span className="text-gray-500">Phone:</span> 209-537-4472
-                </div>
-                <div>
-                  <span className="text-gray-500">Contact:</span> Mark Niewig/Clay Nibler
-                </div>
+                {(purchaseOrder.defaultShipToStore?.address || purchaseOrder.shipToLocation?.address) && (
+                  <div className="text-gray-600">
+                    {purchaseOrder.defaultShipToStore?.address || purchaseOrder.shipToLocation?.address}<br />
+                    {(purchaseOrder.defaultShipToStore?.city && purchaseOrder.defaultShipToStore?.state) ? 
+                      `${purchaseOrder.defaultShipToStore.city}, ${purchaseOrder.defaultShipToStore.state} ${purchaseOrder.defaultShipToStore.zipCode || ''}` :
+                      (purchaseOrder.shipToLocation?.city && purchaseOrder.shipToLocation?.state) ?
+                      `${purchaseOrder.shipToLocation.city}, ${purchaseOrder.shipToLocation.state} ${purchaseOrder.shipToLocation.zipCode || ''}` : ''
+                    }
+                  </div>
+                )}
+                {(purchaseOrder.defaultShipToStore?.phone || purchaseOrder.shipToLocation?.phone) && (
+                  <div>
+                    <span className="text-gray-500">Phone:</span> {purchaseOrder.defaultShipToStore?.phone || purchaseOrder.shipToLocation?.phone}
+                  </div>
+                )}
+                {(purchaseOrder.defaultShipToStore?.contactPerson || purchaseOrder.shipToLocation?.contactPerson) && (
+                  <div>
+                    <span className="text-gray-500">Contact:</span> {purchaseOrder.defaultShipToStore?.contactPerson || purchaseOrder.shipToLocation?.contactPerson}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -282,12 +292,27 @@ export default function PurchaseOrderViewNew() {
               <h3 className="font-medium text-gray-700 mb-3 border-b pb-1">Bill To</h3>
               <div className="space-y-2 text-sm">
                 <div>
-                  <span className="font-medium">Cost Less Accounting</span>
+                  <span className="font-medium">
+                    {purchaseOrder.billToLocation?.name || 'Cost Less Warehouse'}
+                  </span>
                 </div>
-                <div className="text-gray-600">
-                  2905 Railroad Ave<br />
-                  Ceres, CA 95307
-                </div>
+                {purchaseOrder.billToLocation?.address && (
+                  <div className="text-gray-600">
+                    {purchaseOrder.billToLocation.address}<br />
+                    {purchaseOrder.billToLocation.city && purchaseOrder.billToLocation.state && 
+                      `${purchaseOrder.billToLocation.city}, ${purchaseOrder.billToLocation.state} ${purchaseOrder.billToLocation.zipCode || ''}`}
+                  </div>
+                )}
+                {purchaseOrder.billToLocation?.phone && (
+                  <div>
+                    <span className="text-gray-500">Phone:</span> {purchaseOrder.billToLocation.phone}
+                  </div>
+                )}
+                {purchaseOrder.billToLocation?.contactPerson && (
+                  <div>
+                    <span className="text-gray-500">Contact:</span> {purchaseOrder.billToLocation.contactPerson}
+                  </div>
+                )}
                 
                 {/* Additional Charges under Bill To */}
                 {((purchaseOrder.lumpSumAllowance && parseFloat(purchaseOrder.lumpSumAllowance) !== 0) || 
