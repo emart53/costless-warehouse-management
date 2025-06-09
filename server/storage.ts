@@ -540,7 +540,8 @@ export class DatabaseStorage implements IStorage {
         COALESCE(p.product_description, p.name, 'Product ' || poi.product_id::text) as product_description,
         COALESCE(p.case_pack, 1) as case_pack,
         COALESCE(p.size, '') as size,
-        p.case_upc
+        p.case_upc,
+        COALESCE(p.crv, 0) as crv
       FROM purchase_order_items poi
       LEFT JOIN products p ON poi.product_id = p.product_id
       WHERE poi.po_id = ${poId}
@@ -564,7 +565,8 @@ export class DatabaseStorage implements IStorage {
         productDescription: row.product_description,
         casePack: row.case_pack,
         size: row.size,
-        caseUpc: row.case_upc
+        caseUpc: row.case_upc,
+        crv: row.crv
       }
     }));
   }

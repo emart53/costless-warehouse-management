@@ -120,7 +120,10 @@ export default function PurchaseOrderViewLegacy() {
 
   const totals = calculateTotals();
   const hasBillBackValues = purchaseOrder.items?.some((item: PurchaseOrderItem) => item.billBack && parseFloat(item.billBack.toString()) > 0) || false;
-  const hasCrvValues = purchaseOrder.items?.some((item: PurchaseOrderItem) => item.purchaseCrv && parseFloat(item.purchaseCrv.toString()) > 0) || false;
+  const hasCrvValues = purchaseOrder.items?.some((item: PurchaseOrderItem) => {
+    const productCrv = parseFloat(item.product?.crv?.toString() || '0');
+    return productCrv > 0;
+  }) || false;
 
   return (
     <div className="max-w-none p-4 bg-white min-h-screen print:p-0 print:m-0">
@@ -268,7 +271,8 @@ export default function PurchaseOrderViewLegacy() {
           const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
           const billBack = parseFloat(item.billBack?.toString() || '0');
           const weight = parseFloat(item.purchaseWeight?.toString() || '0');
-          const crv = parseFloat(item.purchaseCrv?.toString() || '0');
+          const productCrv = parseFloat(item.product?.crv?.toString() || '0');
+          const crv = quantity * productCrv;
           const netCost = listCost - offInvoice;
           const extendedCost = quantity * netCost;
 
