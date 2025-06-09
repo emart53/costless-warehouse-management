@@ -335,12 +335,12 @@ export default function ProductsEnhanced() {
     // Then filter by search term
     const vendorNameToSearch = product.vendorName || product.vendorname || '';
     const searchMatch = searchTerm === '' || 
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendorNameToSearch.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.productId.toString().includes(searchTerm) ||
-      product.id.toString().includes(searchTerm);
+      vendorNameToSearch?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.productId?.toString().includes(searchTerm) ||
+      product.id?.toString().includes(searchTerm);
     
     return statusMatch && vendorMatch && searchMatch;
   });
