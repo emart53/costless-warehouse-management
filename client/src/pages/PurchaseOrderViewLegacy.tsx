@@ -250,7 +250,7 @@ export default function PurchaseOrderViewLegacy() {
 
         {/* Line Items Table Header */}
         <div className="border-t border-b border-gray-800 py-1 mb-2">
-          <div className="grid grid-cols-12 gap-2 text-sm font-bold">
+          <div className="grid grid-cols-16 gap-1 text-sm font-bold">
             <div className="col-span-1">Qty</div>
             <div className="col-span-1">UPC</div>
             <div className="col-span-3">Item Description</div>
@@ -258,8 +258,12 @@ export default function PurchaseOrderViewLegacy() {
             <div className="col-span-1 text-right">Off Invoice</div>
             <div className="col-span-1 text-right">Bill Back</div>
             <div className="col-span-1 text-right">Weight</div>
+            <div className="col-span-1 text-right">Ext Weight</div>
             <div className="col-span-1 text-right">Billed Cost</div>
-            <div className="col-span-1 text-right">Extended Cost</div>
+            <div className="col-span-1 text-right">Ext Cost</div>
+            <div className="col-span-1 text-right">CRV</div>
+            <div className="col-span-1 text-right">Ext CRV</div>
+            <div className="col-span-1 text-right">Extended List Cost</div>
           </div>
         </div>
 
@@ -277,7 +281,7 @@ export default function PurchaseOrderViewLegacy() {
 
           return (
             <div key={item.id || index} className="mb-1">
-              <div className="grid grid-cols-12 gap-2 text-sm">
+              <div className="grid grid-cols-16 gap-1 text-sm">
                 <div className="col-span-1">{quantity}</div>
                 <div className="col-span-1">{item.product?.caseUpc || ''}</div>
                 <div className="col-span-3">
@@ -287,14 +291,12 @@ export default function PurchaseOrderViewLegacy() {
                 <div className="col-span-1 text-right">${offInvoice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">${billBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">{weight.toFixed(2)}</div>
+                <div className="col-span-1 text-right">{(weight * quantity).toFixed(2)}</div>
                 <div className="col-span-1 text-right">${netCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">${extendedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-              </div>
-              {/* Total weight line for each item */}
-              <div className="grid grid-cols-12 gap-2 text-sm">
-                <div className="col-span-7"></div>
-                <div className="col-span-1 text-right">{weight.toFixed(2)}</div>
-                <div className="col-span-4"></div>
+                <div className="col-span-1 text-right">${crv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div className="col-span-1 text-right">${(crv * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div className="col-span-1 text-right">${(listCost * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
             </div>
           );
