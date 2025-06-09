@@ -269,7 +269,7 @@ export default function PurchaseOrderViewLegacy() {
 
         {/* Line Items Table Header */}
         <div className="border border-gray-400 bg-gray-100 text-center">
-          <div className={`grid gap-0 text-base font-bold py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px 1fr 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
+          <div className={`grid gap-0 text-base font-bold py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `50px 280px 50px 65px 65px ${hasBillBack ? '65px ' : ''}55px 65px 65px 65px${hasCRV ? ' 50px 65px' : ''} 80px` }}>
             <div className="border-r border-gray-400 px-1">QTY</div>
             <div className="border-r border-gray-400 px-1">Product</div>
             <div className="border-r border-gray-400 px-1">Config</div>
@@ -302,7 +302,7 @@ export default function PurchaseOrderViewLegacy() {
 
           return (
             <div key={item.id || index} className="border-b border-gray-300">
-              <div className={`grid gap-0 text-base py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px 1fr 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
+              <div className={`grid gap-0 text-base py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `50px 280px 50px 65px 65px ${hasBillBack ? '65px ' : ''}55px 65px 65px 65px${hasCRV ? ' 50px 65px' : ''} 80px` }}>
                 <div className="border-r border-gray-300 px-1 text-center">{quantity}</div>
                 <div className="border-r border-gray-300 px-1">
                   {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
@@ -325,7 +325,7 @@ export default function PurchaseOrderViewLegacy() {
 
         {/* Total Row */}
         <div className="border-b border-gray-400 bg-gray-50">
-          <div className={`grid gap-0 text-base font-bold py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `60px 1fr 60px 80px 80px ${hasBillBack ? '80px ' : ''}60px 80px 80px 80px${hasCRV ? ' 60px 80px' : ''} 90px` }}>
+          <div className={`grid gap-0 text-base font-bold py-2 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `50px 280px 50px 65px 65px ${hasBillBack ? '65px ' : ''}55px 65px 65px 65px${hasCRV ? ' 50px 65px' : ''} 80px` }}>
             <div className={`px-1 text-right ${hasCRV ? 'col-span-5' : hasBillBack ? 'col-span-4' : 'col-span-3'}`}>Total:</div>
             <div className="border-r border-gray-300 px-1 text-right"></div>
             {hasBillBack && <div className="border-r border-gray-300 px-1 text-right">
