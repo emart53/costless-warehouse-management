@@ -65,7 +65,8 @@ export function ComprehensiveProductEdit({
       transferUnitCt: 0,
       transferWeight: 0,
       transferCrv: 0,
-      transferCost: 0
+      transferCost: 0,
+      transferCostOverride: false
     },
     
     // Product Pricing
@@ -133,7 +134,8 @@ export function ComprehensiveProductEdit({
               transferUnitCt: transferConfig?.transferUnitCt || 1,
               transferWeight: Number(transferConfig?.transferWeight || 0),
               transferCost: 0, // Will be calculated
-              transferCrv: Number(transferConfig?.transferCrv || 0)
+              transferCrv: Number(transferConfig?.transferCrv || 0),
+              transferCostOverride: false
             },
             
             // Product Pricing - using fetched pricing data
@@ -250,11 +252,11 @@ export function ComprehensiveProductEdit({
         </div>
       </div>
 
-      {/* Horizontal Card Layout - 25% width each for 4 containers */}
-      <div className="flex gap-3">
+      {/* Responsive Card Layout - Equal width containers with proper flex */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           
           {/* Product Information Card */}
-          <Card className="flex-1 w-1/4 min-w-60">
+          <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Package className="h-5 w-5" />
@@ -404,7 +406,7 @@ export function ComprehensiveProductEdit({
           </Card>
 
           {/* Purchase Configuration Card */}
-          <Card className="flex-1 w-1/4 min-w-60">
+          <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
@@ -495,7 +497,7 @@ export function ComprehensiveProductEdit({
           </Card>
 
           {/* Transfer Configuration Card */}
-          <Card className="flex-1 w-1/4 min-w-60">
+          <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Truck className="h-5 w-5" />
@@ -631,7 +633,7 @@ export function ComprehensiveProductEdit({
           </Card>
 
           {/* Product Pricing Card */}
-          <Card className="flex-1 w-1/4 min-w-60">
+          <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <DollarSign className="h-5 w-5" />
@@ -677,20 +679,56 @@ export function ComprehensiveProductEdit({
               </div>
 
               <div>
-                <Label htmlFor="transferCost">Transfer Cost</Label>
+                <Label htmlFor="transferCost" className="flex items-center gap-2">
+                  Transfer Cost
+                  {formData.transferConfig.configName !== formData.purchaseConfig.configName && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setFormData({
+                        ...formData,
+                        transferConfig: {
+                          ...formData.transferConfig,
+                          transferCostOverride: !formData.transferConfig.transferCostOverride
+                        }
+                      })}
+                      className="h-6 px-2 text-xs"
+                    >
+                      {formData.transferConfig.transferCostOverride ? 'Auto' : 'Override'}
+                    </Button>
+                  )}
+                </Label>
                 <Input
                   id="transferCost"
                   type="number"
                   step="0.01"
-                  value={(() => {
-                    const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
-                    const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                    return (netCost * ratio).toFixed(2);
-                  })()}
-                  readOnly
-                  className="bg-gray-50"
+                  value={formData.transferConfig.transferCostOverride ? 
+                    formData.transferConfig.transferCost : 
+                    (() => {
+                      const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                      const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                      return (netCost * ratio).toFixed(2);
+                    })()
+                  }
+                  onChange={(e) => {
+                    if (formData.transferConfig.transferCostOverride) {
+                      setFormData({
+                        ...formData,
+                        transferConfig: {
+                          ...formData.transferConfig,
+                          transferCost: parseFloat(e.target.value) || 0
+                        }
+                      });
+                    }
+                  }}
+                  readOnly={!formData.transferConfig.transferCostOverride}
+                  className={formData.transferConfig.transferCostOverride ? "border-orange-300" : "bg-gray-50"}
                   placeholder="$0.00"
                 />
+                {formData.transferConfig.transferCostOverride && (
+                  <div className="text-xs text-orange-600 mt-1">Manual override active</div>
+                )}
               </div>
 
               <div>
