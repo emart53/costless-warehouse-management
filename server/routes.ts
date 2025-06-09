@@ -1896,8 +1896,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // For rapid entry, prioritize exact product ID matches
       query += ` ORDER BY 
         CASE WHEN p.product_id::text = $${paramIndex} THEN 1 ELSE 2 END,
-        p.product_name ASC
-        LIMIT 50`;
+        p.product_name ASC`;
       params.push(search || '');
       
       const result = await pool.query(query, params);
