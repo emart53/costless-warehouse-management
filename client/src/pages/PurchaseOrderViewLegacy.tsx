@@ -326,7 +326,12 @@ export default function PurchaseOrderViewLegacy() {
         {/* Total Row */}
         <div className="border-b border-gray-400 bg-gray-50">
           <div className={`grid gap-0 text-lg font-bold py-3 ${hasCRV ? 'grid-cols-13' : hasBillBack ? 'grid-cols-12' : 'grid-cols-11'}`} style={{ gridTemplateColumns: `80px 400px 70px 110px 110px ${hasBillBack ? '110px ' : ''}85px 110px 110px 110px${hasCRV ? ' 80px 110px' : ''} 120px` }}>
-            <div className={`px-1 text-right ${hasCRV ? 'col-span-8' : hasBillBack ? 'col-span-7' : 'col-span-6'}`}>Total:</div>
+            <div className="border-r border-gray-300 px-1 text-right"></div>
+            <div className="border-r border-gray-300 px-1 text-right"></div>
+            <div className="border-r border-gray-300 px-1 text-right"></div>
+            <div className="border-r border-gray-300 px-1 text-right"></div>
+            <div className="border-r border-gray-300 px-1 text-right"></div>
+            {hasBillBack && <div className="border-r border-gray-300 px-1 text-right"></div>}
             <div className="border-r border-gray-300 px-1 text-right">
               {purchaseOrder.items?.reduce((sum, item) => {
                 const weight = parseFloat(item.purchaseWeight?.toString() || '0');
