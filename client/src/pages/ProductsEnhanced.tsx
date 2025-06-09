@@ -487,38 +487,39 @@ export default function ProductsEnhanced() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Product ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Brand</TableHead>
-                  <TableHead>Case Pack</TableHead>
-                  <TableHead>Size</TableHead>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Last Cost</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="text-base font-semibold">Product ID</TableHead>
+                  <TableHead className="text-base font-semibold">Name</TableHead>
+                  <TableHead className="text-base font-semibold">Brand</TableHead>
+                  <TableHead className="text-base font-semibold">Case Pack</TableHead>
+                  <TableHead className="text-base font-semibold">Size</TableHead>
+                  <TableHead className="text-base font-semibold">Vendor</TableHead>
+                  <TableHead className="text-base font-semibold">Status</TableHead>
+                  <TableHead className="text-base font-semibold">Last Cost</TableHead>
+                  <TableHead className="text-base font-semibold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedProducts.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell className="font-mono">{product.id}</TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>{product.brand || 'N/A'}</TableCell>
-                    <TableCell>{product.casePack || product.casepack || 'N/A'}</TableCell>
-                    <TableCell>{product.unitSize || product.unitsize || 'N/A'}</TableCell>
-                    <TableCell>{product.vendorName || product.vendorname || (product.vendorId || product.vendorid ? `Vendor ${product.vendorId || product.vendorid}` : 'No Vendor')}</TableCell>
-                    <TableCell>
-                      <Badge variant={product.status?.toLowerCase() === 'active' ? 'default' : 'secondary'}>
+                  <TableRow key={product.id} className="text-base">
+                    <TableCell className="font-mono text-base">{product.id}</TableCell>
+                    <TableCell className="font-medium text-base">{product.name}</TableCell>
+                    <TableCell className="text-base">{product.brand || 'N/A'}</TableCell>
+                    <TableCell className="text-base">{product.casePack || product.casepack || 'N/A'}</TableCell>
+                    <TableCell className="text-base">{product.unitSize || product.unitsize || 'N/A'}</TableCell>
+                    <TableCell className="text-base">{product.vendorName || product.vendorname || (product.vendorId || product.vendorid ? `Vendor ${product.vendorId || product.vendorid}` : 'No Vendor')}</TableCell>
+                    <TableCell className="text-base">
+                      <Badge variant={product.status?.toLowerCase() === 'active' ? 'default' : 'secondary'} className="text-sm">
                         {product.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{formatCurrency(product.lastCost)}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-base font-medium">{formatCurrency(product.lastCost)}</TableCell>
+                    <TableCell className="text-base">
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleProductSelect(product)}
+                          className="text-sm"
                         >
                           <Eye className="h-4 w-4 mr-1" />
                           View
@@ -527,6 +528,7 @@ export default function ProductsEnhanced() {
                           variant="outline"
                           size="sm"
                           onClick={() => setLocation(`/products/comprehensive/${product.id}`)}
+                          className="text-sm"
                         >
                           <Edit className="h-4 w-4 mr-1" />
                           Edit

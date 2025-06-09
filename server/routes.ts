@@ -962,6 +962,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Consolidated product configuration endpoint for faster form loading
+  app.get("/api/products/:id/config", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { pool } = await import("./db.js");
+      
+      // Single query to fetch all configuration data in parallel
+      const [purchaseResult, transferResult, pricingResult, overrideResult] = await Promise.all([
+        pool.query(`
+          SELECT 
+            product_purchase_id as id,
+            purchase_case_qty as purchaseCaseQty,
+            purchase_unit_ct as purchaseUnitCt,
+            purchase_weight as purchaseWeight,
+            purchase_crv as purchaseCrv,
+            purchase_cfg as purchaseCfg
+          FROM product_purchases 
+          WHERE product_id = $1
+        `, [id]),
+        
+        pool.query(`
+          SELECT 
+            product_transfer_id as id,
+            transfer_case_qty as transferCaseQty,
+            transfer_unit_ct as transferUnitCt,
+            transfer_weight as transferWeight,
+            transfer_crv as transferCrv,
+            trans_cfg as transferCfg
+          FROM product_transfers 
+          WHERE product_id = $1
+        `, [id]),
+        
+        pool.query(`
+          SELECT 
+            product_id as productId,
+            purchase_cost as purchaseCost,
+            off_invoice as offInvoice,
+            bill_back as billBack,
+            list_cost as listCost,
+            retail_price as retailPrice,
+            effective_date as effectiveDate
+          FROM product_prices 
+          WHERE product_id = $1 
+          ORDER BY effective_date DESC 
+          LIMIT 1
+        `, [id]),
+        
+        pool.query(`
+          SELECT 
+            override_id,
+            original_cost,
+            override_cost,
+            reason,
+            start_date,
+            end_date,
+            reminder_date,
+            is_active,
+            buyer_id,
+            created_at
+          FROM transfer_cost_overrides 
+          WHERE product_id = $1 AND is_active = true
+          ORDER BY created_at DESC 
+          LIMIT 1
+        `, [id])
+      ]);
+      
+      res.json({
+        purchase: purchaseResult.rows[0] || null,
+        transfer: transferResult.rows[0] || null,
+        pricing: pricingResult.rows[0] || null,
+        override: overrideResult.rows[0] || null
+      });
+    } catch (error) {
+      console.error('Product config API error:', error);
+      res.status(500).json({ message: "Failed to fetch product configuration" });
+    }
+  });
+
   // Smart transfer cost optimization calculator
   app.get("/api/products/:id/optimize", async (req, res) => {
     try {
