@@ -484,11 +484,11 @@ export function ComprehensiveProductEdit({
             </CardContent>
           </Card>
 
-          <Card className="w-full">
+          <Card className="w-full border-2 border-blue-200 bg-blue-50">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Truck className="h-5 w-5" />
-                Transfer Configuration
+                Transfer Configuration - ENHANCED VERSION
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
