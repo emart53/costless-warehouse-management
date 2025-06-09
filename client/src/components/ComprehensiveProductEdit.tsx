@@ -105,9 +105,6 @@ export function ComprehensiveProductEdit({
           const overrideArray = overrideResponse.ok ? await overrideResponse.json() : null;
           const overrideData = overrideArray && overrideArray.length > 0 ? overrideArray[0] : null;
           
-          // Debug logging to see actual transfer config data
-          console.log('Transfer Config Data:', transferConfig);
-          
           // Determine configuration names based on business logic
           const determinePurchaseConfig = (config: any) => {
             if (config?.purchaseCfg) return config.purchaseCfg;
@@ -116,11 +113,12 @@ export function ComprehensiveProductEdit({
           };
           
           const determineTransferConfig = (config: any) => {
-            if (config?.transferCfg) return config.transferCfg;
-            if (config?.transfer_cfg) return config.transfer_cfg;
+            // Override incorrect database values with business logic
             const caseQty = config?.transferCaseQty || 1;
             if (caseQty >= 8 && caseQty <= 24) return 'Layer';
-            return caseQty > 24 ? 'Pallet' : 'Case';
+            if (caseQty > 24) return 'Pallet';
+            if (caseQty === 1) return 'Case';
+            return config?.transferCfg || config?.transfer_cfg || 'Case';
           };
           
           setFormData({
@@ -145,8 +143,8 @@ export function ComprehensiveProductEdit({
             },
             transferConfig: {
               configName: determineTransferConfig(transferConfig),
-              transferCaseQty: transferConfig?.transferCaseQty || 1,
-              transferUnitCt: transferConfig?.transferUnitCt || 1,
+              transferCaseQty: Number(transferConfig?.transferCaseQty || 1),
+              transferUnitCt: Number(transferConfig?.transferUnitCt || 1),
               transferWeight: Number(transferConfig?.transferWeight || 0),
               transferCost: Number(overrideData?.override_cost || 0),
               transferCrv: Number(transferConfig?.transferCrv || 0),
