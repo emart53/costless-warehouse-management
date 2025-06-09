@@ -82,6 +82,7 @@ export function ComprehensiveProductEdit({
   const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
   const [tempOverrideValue, setTempOverrideValue] = useState(0);
   const [overrideReason, setOverrideReason] = useState('');
+  const [otherReason, setOtherReason] = useState('');
   const [overrideEndDate, setOverrideEndDate] = useState('');
   const [reminderDate, setReminderDate] = useState('');
 
@@ -917,15 +918,41 @@ export function ComprehensiveProductEdit({
 
               <div>
                 <Label htmlFor="overrideReason">Reason for Override</Label>
-                <Input
-                  id="overrideReason"
-                  type="text"
+                <Select
                   value={overrideReason}
-                  onChange={(e) => setOverrideReason(e.target.value)}
-                  placeholder="Enter business justification for cost override"
-                  className="mt-1"
-                  required
-                />
+                  onValueChange={(value) => {
+                    setOverrideReason(value);
+                    if (value !== 'Other') {
+                      setOtherReason('');
+                    }
+                  }}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select reason for cost override" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Additional allowances applied">Additional allowances applied</SelectItem>
+                    <SelectItem value="Holding cost till existing stock sold">Holding cost till existing stock sold</SelectItem>
+                    <SelectItem value="Competitive adjustment">Competitive adjustment</SelectItem>
+                    <SelectItem value="Operating Cost Adjustment">Operating Cost Adjustment</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                {overrideReason === 'Other' && (
+                  <div className="mt-2">
+                    <Label htmlFor="otherReason">Please specify</Label>
+                    <Input
+                      id="otherReason"
+                      type="text"
+                      value={otherReason}
+                      onChange={(e) => setOtherReason(e.target.value)}
+                      placeholder="Enter specific reason for override"
+                      className="mt-1"
+                      required
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -992,10 +1019,15 @@ export function ComprehensiveProductEdit({
               <Button
                 onClick={() => {
                   // Validate required fields
-                  if (!overrideReason.trim() || !overrideEndDate || !reminderDate) {
+                  const isOtherSelected = overrideReason === 'Other';
+                  const reasonValid = overrideReason && (!isOtherSelected || otherReason.trim());
+                  
+                  if (!reasonValid || !overrideEndDate || !reminderDate) {
                     alert('Please fill in all required fields: Reason, End Date, and Reminder Date');
                     return;
                   }
+                  
+                  const finalReason = isOtherSelected ? `Other: ${otherReason}` : overrideReason;
                   
                   setFormData({
                     ...formData,
@@ -1003,21 +1035,22 @@ export function ComprehensiveProductEdit({
                       ...formData.transferConfig,
                       transferCostOverride: true,
                       transferCost: tempOverrideValue,
-                      overrideReason: overrideReason,
+                      overrideReason: finalReason,
                       overrideEndDate: overrideEndDate,
                       reminderDate: reminderDate,
                       overrideCreatedDate: new Date().toISOString().split('T')[0]
-                    }
+                    } as any
                   });
                   setIsOverrideModalOpen(false);
                   
                   // Reset modal fields
                   setOverrideReason('');
+                  setOtherReason('');
                   setOverrideEndDate('');
                   setReminderDate('');
                 }}
                 className="flex-1"
-                disabled={!overrideReason.trim() || !overrideEndDate || !reminderDate}
+                disabled={!overrideReason || (overrideReason === 'Other' && !otherReason.trim()) || !overrideEndDate || !reminderDate}
               >
                 Apply Override
               </Button>
