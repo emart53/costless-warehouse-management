@@ -797,7 +797,7 @@ export function ComprehensiveProductEdit({
                   <Input
                     id="unitCost"
                     type="number"
-                    step="0.0001"
+                    step="0.01"
                     value={(() => {
                       const transferCost = formData.transferConfig.transferCostOverride ? 
                         formData.transferConfig.transferCost :
@@ -807,11 +807,11 @@ export function ComprehensiveProductEdit({
                           return netCost * ratio;
                         })();
                       const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
-                      return unitCount > 0 ? (transferCost / unitCount).toFixed(4) : transferCost.toFixed(4);
+                      return unitCount > 0 ? (transferCost / unitCount).toFixed(2) : transferCost.toFixed(2);
                     })()}
                     readOnly
                     className="bg-gray-50 pl-8"
-                    placeholder="0.0000"
+                    placeholder="0.00"
                   />
                 </div>
 
@@ -822,7 +822,7 @@ export function ComprehensiveProductEdit({
                 <Input
                   id="grossMargin"
                   type="number"
-                  step="0.1"
+                  step="0.01"
                   value={(() => {
                     const transferCost = formData.transferConfig.transferCostOverride ? 
                       formData.transferConfig.transferCost :
@@ -833,11 +833,11 @@ export function ComprehensiveProductEdit({
                       })();
                     const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
                     const transferUnitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
-                    return formData.retailPrice > 0 && transferUnitCost > 0 ? (((formData.retailPrice - transferUnitCost) / formData.retailPrice) * 100).toFixed(1) : '0.0';
+                    return formData.retailPrice > 0 && transferUnitCost > 0 ? (((formData.retailPrice - transferUnitCost) / formData.retailPrice) * 100).toFixed(2) : '0.00';
                   })()}
                   readOnly
                   className="bg-gray-50"
-                  placeholder="0.0"
+                  placeholder="0.00"
                 />
               </div>
 
@@ -901,8 +901,8 @@ export function ComprehensiveProductEdit({
                       {formData.transferConfig.transferCostOverride && (
                         <div>Cost Variance: <span className={`font-medium ${variance >= 0 ? 'text-red-600' : 'text-green-600'}`}>${variance >= 0 ? '+' : ''}${variance.toFixed(2)}</span></div>
                       )}
-                      <div>Auto-Calc Unit: <span className="font-medium text-blue-600">${autoCalculatedUnitCost.toFixed(4)}</span></div>
-                      <div>Actual Unit Cost: <span className="font-medium">${actualUnitCost.toFixed(4)}</span></div>
+                      <div>Auto-Calc Unit: <span className="font-medium text-blue-600">${autoCalculatedUnitCost.toFixed(2)}</span></div>
+                      <div>Actual Unit Cost: <span className="font-medium">${actualUnitCost.toFixed(2)}</span></div>
                     </>
                   );
                 })()}
@@ -929,7 +929,7 @@ export function ComprehensiveProductEdit({
                     })();
                   const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
                   const unitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
-                  return formData.retailPrice > 0 && unitCost > 0 ? (((formData.retailPrice - unitCost) / formData.retailPrice) * 100).toFixed(1) + '%' : '0.0%';
+                  return formData.retailPrice > 0 && unitCost > 0 ? (((formData.retailPrice - unitCost) / formData.retailPrice) * 100).toFixed(2) + '%' : '0.00%';
                 })()}</span></div>
               </div>
             </div>
