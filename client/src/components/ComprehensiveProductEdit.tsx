@@ -1082,6 +1082,36 @@ export function ComprehensiveProductEdit({
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Save Button Section */}
+        <div className="mt-6 flex justify-end gap-3 border-t pt-4">
+          {onClose && (
+            <Button
+              variant="outline"
+              onClick={onClose}
+              disabled={isSaving}
+            >
+              Cancel
+            </Button>
+          )}
+          <Button
+            onClick={async () => {
+              setIsSaving(true);
+              try {
+                console.log('Saving product data:', formData);
+                await onSave(formData);
+              } catch (error) {
+                console.error('Save error:', error);
+              } finally {
+                setIsSaving(false);
+              }
+            }}
+            disabled={isSaving}
+            className="min-w-[120px]"
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
     </div>
   );
 }
