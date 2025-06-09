@@ -262,28 +262,34 @@ export class DatabaseStorage implements IStorage {
   async getProducts(): Promise<Product[]> {
     const result = await db.execute(sql`
       SELECT 
-        product_id as id,
-        product_id as productId,
-        COALESCE(product_name, product_description, 'Product ' || product_id) as name,
-        product_description as description,
-        product_description as productDescription,
-        brand,
-        size as unitsize,
-        size,
-        case_pack as casepack,
-        case_pack,
-        status,
-        case_upc as sku,
-        vendor_id as vendorid,
-        vendor_id as vendorId,
-        category_id as categoryid,
-        category_id,
-        department_id as departmentid,
-        department_id,
-        discontinued_date as discontinuedDate
-      FROM products 
-      WHERE product_id IS NOT NULL
-      ORDER BY product_id
+        p.product_id as id,
+        p.product_id as productId,
+        COALESCE(p.product_name, p.product_description, 'Product ' || p.product_id) as name,
+        p.product_description as description,
+        p.product_description as productDescription,
+        p.brand,
+        p.size as unitsize,
+        p.size,
+        p.case_pack as casepack,
+        p.case_pack,
+        p.status,
+        p.case_upc as sku,
+        p.vendor_id as vendorid,
+        p.vendor_id as vendorId,
+        p.category_id as categoryid,
+        p.category_id,
+        p.department_id as departmentid,
+        p.department_id,
+        p.discontinued_date as discontinuedDate,
+        COALESCE(pp.retail_price, 0.00)::numeric(10,2) as "retailPrice",
+        COALESCE(pp.purchase_cost, p.last_cost, 0.00)::numeric(10,2) as "lastCost",
+        v.name as vendorname,
+        v.name as vendorName
+      FROM products p
+      LEFT JOIN product_prices pp ON p.product_id = pp.product_id
+      LEFT JOIN vendors v ON p.vendor_id = v.id
+      WHERE p.product_id IS NOT NULL
+      ORDER BY p.product_id
     `);
     return result.rows as any[];
   }
