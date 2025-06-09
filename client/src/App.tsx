@@ -15,6 +15,7 @@ import PurchaseOrderList from "@/pages/PurchaseOrderList";
 import PurchaseOrderEdit from "@/pages/PurchaseOrderEdit";
 import PurchaseOrderView from "@/pages/PurchaseOrderView";
 import PurchaseOrderViewNew from "@/pages/PurchaseOrderViewNew";
+import PurchaseOrderViewLegacy from "@/pages/PurchaseOrderViewLegacy";
 import PurchaseOrderViewAuthentic from "@/pages/PurchaseOrderViewAuthentic";
 import PurchaseOrderViewCSV from "@/pages/PurchaseOrderViewCSV";
 import PurchaseOrderDashboard from "@/pages/PurchaseOrderDashboard";
@@ -55,7 +56,7 @@ function Router() {
         <Route path="/purchase-orders/dashboard" component={PurchaseOrderDashboard} />
         <Route path="/purchase-orders/edit/:id" component={PurchaseOrderEdit} />
         <Route path="/purchase-orders/:id" component={PurchaseOrderView} />
-        <Route path="/purchase-orders/view/:id" component={PurchaseOrderViewNew} />
+        <Route path="/purchase-orders/view/:id" component={PurchaseOrderViewLegacy} />
         <Route path="/purchase-orders/authentic/:id" component={PurchaseOrderViewAuthentic} />
         <Route path="/purchase-orders/csv/:id" component={PurchaseOrderViewCSV} />
         <Route path="/purchase-orders/simple" component={PurchaseOrderEditor} />
