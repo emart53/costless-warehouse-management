@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
 // Import the comprehensive product edit form
-import { ComprehensiveProductEdit } from '../../../comprehensive-product-edit-form';
+import { ComprehensiveProductEdit } from '@/components/ComprehensiveProductEdit';
 
 export default function ComprehensiveProductEditPage() {
   const { id } = useParams();
@@ -35,10 +35,17 @@ export default function ComprehensiveProductEditPage() {
 
   const handleSave = async (productData: any) => {
     try {
-      await apiRequest(`/api/products/${id}`, {
+      const response = await fetch(`/api/products/${id}`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(productData),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to update product');
+      }
 
       toast({
         title: "Success",
@@ -106,9 +113,9 @@ export default function ComprehensiveProductEditPage() {
       <div className="w-full">
         <ComprehensiveProductEdit
           product={product}
-          vendors={vendors || []}
-          departments={departments || []}
-          categories={categories || []}
+          vendors={vendors as any[] || []}
+          departments={departments as any[] || []}
+          categories={categories as any[] || []}
           isOpen={true} // Always open since this is a dedicated page
           onClose={handleBack}
           onSave={handleSave}

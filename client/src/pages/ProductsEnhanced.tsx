@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { ComprehensiveProductEdit } from '../../../comprehensive-product-edit-form';
+import { ComprehensiveProductEdit } from '@/components/ComprehensiveProductEdit';
 
 interface Product {
   id: number;
