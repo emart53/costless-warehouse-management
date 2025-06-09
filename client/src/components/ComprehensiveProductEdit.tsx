@@ -529,18 +529,7 @@ export function ComprehensiveProductEdit({
                     <SelectItem value="Carton">Carton</SelectItem>
                   </SelectContent>
                 </Select>
-                {formData.transferConfig.configName === formData.purchaseConfig.configName && (
-                  <div className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                    <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                    Configuration matches purchase settings
-                  </div>
-                )}
-                {formData.transferConfig.configName !== formData.purchaseConfig.configName && formData.transferConfig.configName && (
-                  <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
-                    <span className="inline-block w-2 h-2 bg-orange-500 rounded-full"></span>
-                    Override enabled - different configuration detected
-                  </div>
-                )}
+
               </div>
 
               <div>
@@ -570,9 +559,7 @@ export function ComprehensiveProductEdit({
                   disabled={formData.transferConfig.configName === formData.purchaseConfig.configName}
                   placeholder="1"
                 />
-                {formData.transferConfig.configName === formData.purchaseConfig.configName && (
-                  <div className="text-xs text-blue-600 mt-1">Synchronized with purchase settings</div>
-                )}
+
               </div>
               
               <div>
@@ -711,7 +698,7 @@ export function ComprehensiveProductEdit({
                   placeholder="$0.00"
                 />
                 {formData.transferConfig.transferCostOverride && (
-                  <div className="text-xs text-orange-600 mt-1">Manual override active</div>
+                  <div className="text-xs text-red-600 mt-1 font-semibold">⚠️ Manual override enabled - custom cost active</div>
                 )}
               </div>
 
