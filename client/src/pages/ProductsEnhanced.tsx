@@ -33,6 +33,7 @@ interface Product {
   categoryId: number;
   departmentId: number;
   lastCost?: number;
+  retailPrice?: number;
   // Restored configuration fields from CSV data
   purchaseCost?: number;
   offInvoice?: number;
@@ -484,7 +485,7 @@ export default function ProductsEnhanced() {
                   <TableHead className="text-base font-semibold">Size</TableHead>
                   <TableHead className="text-base font-semibold">Vendor</TableHead>
                   <TableHead className="text-base font-semibold">Status</TableHead>
-                  <TableHead className="text-base font-semibold">Last Cost</TableHead>
+                  <TableHead className="text-base font-semibold">Retail Price</TableHead>
                   <TableHead className="text-base font-semibold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -501,7 +502,7 @@ export default function ProductsEnhanced() {
                         {product.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-base font-medium">{formatCurrency(product.lastCost)}</TableCell>
+                    <TableCell className="text-base font-medium">{formatCurrency(product.retailPrice)}</TableCell>
                     <TableCell className="text-base">
                       <div className="flex gap-2">
                         <Button
