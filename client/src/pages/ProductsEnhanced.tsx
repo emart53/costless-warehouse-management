@@ -117,7 +117,14 @@ export default function ProductsEnhanced() {
   const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/products');
+      // Add timestamp to prevent browser caching
+      const timestamp = Date.now();
+      const response = await fetch(`/api/products?_t=${timestamp}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
