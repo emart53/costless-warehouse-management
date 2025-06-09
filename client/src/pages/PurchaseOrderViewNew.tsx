@@ -249,14 +249,15 @@ export default function PurchaseOrderViewNew() {
               </div>
             </div>
             
-            {/* Ship To Information */}
+            {/* Contact Address Information */}
             <div>
-              <h3 className="font-medium text-gray-700 mb-3 border-b pb-1">Ship To</h3>
+              <h3 className="font-medium text-gray-700 mb-3 border-b pb-1">Contact Address</h3>
               <div className="space-y-2 text-sm">
                 <div>
                   <span className="font-medium">
                     {purchaseOrder.defaultShipToStore?.name || 
-                     purchaseOrder.shipToLocation?.name || 'Cost Less Warehouse'}
+                     purchaseOrder.shipToLocation?.name || 
+                     purchaseOrder.billToLocation?.name || 'Cost Less Warehouse'}
                   </span>
                 </div>
                 {purchaseOrder.defaultShipToStore?.storeNumber && (
@@ -264,57 +265,42 @@ export default function PurchaseOrderViewNew() {
                     Store #{purchaseOrder.defaultShipToStore.storeNumber}
                   </div>
                 )}
-                {(purchaseOrder.defaultShipToStore?.address || purchaseOrder.shipToLocation?.address) && (
+                {(purchaseOrder.defaultShipToStore?.address || 
+                  purchaseOrder.shipToLocation?.address || 
+                  purchaseOrder.billToLocation?.address) && (
                   <div className="text-gray-600">
-                    {purchaseOrder.defaultShipToStore?.address || purchaseOrder.shipToLocation?.address}<br />
+                    {purchaseOrder.defaultShipToStore?.address || 
+                     purchaseOrder.shipToLocation?.address || 
+                     purchaseOrder.billToLocation?.address}<br />
                     {(purchaseOrder.defaultShipToStore?.city && purchaseOrder.defaultShipToStore?.state) ? 
                       `${purchaseOrder.defaultShipToStore.city}, ${purchaseOrder.defaultShipToStore.state} ${purchaseOrder.defaultShipToStore.zipCode || ''}` :
                       (purchaseOrder.shipToLocation?.city && purchaseOrder.shipToLocation?.state) ?
-                      `${purchaseOrder.shipToLocation.city}, ${purchaseOrder.shipToLocation.state} ${purchaseOrder.shipToLocation.zipCode || ''}` : ''
+                      `${purchaseOrder.shipToLocation.city}, ${purchaseOrder.shipToLocation.state} ${purchaseOrder.shipToLocation.zipCode || ''}` :
+                      (purchaseOrder.billToLocation?.city && purchaseOrder.billToLocation?.state) ?
+                      `${purchaseOrder.billToLocation.city}, ${purchaseOrder.billToLocation.state} ${purchaseOrder.billToLocation.zipCode || ''}` : ''
                     }
                   </div>
                 )}
-                {(purchaseOrder.defaultShipToStore?.phone || purchaseOrder.shipToLocation?.phone) && (
+                {(purchaseOrder.defaultShipToStore?.phone || 
+                  purchaseOrder.shipToLocation?.phone || 
+                  purchaseOrder.billToLocation?.phone) && (
                   <div>
-                    <span className="text-gray-500">Phone:</span> {purchaseOrder.defaultShipToStore?.phone || purchaseOrder.shipToLocation?.phone}
+                    <span className="text-gray-500">Phone:</span> {purchaseOrder.defaultShipToStore?.phone || 
+                                                                     purchaseOrder.shipToLocation?.phone || 
+                                                                     purchaseOrder.billToLocation?.phone}
                   </div>
                 )}
-                {(purchaseOrder.defaultShipToStore?.contactPerson || purchaseOrder.shipToLocation?.contactPerson) && (
+                {(purchaseOrder.defaultShipToStore?.contactPerson || 
+                  purchaseOrder.shipToLocation?.contactPerson || 
+                  purchaseOrder.billToLocation?.contactPerson) && (
                   <div>
-                    <span className="text-gray-500">Contact:</span> {purchaseOrder.defaultShipToStore?.contactPerson || purchaseOrder.shipToLocation?.contactPerson}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Bill To Information */}
-            <div>
-              <h3 className="font-medium text-gray-700 mb-3 border-b pb-1">Bill To</h3>
-              <div className="space-y-2 text-sm">
-                <div>
-                  <span className="font-medium">
-                    {purchaseOrder.billToLocation?.name || 'Cost Less Warehouse'}
-                  </span>
-                </div>
-                {purchaseOrder.billToLocation?.address && (
-                  <div className="text-gray-600">
-                    {purchaseOrder.billToLocation.address}<br />
-                    {purchaseOrder.billToLocation.city && purchaseOrder.billToLocation.state && 
-                      `${purchaseOrder.billToLocation.city}, ${purchaseOrder.billToLocation.state} ${purchaseOrder.billToLocation.zipCode || ''}`}
-                  </div>
-                )}
-                {purchaseOrder.billToLocation?.phone && (
-                  <div>
-                    <span className="text-gray-500">Phone:</span> {purchaseOrder.billToLocation.phone}
-                  </div>
-                )}
-                {purchaseOrder.billToLocation?.contactPerson && (
-                  <div>
-                    <span className="text-gray-500">Contact:</span> {purchaseOrder.billToLocation.contactPerson}
+                    <span className="text-gray-500">Contact:</span> {purchaseOrder.defaultShipToStore?.contactPerson || 
+                                                                       purchaseOrder.shipToLocation?.contactPerson || 
+                                                                       purchaseOrder.billToLocation?.contactPerson}
                   </div>
                 )}
                 
-                {/* Additional Charges under Bill To */}
+                {/* Additional Charges */}
                 {((purchaseOrder.lumpSumAllowance && parseFloat(purchaseOrder.lumpSumAllowance) !== 0) || 
                   (purchaseOrder.deliveryCharge && parseFloat(purchaseOrder.deliveryCharge) !== 0)) && (
                   <div className="mt-3 pt-2 border-t">
@@ -323,7 +309,7 @@ export default function PurchaseOrderViewNew() {
                       <div>
                         <span className="text-gray-500">Lump Sum {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'Charge' : 'Allowance'}:</span><br />
                         <span className={`font-medium ${parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                          {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}${Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toFixed(2)}
+                          {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}${Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                       </div>
                     )}
