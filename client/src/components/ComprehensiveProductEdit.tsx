@@ -579,7 +579,7 @@ export function ComprehensiveProductEdit({
                       transferConfig: {
                         ...formData.transferConfig,
                         transferCaseQty: newCaseQty,
-                        transferUnitCt: newCaseQty * formData.casePack,
+                        transferUnitCt: Math.round((formData.transferConfig.transferUnitCt / formData.transferConfig.transferCaseQty) * newCaseQty),
                         transferWeight: isSameConfig ? formData.purchaseConfig.purchaseWeight : formData.purchaseConfig.purchaseWeight * ratio,
                         transferCrv: (formData.crv || 0) * newCaseQty
                       }
@@ -596,10 +596,10 @@ export function ComprehensiveProductEdit({
                 <Input
                   id="transferUnitCt"
                   type="number"
-                  value={formData.transferConfig.transferCaseQty * formData.casePack}
+                  value={formData.transferConfig.transferUnitCt}
                   disabled
                   className="bg-gray-50"
-                  title="Calculated: Case Qty × Case Pack"
+                  title="Transfer Unit Count from Database"
                 />
               </div>
 
