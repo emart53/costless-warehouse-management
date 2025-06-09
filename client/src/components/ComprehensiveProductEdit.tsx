@@ -532,13 +532,13 @@ export function ComprehensiveProductEdit({
                 {formData.transferConfig.configName === formData.purchaseConfig.configName && (
                   <div className="text-xs text-green-600 mt-1 flex items-center gap-1">
                     <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                    Same as purchase configuration - values auto-sync
+                    Configuration matches purchase settings
                   </div>
                 )}
                 {formData.transferConfig.configName !== formData.purchaseConfig.configName && formData.transferConfig.configName && (
                   <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
                     <span className="inline-block w-2 h-2 bg-orange-500 rounded-full"></span>
-                    Different configuration - manual adjustment needed
+                    Override enabled - different configuration detected
                   </div>
                 )}
               </div>
@@ -571,7 +571,7 @@ export function ComprehensiveProductEdit({
                   placeholder="1"
                 />
                 {formData.transferConfig.configName === formData.purchaseConfig.configName && (
-                  <div className="text-xs text-blue-600 mt-1">Auto-synced from purchase configuration</div>
+                  <div className="text-xs text-blue-600 mt-1">Synchronized with purchase settings</div>
                 )}
               </div>
               
@@ -667,23 +667,21 @@ export function ComprehensiveProductEdit({
               <div>
                 <Label htmlFor="transferCost" className="flex items-center gap-2">
                   Transfer Cost
-                  {formData.transferConfig.configName !== formData.purchaseConfig.configName && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setFormData({
-                        ...formData,
-                        transferConfig: {
-                          ...formData.transferConfig,
-                          transferCostOverride: !formData.transferConfig.transferCostOverride
-                        }
-                      })}
-                      className="h-6 px-2 text-xs"
-                    >
-                      {formData.transferConfig.transferCostOverride ? 'Auto' : 'Override'}
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    variant={formData.transferConfig.transferCostOverride ? "destructive" : "outline"}
+                    size="sm"
+                    onClick={() => setFormData({
+                      ...formData,
+                      transferConfig: {
+                        ...formData.transferConfig,
+                        transferCostOverride: !formData.transferConfig.transferCostOverride
+                      }
+                    })}
+                    className="h-6 px-2 text-xs ml-2"
+                  >
+                    {formData.transferConfig.transferCostOverride ? 'MANUAL OVERRIDE ACTIVE' : 'Enable Override'}
+                  </Button>
                 </Label>
                 <Input
                   id="transferCost"
