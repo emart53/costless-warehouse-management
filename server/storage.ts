@@ -559,7 +559,7 @@ export class DatabaseStorage implements IStorage {
       listCost: row.list_cost,
       offInvoice: row.off_invoice || 0,
       billBack: row.bill_back || 0,
-      purchaseWeight: row.purchase_weight || row.weight,
+      purchaseWeight: parseFloat(row.purchase_weight || row.product_weight || '0'),
       lineTotal: row.line_total,
       netCost: row.net_cost,
       notes: row.notes,
@@ -572,7 +572,7 @@ export class DatabaseStorage implements IStorage {
         size: row.size,
         caseUpc: row.case_upc,
         crv: row.crv,
-        weight: row.weight
+        weight: parseFloat(row.product_weight || '0')
       },
       configuration: row.configuration_name ? {
         configurationName: row.configuration_name
