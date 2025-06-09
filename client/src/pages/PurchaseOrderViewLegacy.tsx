@@ -112,8 +112,12 @@ export default function PurchaseOrderViewLegacy() {
     const deliveryCharge = parseFloat(purchaseOrder.deliveryCharge || '0');
     const lumpSumAllowance = parseFloat(purchaseOrder.lumpSumAllowance || '0');
     
+    // Calculate vendor discount if available
+    const vendorDiscountPercent = parseFloat(purchaseOrder.vendor?.discountPercent || '0');
+    const vendorDiscount = subtotal * vendorDiscountPercent;
+    
     const netInvoiceCost = subtotal + deliveryCharge + totalCrv;
-    const totalInvoiceCost = netInvoiceCost - totalBillBack - lumpSumAllowance;
+    const totalInvoiceCost = netInvoiceCost - totalBillBack - lumpSumAllowance - vendorDiscount;
 
     return {
       subtotal,
@@ -122,6 +126,8 @@ export default function PurchaseOrderViewLegacy() {
       totalCrv,
       deliveryCharge,
       lumpSumAllowance,
+      vendorDiscount,
+      vendorDiscountPercent,
       netInvoiceCost,
       totalInvoiceCost
     };
@@ -375,10 +381,12 @@ export default function PurchaseOrderViewLegacy() {
 
             {/* Right: Financial Summary */}
             <div className="text-sm space-y-1">
-              <div className="flex justify-between">
-                <span>Discount:</span>
-                <span>$0.00</span>
-              </div>
+              {totals.vendorDiscountPercent > 0 && (
+                <div className="flex justify-between">
+                  <span>Early Payment Discount ({(totals.vendorDiscountPercent * 100).toFixed(1)}%):</span>
+                  <span>${totals.vendorDiscount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span>Backhaul Allowance:</span>
                 <span>$0.00</span>
