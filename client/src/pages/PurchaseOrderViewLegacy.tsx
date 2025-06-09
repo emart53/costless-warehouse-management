@@ -281,27 +281,30 @@ export default function PurchaseOrderViewLegacy() {
           const listCost = parseFloat(item.listCost?.toString() || '0');
           const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
           const billBack = parseFloat(item.billBack?.toString() || '0');
-          const weight = parseFloat(item.purchaseWeight?.toString() || '0');
+          const weight = parseFloat(item.purchaseWeight?.toString() || item.product?.weight?.toString() || '0');
           const productCrv = parseFloat(item.product?.crv?.toString() || '0');
-          const crv = quantity * productCrv;
-          const netCost = listCost - offInvoice;
-          const extendedCost = quantity * netCost;
+          const billedCost = listCost - offInvoice - billBack;
+          const extendedWeight = weight * quantity;
+          const extendedCost = billedCost * quantity;
+          const extendedCrv = productCrv * quantity;
 
           return (
             <div key={item.id || index} className="border-b border-gray-300">
-              <div className="grid grid-cols-12 gap-0 text-sm py-2">
+              <div className={`grid gap-0 text-sm py-2 ${hasCRV ? 'grid-cols-12' : hasBillBack ? 'grid-cols-11' : 'grid-cols-10'}`}>
                 <div className="border-r border-gray-300 px-2 text-center">{quantity}</div>
-                <div className="border-r border-gray-300 px-2 col-span-3">
+                <div className="border-r border-gray-300 px-2 col-span-2">
                   {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
                 </div>
                 <div className="border-r border-gray-300 px-2 text-center">{item.configuration?.configurationName || 'Default'}</div>
                 <div className="border-r border-gray-300 px-2 text-right">${listCost.toFixed(2)}</div>
                 <div className="border-r border-gray-300 px-2 text-right">${offInvoice.toFixed(2)}</div>
-                <div className="border-r border-gray-300 px-2 text-right">${billBack.toFixed(2)}</div>
+                {hasBillBack && <div className="border-r border-gray-300 px-2 text-right">${billBack.toFixed(2)}</div>}
                 <div className="border-r border-gray-300 px-2 text-right">{weight.toFixed(2)}</div>
-                <div className="border-r border-gray-300 px-2 text-right">{(weight * quantity).toFixed(2)}</div>
-                <div className="border-r border-gray-300 px-2 text-right">${netCost.toFixed(2)}</div>
-                <div className="px-2 text-right">${extendedCost.toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">{extendedWeight.toFixed(2)}</div>
+                <div className="border-r border-gray-300 px-2 text-right">${billedCost.toFixed(2)}</div>
+                <div className={`border-r border-gray-300 px-2 text-right ${hasCRV ? '' : 'border-r-0'}`}>${extendedCost.toFixed(2)}</div>
+                {hasCRV && <div className="border-r border-gray-300 px-2 text-right">${productCrv.toFixed(2)}</div>}
+                {hasCRV && <div className="px-2 text-right">${extendedCrv.toFixed(2)}</div>}
               </div>
             </div>
           );
@@ -309,29 +312,51 @@ export default function PurchaseOrderViewLegacy() {
 
         {/* Total Row */}
         <div className="border-b border-gray-400 bg-gray-50">
-          <div className="grid grid-cols-12 gap-0 text-sm font-bold py-2">
-            <div className="col-span-9 px-2 text-right">Total:</div>
+          <div className={`grid gap-0 text-sm font-bold py-2 ${hasCRV ? 'grid-cols-12' : hasBillBack ? 'grid-cols-11' : 'grid-cols-10'}`}>
+            <div className={`px-2 text-right ${hasCRV ? 'col-span-7' : hasBillBack ? 'col-span-6' : 'col-span-5'}`}>Total:</div>
             <div className="border-r border-gray-300 px-2 text-right">
-              {purchaseOrder.items?.reduce((sum, item) => sum + (parseFloat(item.purchaseWeight?.toString() || '0') * (item.quantityOrdered || 0)), 0).toFixed(2)}
+              {purchaseOrder.items?.reduce((sum, item) => {
+                const weight = parseFloat(item.purchaseWeight?.toString() || item.product?.weight?.toString() || '0');
+                return sum + (weight * (item.quantityOrdered || 0));
+              }, 0).toFixed(2)}
             </div>
             <div className="border-r border-gray-300 px-2 text-right">
               ${purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
                 const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
-                const netCost = listCost - offInvoice;
-                return sum + netCost;
+                const billBack = parseFloat(item.billBack?.toString() || '0');
+                const billedCost = listCost - offInvoice - billBack;
+                return sum + billedCost;
               }, 0).toFixed(2)}
             </div>
-            <div className="px-2 text-right">
+            <div className={`border-r border-gray-300 px-2 text-right ${hasCRV ? '' : 'border-r-0'}`}>
               ${purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
                 const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
-                const netCost = listCost - offInvoice;
-                return sum + (quantity * netCost);
+                const billBack = parseFloat(item.billBack?.toString() || '0');
+                const billedCost = listCost - offInvoice - billBack;
+                return sum + (quantity * billedCost);
               }, 0).toFixed(2)}
             </div>
+            {hasCRV && (
+              <div className="border-r border-gray-300 px-2 text-right">
+                ${purchaseOrder.items?.reduce((sum, item) => {
+                  const crv = parseFloat(item.product?.crv?.toString() || '0');
+                  return sum + crv;
+                }, 0).toFixed(2)}
+              </div>
+            )}
+            {hasCRV && (
+              <div className="px-2 text-right">
+                ${purchaseOrder.items?.reduce((sum, item) => {
+                  const quantity = item.quantityOrdered || 0;
+                  const crv = parseFloat(item.product?.crv?.toString() || '0');
+                  return sum + (quantity * crv);
+                }, 0).toFixed(2)}
+              </div>
+            )}
           </div>
         </div>
 

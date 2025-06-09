@@ -543,10 +543,9 @@ export class DatabaseStorage implements IStorage {
         p.case_upc,
         COALESCE(p.crv, 0) as crv,
         COALESCE(p.weight, 0) as weight,
-        c.configuration_name
+        NULL as configuration_name
       FROM purchase_order_items poi
       LEFT JOIN products p ON poi.product_id = p.product_id
-      LEFT JOIN configurations c ON poi.purchase_cfg = c.id
       WHERE poi.po_id = ${poId}
       ORDER BY poi.id
     `);
