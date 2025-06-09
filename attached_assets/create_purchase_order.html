@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Purchase Order{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="col-md-6">
+                            <h3 class="card-title"><strong>Add a Purchase Order</strong></h3>
+                        </div>
+                        <div class="float-right">
+                            <h4>PO #: {{ next_po_id }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <form method="POST" id="create-purchase-order-form">
+                {% csrf_token %}
+                
+                <!-- FIRST ROW: Vendor, Dates, Addresses -->
+                <div class="row mb-3">
+                    <!-- Vendor Selection -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_vendor" class="col-form-label">Vendor</label>
+                            <select name="vendor" id="id_vendor" class="form-control form-control-sm" required 
+                                    hx-get="{% url 'purchase_orders:load_vendor_products' %}"
+                                    hx-trigger="change"
+                                    hx-target="#vendor-products"
+                                    hx-indicator=".htmx-indicator"
+                                    hx-headers='{"Cache-Control": "no-cache"}'>
+                                <option value="">Select a vendor</option>
+                                {% for vendor in vendors %}
+                                    <option value="{{ vendor.vendor_id }}">{{ vendor.vendor_name }}</option>
+                                {% endfor %}
+                            </select>
+                            
+                            <!-- Vendor Address Display -->
+                            <div id="vendor_address" class="address-block mt-2 p-2 border rounded bg-light" style="display: none; font-size: 0.85rem;">
+                                <address class="mb-0">
+                                    <strong id="vendor_name"></strong><br>
+                                    <span id="vendor_address1"></span><br>
+                                    <span id="vendor_address2"></span><br>
+                                    <span id="vendor_city_state_zip"></span><br>
+                                    <abbr title="Phone">P:</abbr> <span id="vendor_phone"></span>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dates -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_purchase_order_date" class="col-form-label">PO Date</label>
+                            {% if form.purchase_order_date %}
+                                {{ form.purchase_order_date }}
+                            {% else %}
+                                <input type="date" id="id_purchase_order_date" name="purchase_order_date" class="form-control form-control-sm" value="{% now 'Y-m-d' %}">
+                            {% endif %}
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="id_expected_delivery_date" class="col-form-label">Expected Delivery</label>
+                            {{ form.expected_delivery_date }}
+                        </div>
+                    </div>
+                    
+                    <!-- Bill To Address -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_bill_to">Bill To</label>
+                            {{ form.bill_to }}
+                            <div id="bill_to_address" class="address-block mt-2 p-2 border rounded bg-light" style="display: none; font-size: 0.85rem;">
+                                <address class="mb-0">
+                                    <strong id="bill_to_name"></strong><br>
+                                    <span id="bill_to_address1"></span><br>
+                                    <span id="bill_to_city_state_zip"></span><br>
+                                    <abbr title="Phone">P:</abbr> <span id="bill_to_phone"></span>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ship To Address -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_ship_to">Ship To</label>
+                            {{ form.ship_to }}
+                            <div id="ship_to_address" class="address-block mt-2 p-2 border rounded bg-light" style="display: none; font-size: 0.85rem;">
+                                <address class="mb-0">
+                                    <strong id="ship_to_name"></strong><br>
+                                    <span id="ship_to_address1"></span><br>
+                                    <span id="ship_to_city_state_zip"></span><br>
+                                    <abbr title="Phone">P:</abbr> <span id="ship_to_phone"></span>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECOND ROW: Fees and Discount Terms -->
+                <div class="row mb-3">
+                    <!-- Delivery Charges -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_fee1">Delivery Charges</label>
+                            {{ form.fee1 }}
+                        </div>
+                        <div class="form-check mt-2">
+                            {{ form.deduct_bill_back }}
+                            <label class="form-check-label" for="id_deduct_bill_back">Deduct Bill Back</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Lump Sum Allowance -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_lump_sum_fee">Lump Sum Allowance</label>
+                            {{ form.lump_sum_fee }}
+                        </div>
+                        <div class="form-check mt-2">
+                            {{ form.deduct_lump_sum }}
+                            <label class="form-check-label" for="id_deduct_lump_sum">Deduct Lump Sum</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Discount Terms Display -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Payment Terms:</label>
+                            <div id="discount_display" class="form-control-plaintext">
+                                {% if vendor and vendor.early_payment_discount_rate > 0 %}
+                                    {{ vendor.early_payment_discount_rate }}% in {{ vendor.early_payment_discount_days }} days Net {{ vendor.net_payment_days }}
+                                {% elif vendor %}
+                                    Net {{ vendor.net_payment_days|default:30 }} days
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Hidden fields to store values -->
+                            <input type="hidden" name="early_payment_discount_rate" value="{% if vendor %}{{ vendor.early_payment_discount_rate|default:0 }}{% else %}0{% endif %}">
+                            <input type="hidden" name="early_payment_discount_days" value="{% if vendor %}{{ vendor.early_payment_discount_days|default:0 }}{% else %}0{% endif %}">
+                            <input type="hidden" name="net_payment_days" value="{% if vendor %}{{ vendor.net_payment_days|default:30 }}{% else %}30{% endif %}">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- THIRD ROW: Special Instructions and Notes -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_special_instructions">Special Instructions (For Vendor)</label>
+                            {{ form.special_instructions }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_notes">Notes (For internal use only)</label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purchase Order Items -->
+                <div id="vendor-products">
+                    <div class="htmx-indicator mt-4 mb-3 text-center">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                        <p>Loading vendor products...</p>
+                    </div>
+                    <!-- Products will be loaded here via HTMX after vendor selection -->
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Create Purchase Order</button>
+                        <a href="{% url 'purchase_orders:purchase_order_list' %}" class="btn btn-secondary ml-2">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ============= VENDOR FUNCTIONALITY =============
+        document.getElementById('id_vendor').addEventListener('change', function(e) {
+            const vendorId = e.target.value;
+            const vendorAddressBlock = document.getElementById('vendor_address');
+            
+            if (!vendorId) {
+                vendorAddressBlock.style.display = 'none';
+                return;
+            }
+            
+            // Fetch vendor details - use the correct URL with namespace
+            fetch(`{% url 'purchase_orders:vendor_details_api' vendor_id=0 %}`.replace('0', vendorId))
+                .then(response => response.json())
+                .then(data => {
+                    // Handle debug response format
+                    if (data.model_fields) {
+                        const fields = data.model_fields;
+                        // Update vendor address fields using the debug format
+                        document.getElementById('vendor_name').textContent = fields.vendor_name || '';
+                        document.getElementById('vendor_address1').textContent = fields.address1 || '';
+                        
+                        const address2Elem = document.getElementById('vendor_address2');
+                        if (fields.address2) {
+                            address2Elem.textContent = fields.address2;
+                            address2Elem.style.display = 'block';
+                        } else {
+                            address2Elem.style.display = 'none';
+                        }
+
+                        
+                        document.getElementById('id_vendor').addEventListener('change', function() {
+                            const timestamp = new Date().getTime();
+                            this.setAttribute('hx-get', `{% url 'purchase_orders:load_vendor_products' %}?_=${timestamp}`);
+                        });
+                        
+                        document.getElementById('vendor_city_state_zip').textContent = 
+                            `${fields.city || ''}, ${fields.state || ''} ${fields.zip_code || ''}`;
+                        document.getElementById('vendor_phone').textContent = fields.phone || '';
+                    } else {
+                        // Regular format
+                        document.getElementById('vendor_name').textContent = data.vendor_name || '';
+                        document.getElementById('vendor_address1').textContent = data.address1 || '';
+                        
+                        const address2Elem = document.getElementById('vendor_address2');
+                        if (data.address2) {
+                            address2Elem.textContent = data.address2;
+                            address2Elem.style.display = 'block';
+                        } else {
+                            address2Elem.style.display = 'none';
+                        }
+                        
+                        document.getElementById('vendor_city_state_zip').textContent = 
+                            `${data.city || ''}, ${data.state || ''} ${data.zip || ''}`;
+                        document.getElementById('vendor_phone').textContent = data.phone || '';
+                    }
+                    
+                    // Show the address block
+                    vendorAddressBlock.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching vendor details:', error);
+                    vendorAddressBlock.style.display = 'none';
+                });
+
+                
+            // Get payment terms
+            const termsDisplay = document.getElementById('discount_display');
+            if (!vendorId) {
+                termsDisplay.textContent = 'Select a vendor';
+                return;
+            }
+
+            // Fetch vendor payment terms data
+            console.log('Fetching payment terms for vendor ID:', vendorId);
+            const apiUrl = `{% url 'purchase_orders:vendor_payment_terms_api' vendor_id=0 %}`.replace('0', vendorId);
+            console.log('API URL:', apiUrl);
+
+            fetch(apiUrl)
+                .then(response => {
+                    console.log('API response status:', response.status);
+                    return response.json().then(data => {
+                        console.log('API response data:', data);
+                        return data;
+                    });
+                })
+                .then(data => {
+                    // Get discount data with detailed logging
+                    const discount = Number(data.discount_rate || 0);
+                    const epDays = Number(data.discount_days || 0);
+                    const netDays = Number(data.net_days || 0);
+                    
+                    console.log('Parsed values:', {
+                        discount: discount,
+                        epDays: epDays,
+                        netDays: netDays,
+                        discountCheck: discount > 0.001
+                    });
+                    
+                    const discountRateField = document.querySelector('input[name="early_payment_discount_rate"]');
+                    const discountDaysField = document.querySelector('input[name="early_payment_discount_days"]');
+                    const netDaysField = document.querySelector('input[name="net_payment_days"]');
+
+                    console.log('Form fields found:', {
+                        discountRateField: !!discountRateField,
+                        discountDaysField: !!discountDaysField,
+                        netDaysField: !!netDaysField
+                    });
+
+                    // Only set values if elements exist
+                    if (discountRateField) discountRateField.value = discount;
+                    if (discountDaysField) discountDaysField.value = epDays; 
+                    if (netDaysField) netDaysField.value = netDays;
+                    
+                    // Format and display payment terms
+                    if (discount > 0.001) {
+                        termsDisplay.textContent = `${discount}% in ${epDays} days Net ${netDays}`;
+                    } else {
+                        termsDisplay.textContent = `Net ${netDays} days`;
+                    }
+                    
+                    console.log('Final payment terms display:', termsDisplay.textContent);
+                })
+                .catch(error => {
+                    console.error('Error fetching vendor payment terms:', error);
+                    termsDisplay.textContent = 'Error loading payment terms';
+                });
+        });
+    
+        // ============= LOCATION ADDRESS FUNCTIONALITY =============
+        // Fetch all locations to use in the address blocks
+        const locations = [];
+        
+        // Set up location data from template
+        function setupLocationsFromTemplate() {
+            // This will be populated by Django template tags with location data
+            const locationData = {{ locations_json|safe }};
+            
+            locations.push(...locationData);
+            setupLocationSelectors();
+            updateInitialAddressBlocks();
+        }
+        
+        // Setup event listeners for location selectors
+        function setupLocationSelectors() {
+            const billToSelect = document.getElementById('id_bill_to');
+            const shipToSelect = document.getElementById('id_ship_to');
+            
+            if (billToSelect) {
+                billToSelect.addEventListener('change', function() {
+                    updateAddressBlock('bill_to', this.value);
+                });
+            }
+            
+            if (shipToSelect) {
+                shipToSelect.addEventListener('change', function() {
+                    updateAddressBlock('ship_to', this.value);
+                });
+            }
+        }
+        
+        // Update address block based on selected location
+        function updateAddressBlock(blockType, locationId) {
+            const addressBlock = document.getElementById(blockType + '_address');
+            
+            if (!locationId || locationId === '') {
+                if (addressBlock) addressBlock.style.display = 'none';
+                return;
+            }
+            
+            const location = locations.find(loc => loc.id == locationId);
+            
+            if (location && addressBlock) {
+                // Update address block fields
+                document.getElementById(blockType + '_name').textContent = location.name;
+                document.getElementById(blockType + '_address1').textContent = location.address || '';
+                document.getElementById(blockType + '_city_state_zip').textContent = 
+                    `${location.city || ''}, ${location.state || ''} ${location.zip || ''}`;
+                document.getElementById(blockType + '_phone').textContent = location.phone || '';
+                
+                // Show the address block
+                addressBlock.style.display = 'block';
+            } else {
+                if (addressBlock) addressBlock.style.display = 'none';
+            }
+        }
+        
+        // Update address blocks for initial values
+        function updateInitialAddressBlocks() {
+            const billToSelect = document.getElementById('id_bill_to');
+            const shipToSelect = document.getElementById('id_ship_to');
+            
+            if (billToSelect && billToSelect.value) {
+                updateAddressBlock('bill_to', billToSelect.value);
+            }
+            
+            if (shipToSelect && shipToSelect.value) {
+                updateAddressBlock('ship_to', shipToSelect.value);
+            }
+        }
+        
+        // Initialize location functionality
+        setupLocationsFromTemplate();
+    
+        // ===== FORM SUBMISSION VALIDATION =====
+        const form = document.getElementById('create-purchase-order-form');
+        
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                // Prevent default form submission until we validate
+                event.preventDefault();
+                
+                // Check if a vendor is selected
+                const vendorSelect = document.getElementById('id_vendor');
+                if (!vendorSelect.value) {
+                    alert('Please select a vendor first');
+                    return;
+                }
+                
+                // Check if at least one product has a quantity
+                const quantityInputs = document.querySelectorAll('.quantity-input');
+                let hasProducts = false;
+                
+                quantityInputs.forEach(input => {
+                    if (parseInt(input.value) > 0) {
+                        hasProducts = true;
+                    }
+                });
+                
+                if (!hasProducts) {
+                    alert('Please add at least one product to the purchase order');
+                    return;
+                }
+                
+                // If all validation passes, submit the form
+                console.log('Form validation passed, submitting purchase order...');
+                form.submit();
+            });
+        } else {
+            console.error('Purchase order form not found!');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+C:\py>python costless-warehouse-etl.py
+CostLessWarehouse ETL Migration
+This will migrate your complete legacy dataset
+Source: CostLessWarehouse on SQL\SQLEXPRESS
+Ready to proceed? (yes/no): yes
+2025-06-05 15:11:08,893 - INFO - ============================================================
+2025-06-05 15:11:08,894 - INFO - COSTLESSWAREHOUSE ETL MIGRATION
+2025-06-05 15:11:08,894 - INFO - Source: CostLessWarehouse on SQL\SQLEXPRESS
+2025-06-05 15:11:08,894 - INFO - ============================================================
+2025-06-05 15:11:08,947 - INFO - Connected to CostLessWarehouse on SQL\SQLEXPRESS
+2025-06-05 15:11:08,947 - ERROR - Database connection failed: invalid dsn: invalid connection option "postgresql://neondb_owner:npg_X0oPNgQqyW3s@ep-royal-surf-a6tm0hte.us-west-2.aws.neon.tech/neondb?sslmode"
+
+2025-06-05 15:11:08,948 - ERROR - Migration failed: invalid dsn: invalid connection option "postgresql://neondb_owner:npg_X0oPNgQqyW3s@ep-royal-surf-a6tm0hte.us-west-2.aws.neon.tech/neondb?sslmode"
+
+Traceback (most recent call last):
+  File "C:\py\costless-warehouse-etl.py", line 699, in <module>
+    etl.run_complete_migration()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\py\costless-warehouse-etl.py", line 616, in run_complete_migration
+    self.connect_databases()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\py\costless-warehouse-etl.py", line 57, in connect_databases
+    self.postgres_conn = psycopg2.connect(
+                         ~~~~~~~~~~~~~~~~^
+        os.getenv('DATABASE_URL'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        cursor_factory=psycopg2.extras.RealDictCursor
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Server\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg2\__init__.py", line 134, in connect
+    dsn = _ext.make_dsn(dsn, **kwargs)
+  File "C:\Users\Server\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg2\extensions.py", line 145, in make_dsn
+    parse_dsn(dsn)
+    ~~~~~~~~~^^^^^
+psycopg2.ProgrammingError: invalid dsn: invalid connection option "postgresql://neondb_owner:npg_X0oPNgQqyW3s@ep-royal-surf-a6tm0hte.us-west-2.aws.neon.tech/neondb?sslmode"
+
+
+C:\py>

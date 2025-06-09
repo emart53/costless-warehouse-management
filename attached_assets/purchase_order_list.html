@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Purchase Orders{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Purchase Orders</h1>
+                </div>
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active">Purchase Orders</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3 class="card-title">Purchase Orders</h3>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a href="{% url 'purchase_orders:create_purchase_order' %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus"></i> New Purchase Order
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter options -->
+                        <div class="card-body">
+                            <form method="GET" class="mb-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">Status:</label>
+                                            <select name="status" id="status" class="form-control form-control-sm">
+                                                <option value="">All Statuses</option>
+                                                {% for status_code, status_name in statuses %}
+                                                    <option value="{{ status_code }}" {% if current_status == status_code %}selected{% endif %}>
+                                                        {{ status_name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="vendor">Vendor:</label>
+                                            <select name="vendor" id="vendor" class="form-control form-control-sm">
+                                                <option value="">All Vendors</option>
+                                                {% for vendor in vendors %}
+                                                    <option value="{{ vendor.vendor_id }}" {% if current_vendor == vendor.vendor_id|stringformat:"s" %}selected{% endif %}>
+                                                        {{ vendor.vendor_name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary btn-sm mr-2">Filter</button>
+                                        <a href="{% url 'purchase_orders:purchase_order_list' %}" class="btn btn-secondary btn-sm">Reset</a>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Purchase Orders Table -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%">PO #</th>
+                                            <th style="width: 20%">Vendor</th>
+                                            <th style="width: 10%">Order Date</th>
+                                            <th style="width: 10%">Expected Delivery</th>
+                                            <th style="width: 10%">Status</th>
+                                            <th style="width: 15%">Total Amount</th>
+                                            <th style="width: 15%">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for po in purchase_orders %}
+                                            <tr>
+                                                <td>{{ po.purchase_order_id }}</td>
+                                                <td>{{ po.vendor.vendor_name }}</td>
+                                                <td>{{ po.purchase_order_date|date:"m/d/Y" }}</td>
+                                                <td>{{ po.expected_delivery_date|date:"m/d/Y" }}</td>
+                                                <td>
+                                                    {% if po.status == 'DRAFT' %}
+                                                        <span class="badge badge-warning">Draft</span>
+                                                    {% elif po.status == 'SUBMITTED' %}
+                                                        <span class="badge badge-info">Submitted</span>
+                                                    {% elif po.status == 'SCHEDULED' %}
+                                                        <span class="badge badge-primary">Scheduled</span>
+                                                    {% elif po.status == 'RECEIVED' %}
+                                                        <span class="badge badge-success">Received</span>
+                                                    {% elif po.status == 'CANCELLED' %}
+                                                        <span class="badge badge-danger">Cancelled</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if po.invoice_amount %}
+                                                        ${{ po.invoice_amount|floatformat:2 }}
+                                                    {% elif po.total_amount %}
+                                                        ${{ po.total_amount|floatformat:2 }}
+                                                    {% else %}
+                                                        $0.00
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'purchase_orders:purchase_order_detail' purchase_order_id=po.purchase_order_id %}"
+                                                       class="btn btn-info btn-sm">
+                                                      <i class="fas fa-eye"></i> View
+                                                    </a>
+                                                    <a href="{% url 'purchase_orders:edit_purchase_order' purchase_order_id=po.purchase_order_id %}"
+                                                        class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a href="{% url 'purchase_orders:purchase_order_pdf' purchase_order_id=po.purchase_order_id %}"
+                                                        class="btn btn-secondary btn-sm" target="_blank">
+                                                        <i class="fas fa-file-pdf"></i> Print
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="7" class="text-center">No purchase orders found.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            {% if purchase_orders.has_other_pages %}
+                                <div class="pagination mt-3">
+                                    <ul class="pagination">
+                                        {% if purchase_orders.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=1{% if current_status %}&status={{ current_status }}{% endif %}{% if current_vendor %}&vendor={{ current_vendor }}{% endif %}">First</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ purchase_orders.previous_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_vendor %}&vendor={{ current_vendor }}{% endif %}">Previous</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">First</span>
+                                            </li>
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Previous</span>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for num in purchase_orders.paginator.page_range %}
+                                            {% if purchase_orders.number == num %}
+                                                <li class="page-item active">
+                                                    <span class="page-link">{{ num }}</span>
+                                                </li>
+                                            {% elif num > purchase_orders.number|add:'-3' and num < purchase_orders.number|add:'3' %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page={{ num }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_vendor %}&vendor={{ current_vendor }}{% endif %}">{{ num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if purchase_orders.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ purchase_orders.next_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_vendor %}&vendor={{ current_vendor }}{% endif %}">Next</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ purchase_orders.paginator.num_pages }}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_vendor %}&vendor={{ current_vendor }}{% endif %}">Last</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Next</span>
+                                            </li>
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Last</span>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+  Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'layout-animations'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'navigation-override'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'oversized-images'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'publickey-credentials'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'speaker-selection'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'unoptimized-images'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'unsized-media'.
+_ @ framework-02bf391e73408bba.js:1
+  Unrecognized feature: 'pointer-lock'.
+_ @ framework-02bf391e73408bba.js:1
+  Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-02bf391e73408bba.js:1
+  Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-02bf391e73408bba.js:1
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f041413a-d119-484e-b851-5863c7b584b5:1   Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=5ffde651-1a4d-4977-86c4-ab1f2ac4a36b:1   Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+classifier.js:1 [Report Only] Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
+
+ [Report Only] Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
+
+WarehouseMaster:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710

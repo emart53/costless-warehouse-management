@@ -1,0 +1,58 @@
+                                            Table "public.products"
+       Column        |            Type             | Collation | Nullable |               Default                
+---------------------+-----------------------------+-----------+----------+--------------------------------------
+ id                  | integer                     |           | not null | nextval('products_id_seq'::regclass)
+ sku                 | character varying(50)       |           |          | 
+ upc                 | character varying(20)       |           |          | 
+ name                | text                        |           |          | 
+ description         | text                        |           |          | 
+ category            | text                        |           |          | 
+ subcategory         | text                        |           |          | 
+ brand               | text                        |           |          | 
+ unit                | text                        |           | not null | 'each'::text
+ unit_size           | text                        |           |          | 
+ case_pack           | integer                     |           |          | 1
+ min_stock_level     | integer                     |           |          | 0
+ max_stock_level     | integer                     |           |          | 
+ reorder_point       | integer                     |           |          | 
+ preferred_vendor_id | integer                     |           |          | 
+ last_cost           | numeric(10,2)               |           |          | 
+ avg_cost            | numeric(10,2)               |           |          | 
+ created_at          | timestamp without time zone |           |          | now()
+ productId           | character varying(50)       |           | not null | ''::character varying
+ product_id          | integer                     |           |          | 
+ product_description | text                        |           |          | 
+ product_name        | text                        |           |          | 
+ case_upc            | character varying(13)       |           |          | 
+ size                | text                        |           |          | 
+ discontinued_date   | date                        |           |          | 
+ status              | text                        |           |          | 'Active'::character varying
+ category_id         | integer                     |           |          | 
+ department_id       | integer                     |           |          | 
+ vendor_id           | integer                     |           |          | 
+ purchase_cost       | numeric(10,2)               |           |          | 
+ off_invoice         | numeric(10,2)               |           |          | 0
+ crv                 | numeric(6,4)                |           |          | 0
+ purchase_weight     | numeric(10,2)               |           |          | 0
+ bill_back           | numeric(10,2)               |           |          | 0.00
+ updated_at          | timestamp without time zone |           |          | now()
+ configuration_id    | integer                     |           |          | 
+Indexes:
+    "products_pkey" PRIMARY KEY, btree (id)
+    "products_product_id_key" UNIQUE CONSTRAINT, btree (product_id)
+    "products_sku_unique" UNIQUE CONSTRAINT, btree (sku)
+Foreign-key constraints:
+    "products_configuration_id_fkey" FOREIGN KEY (configuration_id) REFERENCES configurations(configuration_id)
+    "products_preferred_vendor_id_vendors_id_fk" FOREIGN KEY (preferred_vendor_id) REFERENCES vendors(id)
+Referenced by:
+    TABLE "inventory" CONSTRAINT "inventory_product_id_products_id_fk" FOREIGN KEY (product_id) REFERENCES products(id)
+    TABLE "product_prices" CONSTRAINT "product_prices_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(product_id)
+    TABLE "product_purchases" CONSTRAINT "product_purchases_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(product_id)
+    TABLE "product_transfers" CONSTRAINT "product_transfers_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(product_id)
+    TABLE "product_upcs" CONSTRAINT "product_upcs_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(product_id)
+    TABLE "purchase_order_items" CONSTRAINT "purchase_order_items_product_id_products_id_fk" FOREIGN KEY (product_id) REFERENCES products(id)
+    TABLE "standing_order_items" CONSTRAINT "standing_order_items_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(id)
+    TABLE "transactions" CONSTRAINT "transactions_product_id_products_id_fk" FOREIGN KEY (product_id) REFERENCES products(id)
+    TABLE "transfer_order_items" CONSTRAINT "transfer_order_items_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(product_id)
+
+neondb=> 

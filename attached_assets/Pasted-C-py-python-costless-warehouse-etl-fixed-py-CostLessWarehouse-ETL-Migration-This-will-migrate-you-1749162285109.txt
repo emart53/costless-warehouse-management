@@ -1,0 +1,68 @@
+C:\py>python costless-warehouse-etl-fixed.py
+CostLessWarehouse ETL Migration
+This will migrate your complete legacy dataset
+Source: CostLessWarehouse on SQL\SQLEXPRESS
+Ready to proceed? (yes/no): yes
+2025-06-05 15:24:19,043 - INFO - ============================================================
+2025-06-05 15:24:19,043 - INFO - COSTLESSWAREHOUSE ETL MIGRATION
+2025-06-05 15:24:19,043 - INFO - Source: CostLessWarehouse on SQL\SQLEXPRESS
+2025-06-05 15:24:19,044 - INFO - ============================================================
+2025-06-05 15:24:19,087 - INFO - Connected to CostLessWarehouse on SQL\SQLEXPRESS
+2025-06-05 15:24:19,957 - INFO - Connected to PostgreSQL target database
+2025-06-05 15:24:19,958 - INFO - Clearing target tables...
+2025-06-05 15:24:20,942 - INFO - Starting departments migration...
+2025-06-05 15:24:20,945 - INFO - Migrating departments from Dept table...
+2025-06-05 15:24:21,069 - INFO - Executing legacy query for departments...
+2025-06-05 15:24:21,390 - INFO - departments migration completed:
+2025-06-05 15:24:21,390 - INFO -   Processed: 7
+2025-06-05 15:24:21,391 - INFO -   Success: 7
+2025-06-05 15:24:21,391 - INFO -   Errors: 0
+2025-06-05 15:24:21,391 - INFO -   Duration: 0.3 seconds
+2025-06-05 15:24:21,391 - INFO - departments completed in 0.4 seconds
+2025-06-05 15:24:21,392 - INFO - Starting categories migration...
+2025-06-05 15:24:21,392 - INFO - Migrating categories from Category table...
+2025-06-05 15:24:21,392 - INFO - Executing legacy query for categories...
+2025-06-05 15:24:24,403 - INFO - categories migration completed:
+2025-06-05 15:24:24,404 - INFO -   Processed: 83
+2025-06-05 15:24:24,404 - INFO -   Success: 83
+2025-06-05 15:24:24,404 - INFO -   Errors: 0
+2025-06-05 15:24:24,405 - INFO -   Duration: 3.0 seconds
+2025-06-05 15:24:24,405 - INFO - categories completed in 3.0 seconds
+2025-06-05 15:24:24,405 - INFO - Starting vendors migration...
+2025-06-05 15:24:24,405 - INFO - Migrating vendors from Vendor table...
+2025-06-05 15:24:24,405 - INFO - Executing legacy query for vendors...
+2025-06-05 15:24:24,479 - ERROR - Batch error for vendors: syntax error at or near ")"
+LINE 18:         )
+                 ^
+
+2025-06-05 15:24:24,479 - ERROR - Sample data: ('07ACH', 'ACH', 'Doug Russo', '209-833-5110', 'DSC Logistics 1820 N. MacArthur Drive', 'Tracy', 'CA', '95736', 0.02, 10, 11, True, datetime.datetime(2025, 6, 5, 15, 24, 24, 407203))
+2025-06-05 15:24:24,514 - ERROR - vendors migration failed: syntax error at or near ")"
+LINE 18:         )
+                 ^
+
+2025-06-05 15:24:24,514 - ERROR - Migration failed: syntax error at or near ")"
+LINE 18:         )
+                 ^
+
+Traceback (most recent call last):
+  File "C:\py\costless-warehouse-etl-fixed.py", line 758, in <module>
+    etl.run_complete_migration()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 707, in run_complete_migration
+    step_function()
+    ~~~~~~~~~~~~~^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 214, in migrate_vendors
+    self._migrate_table_with_transform('vendors', legacy_query, postgres_insert, self._transform_vendor)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 632, in _migrate_table_with_transform
+    self._execute_batch(cursor_pg, postgres_insert, batch, table_name)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 653, in _execute_batch
+    cursor.executemany(query, batch)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+psycopg2.errors.SyntaxError: syntax error at or near ")"
+LINE 18:         )
+                 ^
+
+
+C:\py>

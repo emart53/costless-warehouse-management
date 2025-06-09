@@ -1,0 +1,49 @@
+rror initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ apa-all-frames-content-edge.js:1
+Console.js:61  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+Mt.forEach.n.<computed> @ Console.js:61
+o @ apa-all-frames-content-edge.js:1
+_app-23dd470c67b0c87e.js:37 
+            
+            
+            POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=d8cb5078-7559-463d-a9fc-61fb67a4ca1c net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+a @ _app-23dd470c67b0c87e.js:40
+m @ _app-23dd470c67b0c87e.js:40
+g @ _app-23dd470c67b0c87e.js:40
+send @ _app-23dd470c67b0c87e.js:40
+e.flush @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+e.notify @ _app-23dd470c67b0c87e.js:6
+f @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+r @ _app-23dd470c67b0c87e.js:37
+_app-23dd470c67b0c87e.js:37 
+            
+            
+            POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8bcda3ec-aa5c-4b79-bc86-515e9555e291 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+w @ _app-23dd470c67b0c87e.js:40
+(anonymous) @ _app-23dd470c67b0c87e.js:40
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+Promise.then
+a @ _app-23dd470c67b0c87e.js:40
+m @ _app-23dd470c67b0c87e.js:40
+g @ _app-23dd470c67b0c87e.js:40
+send @ _app-23dd470c67b0c87e.js:40
+e.flush @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+e.notify @ _app-23dd470c67b0c87e.js:6
+f @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+r @ _app-23dd470c67b0c87e.js:37

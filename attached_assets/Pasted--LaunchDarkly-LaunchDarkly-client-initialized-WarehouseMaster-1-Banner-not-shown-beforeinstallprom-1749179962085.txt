@@ -1,0 +1,77 @@
+[LaunchDarkly] LaunchDarkly client initialized
+WarehouseMaster:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+ [Report Only] Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
+
+classifier.js:1 [Report Only] Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
+
+93Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'battery'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'layout-animations'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'navigation-override'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'oversized-images'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'publickey-credentials'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'speaker-selection'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'unoptimized-images'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'unsized-media'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Unrecognized feature: 'pointer-lock'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-7ec4f0b4fce77512.js:1
+framework-7ec4f0b4fce77512.js:1  Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-7ec4f0b4fce77512.js:1
+WarehouseMaster:1  Access to fetch at 'https://sp.replit.com/v1/t' from origin 'https://replit.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+sp.replit.com/v1/t:1 
+            
+            
+            Failed to load resource: net::ERR_FAILED
+4hook.js:608  WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608  WARN: A component changed from controlled to uncontrolled.
+overrideMethod @ hook.js:608
+hook.js:608  WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+stallwart.build.js:1 stallwart: failed ping 1
+2classifier.js:1  CssSelectorGenerator: shadow root inferred You did not provide a root and the element is a child of Shadow DOM. This will produce a selector using ShadowRoot as a root. If you plan to use the selector using document as a root (e.g. `document.querySelector`), it will not work as intended.
+tpe @ classifier.js:1
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+4classifier.js:1  CssSelectorGenerator: shadow root inferred You did not provide a root and the element is a child of Shadow DOM. This will produce a selector using ShadowRoot as a root. If you plan to use the selector using document as a root (e.g. `document.querySelector`), it will not work as intended.
+tpe @ classifier.js:1
+workspace_iframe.html:32  Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32  Unrecognized feature: 'battery'.
+workspace_iframe.html:32  Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32  Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32  Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32  Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32  Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32  Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32  Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32  Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32  Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32  Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32  Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32  Allow attribute will take precedence over 'allowpaymentrequest'.
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 5
+stallwart.build.js:1 stallwart: session stalled
+WarehouseMaster:1  Tracking Prevention blocked a resource from loading https://td.doubleclick.net/td/rul/11411994397?random=1749154710316&cv=11&fst=1749154710316&fmt=3&bg=ffffff&guid=ON&async=1&gtm=45be5641h2v9171242957za200&gcd=13l3l3l3l1l1&dma=0&tag_exp=101509157~103116026~103200004~103233427~103351869~103351871~104661466~104661468&u_w=5120&u_h=1440&url=https%3A%2F%2Freplit.com%2F%40edmr10%2FWarehouseMaster&ref=https%3A%2F%2Fwww.bing.com%2F&hn=www.googleadservices.com&frm=0&tiba=-%20Replit&npa=0&pscdl=noapi&auid=1935060221.1748873214&fledge=1&data=event%3Dgtag.config.

@@ -1,0 +1,97 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# nyc test coverage
+.nyc_output
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Replit specific
+.replit
+replit.nix
+
+# Backup files
+backups/
+*.backup
+*.bak
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Migration logs
+*_migration_*.log
+authentic_*.log
+costless_*.log
+csv_etl_*.log
+
+# Large data files (keep structure but not data)
+*.csv
+*.xlsx
+*.sql
+*.pdf
+
+# Keep essential schema files
+!schema.sql
+!backup-transfer-overrides.sql
+
+# ETL and batch processing files
+batch_*
+add-*.js
+complete-*.js
+import-*.js
+load-*.js
+fix-*.js
+bulk-*.js
+cleanup-*.js
+*-etl.py
+*migration*.py
+*-rollup*.js
+*-loader.js

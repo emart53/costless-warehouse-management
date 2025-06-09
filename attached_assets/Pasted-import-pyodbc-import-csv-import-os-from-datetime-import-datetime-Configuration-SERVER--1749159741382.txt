@@ -1,0 +1,210 @@
+import pyodbc
+import csv
+import os
+from datetime import datetime
+
+# Configuration
+SERVER     = "SQL\\SQLEXPRESS"
+DATABASE   = "CostLessWarehouse"
+OUTPUT_DIR = "extracted_data"
+
+# Ensure output directory exists
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# Initialize logger
+log_file = open(os.path.join(OUTPUT_DIR, "extract_log.txt"), "w", encoding="utf-8")
+def log(message):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    entry = f"{timestamp} - {message}\n"
+    print(entry, end="")
+    log_file.write(entry)
+    log_file.flush()
+
+# Connect to SQL Server
+try:
+    log(f"Connecting to {DATABASE} on {SERVER}")
+    conn = pyodbc.connect(
+        f"DRIVER={{SQL Server}};SERVER={SERVER};DATABASE={DATABASE};Trusted_Connection=yes;"
+    )
+    cursor = conn.cursor()
+    log("Connection successful")
+except Exception as e:
+    log(f"Connection error: {e}")
+    log_file.close()
+    raise
+
+# --- Purchase Order Extraction ---
+# SQL for headers with target column aliases
+HEADER_QUERY = """
+SELECT
+    p.POID                           AS purchase_order_id,
+    p.PODate                         AS purchase_order_date,
+    p.VendorID                       AS vendor_id,
+    CASE WHEN p.Received = 1 THEN 'RECEIVED' ELSE 'PENDING' END AS status,
+    p.Notes                          AS notes,
+    p.BillTo                         AS bill_to_id,
+    p.ShipTo                         AS ship_to_id,
+    p.ExpectedDelivery               AS expected_delivery_date,
+    COALESCE(p.Fee1, 0)              AS fee1,
+    COALESCE(p.BackHaul, 0)          AS backhaul_fee,
+    COALESCE(p.DeductBH, 0)          AS deduct_backhaul,
+    COALESCE(p.LumpSum, 0)           AS lump_sum_fee,
+    COALESCE(p.DeductLump, 0)        AS deduct_lump_sum,
+    COALESCE(p.DeductBB, 0)          AS deduct_bill_back,
+    COALESCE(v.Discount, 0)          AS discount,
+    COALESCE(v.EPDays, 0)            AS ep_days,
+    COALESCE(v.NetDays, 0)           AS net_days
+FROM PurchaseOrders p
+LEFT JOIN Vendor v ON p.VendorID = v.VendorID
+WHERE p.POID > 20955
+"""
+
+# SQL for items with aliases matching target schema
+ITEM_QUERY = """
+SELECT
+    pi.POProductID   AS purchase_order_item_id,
+    pi.POID          AS purchase_order_id,
+    pi.ProductID     AS product_id,
+    pi.POQty         AS quantity,
+    pi.WhseShipCfg   AS configuration_name,
+    pi.POShipCfg     AS configuration_name,   -- alias if alternate name
+    pi.WhseShipCost  AS purchase_cost,
+    pi.OffInvoice    AS off_invoice,
+    pi.BillBack      AS bill_back,
+    pi.CRV           AS purchase_crv,
+    pi.WhseShipWt    AS purchase_weight,
+    pi.AddDate       AS created_at,
+    pi.ShipCaseQty   AS purchase_case_qty
+FROM POProducts pi
+WHERE pi.POID BETWEEN ? AND ?
+ORDER BY pi.POID, pi.POProductID
+"""
+
+# Extract purchase order headers
+header_csv = os.path.join(OUTPUT_DIR, "purchase_order_header.csv")
+log("Extracting purchase order headers...")
+cursor.execute(HEADER_QUERY)
+with open(header_csv, 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow([col[0] for col in cursor.description])
+    count = 0
+    for batch in iter(lambda: cursor.fetchmany(500), []):
+        writer.writerows(batch)
+        count += len(batch)
+    log(f"Purchase headers extracted: {count}")
+
+# Extract purchase order items in batches
+item_csv = os.path.join(OUTPUT_DIR, "purchase_order_items.csv")
+log("Extracting purchase order items in batches...")
+cursor.execute("SELECT MIN(POID), MAX(POID) FROM POProducts WHERE POID > 20955")
+min_poid, max_poid = cursor.fetchone()
+batch_size = 5000
+with open(item_csv, 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    # write header row
+    cursor.execute(ITEM_QUERY, (min_poid, min(min_poid+batch_size-1, max_poid)))
+    writer.writerow([col[0] for col in cursor.description])
+    total_items = 0
+    for start in range(min_poid, max_poid+1, batch_size):
+        end = min(start + batch_size - 1, max_poid)
+        log(f"Batch POID {start}-{end}")
+        cursor.execute(ITEM_QUERY, (start, end))
+        batch_count = 0
+        for batch in iter(lambda: cursor.fetchmany(500), []):
+            writer.writerows(batch)
+            batch_count += len(batch)
+            total_items += len(batch)
+        log(f"  Items in this batch: {batch_count}")
+    log(f"Total purchase items extracted: {total_items}")
+
+# --- Adjustment Extraction ---
+# Inspect tables for dynamic mapping
+log("Inspecting adjustment tables for dynamic field mapping...")
+cursor.execute("SELECT TOP 1 * FROM Adjustments")
+adjustment_cols = [c[0] for c in cursor.description]
+cursor.execute("SELECT TOP 1 * FROM AdjustProducts")
+adjustprod_cols = [c[0] for c in cursor.description]
+cursor.execute("SELECT TOP 1 * FROM AdjustmentCodes")
+adjcodes_cols = [c[0] for c in cursor.description]
+
+# Build and run adjustment types extraction
+types_csv = os.path.join(OUTPUT_DIR, "adjustment_types.csv")
+type_fields = []
+if "ID" in adjcodes_cols:
+    type_fields.append("ID AS adjustment_type_id")
+if "AdjCode" in adjcodes_cols:
+    type_fields.append("AdjCode AS description")
+type_fields += ["'UNKNOWN' AS inventory_effect","'ACTIVE' AS status"]
+types_query = f"SELECT {', '.join(type_fields)} FROM AdjustmentCodes"
+log("Extracting adjustment types...")
+cursor.execute(types_query)
+with open(types_csv, 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow([col[0] for col in cursor.description])
+    count = 0
+    for batch in iter(lambda: cursor.fetchmany(500), []):
+        writer.writerows(batch)
+        count += len(batch)
+    log(f"Adjustment types extracted: {count}")
+
+# Build and run adjustment headers extraction
+hdr_csv = os.path.join(OUTPUT_DIR, "adjustment_header.csv")
+hdr_fields = []
+if "AdjustId" in adjustment_cols:
+    hdr_fields.append("AdjustId AS adjustment_id")
+if "AdjustDate" in adjustment_cols:
+    hdr_fields.append("AdjustDate AS adjustment_date")
+if "AdjustTypeID" in adjustment_cols:
+    hdr_fields.append("AdjustTypeID")
+else:
+    hdr_fields.append("0 AS adjustment_type_id")
+if "AdjustedBy" in adjustment_cols:
+    hdr_fields.append("AdjustedBy AS created_by")
+if "Confirmed" in adjustment_cols:
+    hdr_fields.append("Confirmed AS confirmed_status")
+    hdr_fields.append("CASE WHEN Confirmed=1 THEN 'CONFIRMED' ELSE 'PENDING' END AS status")
+hdr_fields += ["'WAREHOUSE' AS location","'' AS notes"]
+hdr_query = f"SELECT {', '.join(hdr_fields)} FROM Adjustments"
+log("Extracting adjustment headers...")
+cursor.execute(hdr_query)
+with open(hdr_csv, 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow([col[0] for col in cursor.description])
+    count = 0
+    for batch in iter(lambda: cursor.fetchmany(500), []):
+        writer.writerows(batch)
+        count += len(batch)
+    log(f"Adjustment headers extracted: {count}")
+
+# Extraction of adjustment items with FK mapping
+items_csv = os.path.join(OUTPUT_DIR, "adjustment_items.csv")
+items_query = """
+SELECT
+    ap.AdjProdId   AS adjustment_item_id,
+    ap.AdjID       AS adjustment_id,
+    ap.ProductId   AS product_id,
+    (COALESCE(ap.AdjIn,0)-COALESCE(ap.AdjOut,0)) AS quantity,
+    COALESCE(ac.ID,0) AS adjustment_type_id,
+    ap.AdjCode     AS adjustment_type,
+    COALESCE(cfg.configuration_id,0) AS configuration_id,
+    ''             AS notes,
+    ap.AdjDate     AS added_date
+FROM AdjustProducts ap
+LEFT JOIN AdjustmentCodes ac ON ap.AdjCode = ac.AdjCode
+LEFT JOIN configurations cfg ON cfg.configuration_name='REGULAR'
+"""
+log("Extracting adjustment items...")
+cursor.execute(items_query)
+with open(items_csv, 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow([col[0] for col in cursor.description])
+    count = 0
+    for batch in iter(lambda: cursor.fetchmany(500), []):
+        writer.writerows(batch)
+        count += len(batch)
+    log(f"Adjustment items extracted: {count}")
+
+# Cleanup
+conn.close()
+log("All extractions complete")
+log_file.close()

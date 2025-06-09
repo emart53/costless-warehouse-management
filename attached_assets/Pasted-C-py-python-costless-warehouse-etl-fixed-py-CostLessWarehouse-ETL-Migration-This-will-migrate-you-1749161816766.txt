@@ -1,0 +1,55 @@
+C:\py>python costless-warehouse-etl-fixed.py
+CostLessWarehouse ETL Migration
+This will migrate your complete legacy dataset
+Source: CostLessWarehouse on SQL\SQLEXPRESS
+Ready to proceed? (yes/no): yes
+2025-06-05 15:16:38,834 - INFO - ============================================================
+2025-06-05 15:16:38,835 - INFO - COSTLESSWAREHOUSE ETL MIGRATION
+2025-06-05 15:16:38,835 - INFO - Source: CostLessWarehouse on SQL\SQLEXPRESS
+2025-06-05 15:16:38,836 - INFO - ============================================================
+2025-06-05 15:16:38,888 - INFO - Connected to CostLessWarehouse on SQL\SQLEXPRESS
+2025-06-05 15:16:39,576 - INFO - Connected to PostgreSQL target database
+2025-06-05 15:16:39,577 - INFO - Clearing target tables...
+2025-06-05 15:16:40,372 - INFO - Starting departments migration...
+2025-06-05 15:16:40,375 - INFO - Migrating departments from Dept table...
+2025-06-05 15:16:40,375 - INFO - Executing legacy query for departments...
+2025-06-05 15:16:40,724 - INFO - departments migration completed:
+2025-06-05 15:16:40,725 - INFO -   Processed: 7
+2025-06-05 15:16:40,725 - INFO -   Success: 7
+2025-06-05 15:16:40,725 - INFO -   Errors: 0
+2025-06-05 15:16:40,726 - INFO -   Duration: 0.3 seconds
+2025-06-05 15:16:40,726 - INFO - departments completed in 0.4 seconds
+2025-06-05 15:16:40,726 - INFO - Starting categories migration...
+2025-06-05 15:16:40,727 - INFO - Migrating categories from Category table...
+2025-06-05 15:16:40,727 - INFO - Executing legacy query for categories...
+2025-06-05 15:16:43,660 - ERROR - Batch error for categories: insert or update on table "categories" violates foreign key constraint "categories_department_id_fkey"
+DETAIL:  Key (department_id)=(0) is not present in table "departments".
+
+2025-06-05 15:16:43,660 - ERROR - Sample data: (1, 'No Category Assigned', 1, True, datetime.datetime(2025, 6, 5, 15, 16, 40, 730000), datetime.datetime(2025, 6, 5, 15, 16, 40, 730003))
+2025-06-05 15:16:43,697 - ERROR - categories migration failed: insert or update on table "categories" violates foreign key constraint "categories_department_id_fkey"
+DETAIL:  Key (department_id)=(0) is not present in table "departments".
+
+2025-06-05 15:16:43,697 - ERROR - Migration failed: insert or update on table "categories" violates foreign key constraint "categories_department_id_fkey"
+DETAIL:  Key (department_id)=(0) is not present in table "departments".
+
+Traceback (most recent call last):
+  File "C:\py\costless-warehouse-etl-fixed.py", line 748, in <module>
+    etl.run_complete_migration()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 697, in run_complete_migration
+    step_function()
+    ~~~~~~~~~~~~~^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 147, in migrate_categories
+    self._migrate_table_with_transform('categories', legacy_query, postgres_insert, self._transform_category)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 622, in _migrate_table_with_transform
+    self._execute_batch(cursor_pg, postgres_insert, batch, table_name)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\py\costless-warehouse-etl-fixed.py", line 643, in _execute_batch
+    cursor.executemany(query, batch)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+psycopg2.errors.ForeignKeyViolation: insert or update on table "categories" violates foreign key constraint "categories_department_id_fkey"
+DETAIL:  Key (department_id)=(0) is not present in table "departments".
+
+
+C:\py>

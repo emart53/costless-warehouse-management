@@ -1,0 +1,509 @@
+{% load static %}
+{% load purchase_order_filters %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Purchase Order #{{ purchase_order.purchase_order_id }}</title>
+  <style>
+    @page {
+        size: letter landscape;
+        margin: 0.5cm;
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        line-height: 1.3;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .wrapper {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Header styling */
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+    }
+    
+    .company-logo {
+        width: 15%;
+        font-size: 16px;
+        vertical-align: top;
+    }
+    
+    .company-address {
+        width: 35%;
+        vertical-align: top;
+    }
+    
+    .po-title {
+        width: 25%;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .po-number {
+        width: 25%;
+        text-align: right;
+        vertical-align: top;
+    }
+    
+    /* Info section styling */
+    .info-section {
+        margin-bottom: 10px;
+    }
+    
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+    }
+    
+    .info-table td {
+        vertical-align: top;
+        padding: 5px;
+        border: 1px solid #ddd;
+        font-size: 10px;
+    }
+    
+    .vendor-info {
+        width: 20%;
+    }
+    
+    .instructions-box {
+        border: 1px solid #ddd;
+        padding: 5px;
+        margin-top: 5px;
+        min-height: 50px;
+    }
+    
+    .box-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    /* Order items table */
+    table.order-items {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+        table-layout: fixed;
+    }
+    
+    table.order-items tr {
+        page-break-inside: avoid;
+    }
+    
+    table.order-items th {
+        background-color: #f2f2f2;
+        border: 1px solid #ddd;
+        padding: 4px;
+        text-align: left;
+        font-weight: bold;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+    
+    table.order-items td {
+        border: 1px solid #ddd;
+        padding: 4px;
+        text-align: left;
+        font-size: 11px;
+    }
+    
+    .items-total-row td {
+        font-weight: bold;
+        border-top: 2px solid #000;
+    }
+    
+    /* Signature and fees section */
+    .signature-section {
+        page-break-inside: avoid;
+    }
+    
+    .signature-wrapper {
+        float: left;
+        width: 35%;
+    }
+    
+    .signature-line {
+        margin-top: 20px;
+        border-top: 1px solid #000;
+        padding-top: 5px;
+        position: relative;
+    }
+    
+    .signature-text {
+        position: absolute;
+        top: -10px;
+        left: 0;
+        background: white;
+        padding: 0 5px;
+    }
+    
+    .date-line {
+        margin-top: 20px;
+        border-top: 1px solid #000;
+        padding-top: 5px;
+        position: relative;
+        width: 50%;
+    }
+    
+    .date-text {
+        position: absolute;
+        top: -10px;
+        left: 0;
+        background: white;
+        padding: 0 5px;
+    }
+    
+    .fees-wrapper {
+        float: right;
+        width: 65%;
+    }
+    
+    .fees-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .fees-table td {
+        padding: 2px 5px;
+    }
+    
+    .fees-label {
+        font-weight: bold;
+    }
+    
+    .fees-checkbox {
+        width: 20px;
+        text-align: center;
+        border: 1px solid #000;
+    }
+    
+    /* Footer */
+    .footer {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 10px;
+        color: #777;
+        page-break-inside: avoid;
+    }
+    
+    /* Fix for numeric column overlap */
+    .numeric-cell {
+        text-align: right;
+        white-space: nowrap;
+    }
+    
+    /* Clear float */
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+    
+    /* Highlighted cells */
+    .highlight-row td {
+        background-color: #fffde7;
+    }
+    
+    /* Early payment discount highlight */
+    .early-payment-row td {
+        background-color: #e8f5e9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <!-- Header Section -->
+    <div>
+      <table class="header-table">
+        <tr>
+          <td class="company-logo">
+            <strong>COST LESS</strong><br>
+            <strong>FOOD COMPANY</strong>
+          </td>
+          <td class="company-address">
+            2905 Railroad Avenue<br>
+            Ceres, CA 95307<br>
+            209-537-4472<br>
+            209-537-4689 fax
+          </td>
+          <td class="po-title">
+            Purchase Order
+          </td>
+          <td class="po-number">
+            #: {{ purchase_order.purchase_order_id }}<br>
+            Page 1 of 1
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <!-- Info Section -->
+    <div class="info-section">
+      <table class="info-table">
+        <tr>
+          <td class="vendor-info">
+            <strong>{{ vendor.vendor_name }}</strong><br>
+            {{ vendor.address }}{% if vendor.address2 %}<br>{{ vendor.address2 }}{% endif %}<br>
+            {{ vendor.city }}, {{ vendor.state }} {{ vendor.zip }}<br>
+            {% if vendor.phone %}{{ vendor.phone }}{% endif %}<br>
+            {% if vendor.fax %}{{ vendor.fax }}{% endif %}
+            {% if vendor.contact_person %}<br>{{ vendor.contact_person }}{% endif %}
+          </td>
+          <td style="width: 25%;">
+            <div style="margin-bottom: 5px;">
+              <table style="width: 100%; font-size: 10px;">
+                <tr>
+                  <td style="width: 50%; padding: 1px;"><strong>Purchase Order Date</strong></td>
+                  <td style="padding: 1px;">{{ purchase_order.purchase_order_date|date:"n/j/Y" }}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 1px;"><strong>Expected Delivery Date:</strong></td>
+                  <td style="padding: 1px;">{{ purchase_order.expected_delivery_date|date:"n/j/Y" }}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 1px;"><strong>Terms:</strong></td>
+                  <td style="padding: 1px;">
+                    {% if has_payment_terms %}
+                      {% if ep_days > 0 %}
+                        {{ ep_days }} days {{ early_payment_discount_rate }}% / 
+                      {% endif %}
+                      Net {{ net_days }}
+                    {% else %}
+                      {{ purchase_order.terms|default:"0.00%" }} {{ purchase_order.terms_type|default:"Net" }}
+                    {% endif %}
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="instructions-box">
+              <div class="box-label">Special Instructions:</div>
+              <div>{{ purchase_order.special_instructions|default:"" }}</div>
+            </div>
+          </td>
+          <td style="width: 20%;">
+            <div>
+              <strong>Bill To:</strong> {{ bill_to.location_name }}<br>
+              {{ bill_to.address }}<br>
+              {{ bill_to.city }}, {{ bill_to.state }} {{ bill_to.zip }}<br>
+              {% if bill_to.phone %}{{ bill_to.phone }}{% endif %}
+            </div>
+          </td>
+          <td style="width: 20%;">
+            <div>
+              <strong>ShipTo:</strong> {{ ship_to.location_name }}<br>
+              {{ ship_to.address }}<br>
+              {{ ship_to.city }}, {{ ship_to.state }} {{ ship_to.zip }}<br>
+              {% if ship_to.phone %}{{ ship_to.phone }}{% endif %}<br>
+              {% if ship_to.contact_person %}{{ ship_to.contact_person }}{% endif %}
+            </div>
+          </td>
+          <td style="width: 15%;">
+            <div style="padding: 2px;">
+              <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 1px;"><strong>BackHaul:</strong></td>
+                  <td style="text-align: right; padding: 1px;">${{ purchase_order.backhaul_fee|default:"0.00"|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 1px;"><strong>Lump Sum:</strong></td>
+                  <td style="text-align: right; padding: 1px;">${{ purchase_order.lump_sum_fee|default:"0.00"|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 1px;"><strong>Delivery Charge:</strong></td>
+                  <td style="text-align: right; padding: 1px;">${{ purchase_order.delivery_charge|default:"0.00"|floatformat:2 }}</td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <!-- Items Table - Using HTML attributes for more control -->
+    <table border="1" cellspacing="0" cellpadding="3" style="width: 100%; margin-bottom: 15px; border-collapse: collapse; table-layout: fixed;">
+      <tr style="background-color: #f2f2f2; font-weight: bold;">
+        <td width="4%" align="center">Qty</td>
+        <td width="5%">UPC</td>
+        <td width="{% if total_crv > 0 %}24{% else %}29{% endif %}%">Item Description</td>
+        <td width="8%" align="right">List Cost</td>
+        <td width="8%" align="right">Off Invoice</td>
+        <td width="7%" align="right">Bill Back</td>
+        <td width="8%" align="right">Total Weight</td>
+        <td width="8%" align="right">Billed Cost</td>
+        <td width="10%" align="right">Extended Cost</td>
+        {% if total_crv > 0 %}
+        <td width="5%" align="right">CRV</td>
+        <td width="7%" align="right">Extended CRV</td>
+        {% endif %}
+      </tr>
+      
+      {% for item in line_items %}
+      {% if item.quantity > 0 %}
+      <tr>
+        <td align="center">{{ item.quantity }}</td>
+        <td>{{ item.product.case_upc|slice:"-5:" }}</td>
+        <td>{{ item.product.brand }} {{ item.product.product_name }} {{ item.product.case_pack }}/{{ item.product.size }}</td>
+        <td align="right">${{ item.purchase_cost|floatformat:2 }}</td>
+        <td align="right">${{ item.off_invoice|floatformat:2 }}</td>
+        <td align="right">${{ item.bill_back|floatformat:2 }}</td>
+        <td align="right">
+          {% if item.extended_weight %}
+            {{ item.extended_weight|floatformat:2 }}
+          {% elif item.pk in calculated_weights %}
+            {{ calculated_weights|get_item:item.pk|floatformat:2 }}
+          {% elif item.purchase_weight %}
+            {{ item.purchase_weight|multiply:item.quantity|floatformat:2 }}
+          {% else %}
+            0.00
+          {% endif %}
+        </td>
+        <td align="right">${{ item.net_cost|default:"0.00"|floatformat:2 }}</td>
+        <td align="right">${{ item.extended_net_cost|default:"0.00"|floatformat:2 }}</td>
+        {% if total_crv > 0 %}
+        <td align="right">
+          {% if item.purchase_crv %}${{ item.purchase_crv|floatformat:2 }}{% else %}$0.00{% endif %}
+        </td>
+        <td align="right">
+          {% if item.extended_crv %}
+            ${{ item.extended_crv|floatformat:2 }}
+          {% else %}
+            $0.00
+          {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+      {% endif %}
+      {% endfor %}
+      
+      <!-- Totals Row -->
+      <tr style="font-weight: bold; border-top: 2px solid #000;">
+        <td align="center">{{ total_quantity }}</td>
+        <td colspan="5"></td>
+        <td align="right">{{ total_weight|default:"0"|floatformat:2 }}</td>
+        <td></td>
+        <td align="right">${{ subtotal|floatformat:2 }}</td>
+        {% if total_crv > 0 %}
+        <td></td>
+        <td align="right">${{ total_crv|default:"0.00"|floatformat:2 }}</td>
+        {% endif %}
+      </tr>
+    </table>
+    
+    <!-- Signature and Fees Section -->
+    <div class="signature-section clearfix">
+      <div class="signature-wrapper">
+        <div class="signature-line">
+          <div class="signature-text">Received By:</div>
+        </div>
+        <div class="date-line">
+          <div class="date-text">Date:</div>
+        </div>
+      </div>
+      
+      <div class="fees-wrapper">
+        <table class="fees-table">
+          <tr>
+            <td class="fees-label">Discount:</td>
+            <td style="text-align: right;">
+              {% if has_header_discount %}
+                ${{ header_discount_amount|floatformat:2 }}
+              {% else %}
+                $0.00
+              {% endif %}
+            </td>
+            <td class="fees-checkbox"></td>
+            <td>
+              {% if has_header_discount %}
+                {{ header_discount_rate }}% Order Discount
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="fees-label">Backhaul Allowance:</td>
+            <td style="text-align: right;">{% if purchase_order.backhaul_fee %}-{% endif %} ${{ purchase_order.backhaul_fee|default:"0.00"|floatformat:2 }}</td>
+            <td class="fees-checkbox">
+              {% if purchase_order.deduct_backhaul %}☑{% endif %}
+            </td>
+            <td>Back Haul will be Deducted</td>
+          </tr>
+          <tr>
+            <td class="fees-label">Lump Sum Allowance:</td>
+            <td style="text-align: right;">{% if purchase_order.lump_sum_fee %}-{% endif %} ${{ purchase_order.lump_sum_fee|default:"0.00"|floatformat:2 }}</td>
+            <td class="fees-checkbox">
+              {% if purchase_order.deduct_lump_sum %}☑{% endif %}
+            </td>
+            <td>Lump Sum will be Deducted</td>
+          </tr>
+          <tr>
+            <td class="fees-label">Delivery Charge:</td>
+            <td style="text-align: right;">{% if purchase_order.delivery_charge %}-{% endif %} ${{ purchase_order.delivery_charge|default:"0.00"|floatformat:2 }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="fees-label">Net Extended CRV:</td>
+            <td style="text-align: right;">
+              {% if total_crv and total_crv > 0 %}
+                ${{ total_crv|floatformat:2 }}
+              {% else %}
+                $0.00
+              {% endif %}
+            </td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="fees-label">Net Invoice Cost:</td>
+            <td style="text-align: right;">${{ net_invoice_cost|default:subtotal|floatformat:2 }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="fees-label">Total Bill Back:</td>
+            <td style="text-align: right;">${{ total_bill_back|default:"0.00"|floatformat:2 }}</td>
+            <td class="fees-checkbox">
+              {% if bill_back_deducted %}☑{% endif %}
+            </td>
+            <td>Bill Back will be Deducted</td>
+          </tr>
+          
+          {% if early_payment_discount > 0 %}
+          <tr class="early-payment-row">
+            <td class="fees-label">Early Payment Discount ({{ early_payment_discount_rate }}%):</td>
+            <td style="text-align: right;">-${{ early_payment_discount|floatformat:2 }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr class="early-payment-row">
+            <td class="fees-label">Early Payment Total:</td>
+            <td style="text-align: right;">${{ early_payment_total|floatformat:2 }}</td>
+            <td colspan="2">(If paid within {{ ep_days }} days)</td>
+          </tr>
+          {% endif %}
+          
+          <tr class="highlight-row">
+            <td class="fees-label" style="font-size: 14px;">Net Total Cost:</td>
+            <td style="text-align: right; font-weight: bold; font-size: 14px;">${{ total|floatformat:2 }}</td>
+            <td colspan="2"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      {{ purchase_order.purchase_order_date|date:"l, F j, Y" }}
+    </div>
+  </div>
+</body>
+</html>

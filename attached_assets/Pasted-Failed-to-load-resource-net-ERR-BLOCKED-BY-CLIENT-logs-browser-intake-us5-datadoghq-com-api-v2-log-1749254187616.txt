@@ -1,0 +1,202 @@
+Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=389903e6-4227-45f5-a1c8-69010ec35816:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+apa-all-frames-content-edge.js:1  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ apa-all-frames-content-edge.js:1
+Console.js:61  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+Mt.forEach.n.<computed> @ Console.js:61
+_app-23dd470c67b0c87e.js:37 
+            
+            
+            POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=3719db33-851a-4f91-99e9-855f5ef7a139 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+a @ _app-23dd470c67b0c87e.js:40
+m @ _app-23dd470c67b0c87e.js:40
+g @ _app-23dd470c67b0c87e.js:40
+send @ _app-23dd470c67b0c87e.js:40
+e.flush @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+e.notify @ _app-23dd470c67b0c87e.js:6
+f @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+r @ _app-23dd470c67b0c87e.js:37
+_app-23dd470c67b0c87e.js:37 
+            
+            
+            POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8ba5870e-a61e-463a-8222-f801290433df net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+w @ _app-23dd470c67b0c87e.js:40
+(anonymous) @ _app-23dd470c67b0c87e.js:40
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+Promise.then
+a @ _app-23dd470c67b0c87e.js:40
+m @ _app-23dd470c67b0c87e.js:40
+g @ _app-23dd470c67b0c87e.js:40
+send @ _app-23dd470c67b0c87e.js:40
+e.flush @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+e.notify @ _app-23dd470c67b0c87e.js:6
+f @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+r @ _app-23dd470c67b0c87e.js:37
+apa-all-frames-content-edge.js:1  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ apa-all-frames-content-edge.js:1
+Console.js:61  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+Mt.forEach.n.<computed> @ Console.js:61
+o @ apa-all-frames-content-edge.js:1
+_app-23dd470c67b0c87e.js:37 
+            
+            
+            POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=06b7b12e-5dfc-4a64-b6ba-e2e464a78bc3 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+a @ _app-23dd470c67b0c87e.js:40
+m @ _app-23dd470c67b0c87e.js:40
+g @ _app-23dd470c67b0c87e.js:40
+send @ _app-23dd470c67b0c87e.js:40
+e.flush @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+e.notify @ _app-23dd470c67b0c87e.js:6
+f @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+r @ _app-23dd470c67b0c87e.js:37
+setTimeout
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+a @ _app-23dd470c67b0c87e.js:1
+notifyBeforeAddMessage @ _app-23dd470c67b0c87e.js:1
+e.push @ _app-23dd470c67b0c87e.js:6
+e.addOrUpdate @ _app-23dd470c67b0c87e.js:6
+e.add @ _app-23dd470c67b0c87e.js:6
+add @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+e.notify @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+e.notify @ _app-23dd470c67b0c87e.js:9
+handleLog @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+e.log @ _app-23dd470c67b0c87e.js:9
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+n.value @ _app-23dd470c67b0c87e.js:1
+e.info @ _app-23dd470c67b0c87e.js:9
+info @ _app-23dd470c67b0c87e.js:9
+R @ 1009-9430e2cb1489475c.js:1
+info @ 3722-e6ba2bc825eaa9a0.js:1
+(anonymous) @ 3722-e6ba2bc825eaa9a0.js:1
+ei @ 3722-e6ba2bc825eaa9a0.js:1
+em @ 3722-e6ba2bc825eaa9a0.js:1
+(anonymous) @ 3722-e6ba2bc825eaa9a0.js:1
+apply @ 3722-e6ba2bc825eaa9a0.js:1
+(anonymous) @ 9425-870eaf18de20d12c.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+n @ main-e6eddc0cd7926363.js:1
+u @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+(anonymous) @ 9425-870eaf18de20d12c.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+n @ main-e6eddc0cd7926363.js:1
+u @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+u @ 3629-fc1aa2688d317b9f.js:1
+(anonymous) @ 3629-fc1aa2688d317b9f.js:1
+r @ _app-23dd470c67b0c87e.js:37
+setTimeout
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+Object.assign.isScheduled @ 3629-fc1aa2688d317b9f.js:1
+(anonymous) @ 9425-870eaf18de20d12c.js:1
+n @ 9425-870eaf18de20d12c.js:1
+r @ _app-23dd470c67b0c87e.js:37
+_app-23dd470c67b0c87e.js:37 
+            
+            
+            POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A574a9ee2&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=cc619980-ca36-4da4-977f-bc6b891c6db4 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+w @ _app-23dd470c67b0c87e.js:40
+(anonymous) @ _app-23dd470c67b0c87e.js:40
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+Promise.then
+a @ _app-23dd470c67b0c87e.js:40
+m @ _app-23dd470c67b0c87e.js:40
+g @ _app-23dd470c67b0c87e.js:40
+send @ _app-23dd470c67b0c87e.js:40
+e.flush @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+(anonymous) @ _app-23dd470c67b0c87e.js:6
+e.notify @ _app-23dd470c67b0c87e.js:6
+f @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+r @ _app-23dd470c67b0c87e.js:37
+setTimeout
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+a @ _app-23dd470c67b0c87e.js:1
+notifyBeforeAddMessage @ _app-23dd470c67b0c87e.js:1
+e.push @ _app-23dd470c67b0c87e.js:6
+e.addOrUpdate @ _app-23dd470c67b0c87e.js:6
+e.add @ _app-23dd470c67b0c87e.js:6
+add @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+e.notify @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+e.notify @ _app-23dd470c67b0c87e.js:9
+handleLog @ _app-23dd470c67b0c87e.js:9
+(anonymous) @ _app-23dd470c67b0c87e.js:9
+e.log @ _app-23dd470c67b0c87e.js:9
+d @ _app-23dd470c67b0c87e.js:1
+(anonymous) @ _app-23dd470c67b0c87e.js:1
+n.value @ _app-23dd470c67b0c87e.js:1
+e.info @ _app-23dd470c67b0c87e.js:9
+info @ _app-23dd470c67b0c87e.js:9
+R @ 1009-9430e2cb1489475c.js:1
+info @ 3722-e6ba2bc825eaa9a0.js:1
+(anonymous) @ 3722-e6ba2bc825eaa9a0.js:1
+ei @ 3722-e6ba2bc825eaa9a0.js:1
+em @ 3722-e6ba2bc825eaa9a0.js:1
+(anonymous) @ 3722-e6ba2bc825eaa9a0.js:1
+apply @ 3722-e6ba2bc825eaa9a0.js:1
+(anonymous) @ 9425-870eaf18de20d12c.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+n @ main-e6eddc0cd7926363.js:1
+u @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+(anonymous) @ 9425-870eaf18de20d12c.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+n @ main-e6eddc0cd7926363.js:1
+u @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+(anonymous) @ main-e6eddc0cd7926363.js:1
+u @ 3629-fc1aa2688d317b9f.js:1
+(anonymous) @ 3629-fc1aa2688d317b9f.js:1
+r @ _app-23dd470c67b0c87e.js:37
+setTimeout
+(anonymous) @ _app-23dd470c67b0c87e.js:37
+Object.assign.isScheduled @ 3629-fc1aa2688d317b9f.js:1
+(anonymous) @ 9425-870eaf18de20d12c.js:1
+n @ 9425-870eaf18de20d12c.js:1
+r @ _app-23dd470c67b0c87e.js:37

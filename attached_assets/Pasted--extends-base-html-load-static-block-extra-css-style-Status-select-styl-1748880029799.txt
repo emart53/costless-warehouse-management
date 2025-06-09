@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* Status select styles */
+    .status-select {
+        font-weight: bold;
+        border-width: 2px;
+        min-width: 150px;
+    }
+
+    .status-select[data-status="active"] {
+        background-color: #d4edda !important;
+        border-color: #28a745 !important;
+        color: #155724 !important;
+    }
+
+    .status-select[data-status="inactive"] {
+        background-color: #fff3cd !important;
+        border-color: #ffc107 !important;
+        color: #856404 !important;
+    }
+
+    .status-select[data-status="discontinued"] {
+        background-color: #f8d7da !important;
+        border-color: #dc3545 !important;
+        color: #721c24 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item active">Edit Product #{{ product.product_id }}</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <!-- Card Header -->
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Edit Product</h5>
+            <span id="calc-indicator" class="text-muted small">Active</span>
+        </div>
+
+        <form method="POST" action="{% url 'products:edit_product' product.product_id %}" id="product-form">
+            {% csrf_token %}
+            <div class="card-body">
+                {% if error_message %}
+                    <div class="alert alert-danger">{{ error_message }}</div>
+                {% endif %}
+
+                {% include 'products/partials/product_info.html' %}
+                {% include 'products/partials/purchase_details.html' %}
+                {% include 'products/partials/transfer_details.html' %}
+                {% include 'products/partials/pricing_section.html' %}
+                {% include 'products/partials/upc_section.html' %}
+            </div>
+
+            <div class="card-footer d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Save Product</button>
+                <a href="{% url 'products:product_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    {% include 'products/partials/override_modal.html' %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Your existing product_calcs.js -->
+<script src="{% static 'js/product_calcs.js' %}"></script>
+
+<!-- Simple status color handling -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Status color handling
+    const statusSelect = document.getElementById('id_status');
+    
+    function updateStatusColor() {
+        if (statusSelect) {
+            const status = statusSelect.value;
+            statusSelect.setAttribute('data-status', status);
+        }
+    }
+    
+    // Set initial color and update on change
+    updateStatusColor();
+    if (statusSelect) {
+        statusSelect.addEventListener('change', updateStatusColor);
+    }
+});
+</script>
+<!-- Status handling and fixes -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Status color handling
+    const statusSelect = document.getElementById('id_status');
+    
+    function updateStatusColor() {
+        if (statusSelect) {
+            const status = statusSelect.value;
+            statusSelect.setAttribute('data-status', status);
+        }
+    }
+    
+    // Set initial color and update on change
+    updateStatusColor();
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            updateStatusColor();
+            console.log('Status changed to:', this.value); // Debug log
+        });
+        
+        // Make sure the select is not disabled
+        statusSelect.disabled = false;
+        statusSelect.removeAttribute('readonly');
+    }
+    
+    // Fix GM% decimal places
+    const gmField = document.getElementById('gm_percentage');
+    if (gmField) {
+        // Format existing value
+        const currentValue = parseFloat(gmField.value);
+        if (!isNaN(currentValue)) {
+            gmField.value = currentValue.toFixed(1);
+        }
+        
+        // Override any other scripts that might be setting the value
+        const originalSetAttribute = gmField.setAttribute;
+        gmField.setAttribute = function(name, value) {
+            if (name === 'value') {
+                const numValue = parseFloat(value);
+                if (!isNaN(numValue)) {
+                    value = numValue.toFixed(1);
+                }
+            }
+            originalSetAttribute.call(this, name, value);
+        };
+    }
+});
+</script>
+{% endblock %}

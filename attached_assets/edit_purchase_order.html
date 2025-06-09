@@ -1,0 +1,662 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Purchase Order #{{ purchase_order.purchase_order_id }}{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="col-md-6">
+                            <h3 class="card-title"><strong>Edit Purchase Order</strong></h3>
+                        </div>
+                        <div class="float-right">
+                            <h4>PO #: {{ purchase_order.purchase_order_id }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <form method="POST" id="edit-purchase-order-form">
+                {% csrf_token %}
+                
+                <!-- FIRST ROW: Vendor, Dates, Addresses -->
+                <div class="row mb-3">
+                    <!-- Vendor Selection (read-only in edit mode) -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_vendor" class="col-form-label">Vendor</label>
+                            <input type="text" class="form-control form-control-sm" value="{{ purchase_order.vendor.vendor_name }}" readonly>
+                            <input type="hidden" name="vendor" value="{{ purchase_order.vendor.vendor_id }}">
+                            
+                            <!-- Vendor Address Display -->
+                            <div id="vendor_address" class="address-block mt-2 p-2 border rounded bg-light" style="font-size: 0.85rem;">
+                                <address class="mb-0">
+                                    <strong>{{ purchase_order.vendor.vendor_name }}</strong><br>
+                                    <span>{{ purchase_order.vendor.address1 }}</span><br>
+                                    {% if purchase_order.vendor.address2 and purchase_order.vendor.address2|length > 0 %}
+                                    <span>{{ purchase_order.vendor.address2 }}</span><br>
+                                    {% endif %}
+                                    <span>{{ purchase_order.vendor.city }}, {{ purchase_order.vendor.state }} {{ purchase_order.vendor.zip_code }}</span><br>
+                                    <abbr title="Phone">P:</abbr> <span>{{ purchase_order.vendor.phone }}</span>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dates -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_purchase_order_date" class="col-form-label">PO Date</label>
+                            {{ form.purchase_order_date }}
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="id_expected_delivery_date" class="col-form-label">Expected Delivery</label>
+                            {{ form.expected_delivery_date }}
+                        </div>
+                    </div>
+                    
+                    <!-- Bill To Address -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_bill_to">Bill To</label>
+                            {{ form.bill_to }}
+                            <div id="bill_to_address" class="address-block mt-2 p-2 border rounded bg-light" style="font-size: 0.85rem;">
+                                <address class="mb-0">
+                                    <strong>{{ purchase_order.bill_to.location_name }}</strong><br>
+                                    <span>{{ purchase_order.bill_to.address }}</span><br>
+                                    <span>{{ purchase_order.bill_to.city }}, {{ purchase_order.bill_to.state }} {{ purchase_order.bill_to.zip }}</span><br>
+                                    <abbr title="Phone">P:</abbr> <span>{{ purchase_order.bill_to.phone }}</span>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ship To Address -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_ship_to">Ship To</label>
+                            {{ form.ship_to }}
+                            <div id="ship_to_address" class="address-block mt-2 p-2 border rounded bg-light" style="font-size: 0.85rem;">
+                                <address class="mb-0">
+                                    <strong>{{ purchase_order.ship_to.location_name }}</strong><br>
+                                    <span>{{ purchase_order.ship_to.address }}</span><br>
+                                    <span>{{ purchase_order.ship_to.city }}, {{ purchase_order.ship_to.state }} {{ purchase_order.ship_to.zip }}</span><br>
+                                    <abbr title="Phone">P:</abbr> <span>{{ purchase_order.ship_to.phone }}</span>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECOND ROW: Fees and Discount Terms -->
+                <div class="row mb-3">
+                    <!-- Delivery Charges -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_fee1">Delivery Charges</label>
+                            {{ form.fee1 }}
+                        </div>
+                        <div class="form-check mt-2">
+                            {{ form.deduct_bill_back }}
+                            <label class="form-check-label" for="id_deduct_bill_back">Deduct Bill Back</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Lump Sum Allowance -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="id_lump_sum_fee">Lump Sum Allowance</label>
+                            {{ form.lump_sum_fee }}
+                        </div>
+                        <div class="form-check mt-2">
+                            {{ form.deduct_lump_sum }}
+                            <label class="form-check-label" for="id_deduct_lump_sum">Deduct Lump Sum</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Terms Display (Read-Only) -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Payment Terms:</label>
+                            <div class="form-control-plaintext" id="discount_display">
+                                {% if purchase_order.discount and purchase_order.discount > 0 %}
+                                    {{ purchase_order.discount }}% in {{ purchase_order.ep_days }} days Net {{ purchase_order.net_days }}
+                                {% else %}
+                                    Net {{ purchase_order.net_days|default:30 }} days
+                                {% endif %}
+                            </div>
+                            <!-- Hidden fields to store values from vendor -->
+                            <input type="hidden" name="discount" value="{{ purchase_order.discount|default:0 }}">
+                            <input type="hidden" name="ep_days" value="{{ purchase_order.ep_days|default:0 }}">
+                            <input type="hidden" name="net_days" value="{{ purchase_order.net_days|default:30 }}">
+                        </div>
+                    </div>
+                
+                <!-- THIRD ROW: Special Instructions and Notes -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_special_instructions">Special Instructions (For Vendor)</label>
+                            {{ form.special_instructions }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_notes">Notes (For internal use only)</label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Items Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Line Items</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">Delete</th>
+                                        <th style="width: 8%;" class="text-center">Quantity</th>
+                                        <th style="width: 30%;">Product</th>
+                                        <th style="width: 8%;">Config</th>
+                                        <th style="width: 8%;" class="text-right">Unit Cost</th>
+                                        <th style="width: 8%;" class="text-right">Off Invoice</th>
+                                        <th style="width: 8%;" class="text-right">Bill Back</th>
+                                        <th style="width: 8%;" class="text-right">Net Cost</th>
+                                        <th style="width: 10%;" class="text-right">Ext. Cost</th>
+                                        {% if has_crv %}
+                                        <th style="width: 8%;" class="text-right">CRV</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody id="line-items">
+                                    {% for item in line_items %}
+                                    <tr id="item-row-{{ item.product.product_id }}">
+                                        <td class="text-center">
+                                            <input type="checkbox" name="delete_{{ item.product.product_id }}" 
+                                                   id="delete_{{ item.product.product_id }}" value="1">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="quantity_{{ item.product.product_id }}" 
+                                                   id="quantity_{{ item.product.product_id }}" 
+                                                   class="form-control form-control-sm quantity-input" 
+                                                   value="{{ item.quantity }}" min="0"
+                                                   data-net-cost="{{ item.net_cost }}"
+                                                   data-weight="{{ item.purchase_weight|default:'0' }}"
+                                                   data-crv="{{ item.purchase_crv|default:'0' }}"
+                                                   onchange="updateExtendedCost(this, {{ item.product.product_id }})">
+                                        </td>
+                                        <td class="small">
+                                            {{ item.product.case_upc|default:""|slice:"-5:" }} 
+                                            {{ item.product.brand }} {{ item.product.product_name }} 
+                                            {{ item.product.case_pack }}/{{ item.product.size }}
+                                        </td>
+                                        <td>
+                                            {% if item.purchase_cfg_id %}
+                                                {% with config=item.purchase_cfg %}
+                                                    {{ config.configuration_name|default:"Default" }}
+                                                {% endwith %}
+                                            {% elif item.purchase_cfg %}
+                                                {{ item.purchase_cfg.configuration_name|default:"Default" }}
+                                            {% else %}
+                                                Default
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-right">${{ item.purchase_cost|floatformat:2 }}</td>
+                                        <td class="text-right">${{ item.off_invoice|default_if_none:"0.00"|floatformat:2 }}</td>
+                                        <td class="text-right">${{ item.bill_back|default_if_none:"0.00"|floatformat:2 }}</td>
+                                        <td class="text-right">${{ item.net_cost|floatformat:2 }}</td>
+                                        <td class="text-right ext-cost" id="ext_cost_{{ item.product.product_id }}">
+                                            ${{ item.extended_net_cost|floatformat:2 }}
+                                        </td>
+                                        {% if has_crv %}
+                                        <td class="text-right">${{ item.purchase_crv|default_if_none:"0.00"|floatformat:2 }}</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="{% if has_crv %}10{% else %}9{% endif %}" class="text-center">
+                                            No line items found.
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-light">
+                                        <td colspan="8" class="text-right"><strong>Total:</strong></td>
+                                        <td class="text-right" id="total_ext_cost"><strong>${{ subtotal|floatformat:2 }}</strong></td>
+                                        {% if has_crv %}
+                                        <td></td>
+                                        {% endif %}
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <!-- Add New Product Section -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="new_product">Add Product</label>
+                                    <select name="new_product" id="new_product" class="form-control select2">
+                                        <option value="">Select a product to add</option>
+                                        {% for product in available_products %}
+                                        <option value="{{ product.product_id }}">
+                                            {{ product.case_upc|slice:"-5:" }} {{ product.brand }} 
+                                            {{ product.product_name }} {{ product.case_pack }}/{{ product.size }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="new_quantity">Quantity</label>
+                                    <input type="number" name="new_quantity" id="new_quantity" 
+                                           class="form-control" value="1" min="1">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group" style="margin-top: 32px;">
+                                    <button type="button" id="add-product-btn" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Add Product
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                
+<!-- Order Summary with Debug Info -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h3 class="card-title">Order Summary</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 offset-md-6">
+                <table class="table table-sm">
+                    <tr>
+                        <td class="text-right">Extended Cost:</td>
+                        <td class="text-right" id="summary_subtotal">
+                            {% if subtotal %}${{ subtotal|floatformat:2 }}{% else %}$0.00{% endif %}
+                        </td>
+                    </tr>
+                    {% if purchase_order.discount and purchase_order.discount > 0 %}
+                    <tr id="summary_discount_row">
+                        <td class="text-right">Early Pay Discount ({{ purchase_order.discount|default:0 }}%):</td>
+                        <td class="text-right text-danger" id="summary_discount">
+                            {% if early_payment_discount %}-${{ early_payment_discount|floatformat:2 }}{% else %}-$0.00{% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if purchase_order.lump_sum_fee and purchase_order.lump_sum_fee > 0 %}
+                    <tr id="summary_lump_sum_row">
+                        <td class="text-right">Lump Sum Discount:</td>
+                        <td class="text-right text-danger" id="summary_lump_sum">
+                            {% if purchase_order.deduct_lump_sum %}-{% endif %}
+                            ${{ purchase_order.lump_sum_fee|default:"0.00"|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if purchase_order.fee1 and purchase_order.fee1 > 0 %}
+                    <tr id="summary_fee1_row">
+                        <td class="text-right">Delivery Charge:</td>
+                        <td class="text-right" id="summary_fee1">
+                            ${{ purchase_order.fee1|default:"0.00"|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if total_crv and total_crv > 0 %}
+                    <tr id="summary_crv_row">
+                        <td class="text-right">Net Extended CRV:</td>
+                        <td class="text-right" id="summary_crv">
+                            ${{ total_crv|default:0|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr class="table-active">
+                        <td class="text-right"><strong>Standard Invoice Amount:</strong></td>
+                        <td class="text-right" id="summary_total">
+                            <strong>{% if total %}${{ total|floatformat:2 }}{% else %}$0.00{% endif %}</strong>
+                        </td>
+                    </tr>
+                    {% if purchase_order.discount and purchase_order.discount > 0 %}
+                    <tr id="summary_early_payment_row" class="table-success">
+                        <td class="text-right"><strong>Early Payment Amount:</strong></td>
+                        <td class="text-right" id="summary_early_payment">
+                            <strong>{% if early_payment_total %}${{ early_payment_total|floatformat:2 }}{% else %}$0.00{% endif %}</strong>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                <!-- Form Actions -->
+                <div class="row mt-4 mb-5">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{% url 'purchase_orders:purchase_order_detail' purchase_order_id=purchase_order.purchase_order_id %}" 
+                           class="btn btn-secondary ml-2">Cancel</a>
+                        
+                        <!-- Status change buttons -->
+                        {% if purchase_order.status == 'DRAFT' %}
+                        <button type="button" class="btn btn-success float-right ml-2" 
+                                onclick="changeStatus('SUBMITTED')">Submit to Vendor</button>
+                        {% elif purchase_order.status == 'SUBMITTED' %}
+                        <button type="button" class="btn btn-primary float-right ml-2" 
+                                onclick="changeStatus('SCHEDULED')">Schedule Delivery</button>
+                        {% elif purchase_order.status == 'SCHEDULED' %}
+                        <button type="button" class="btn btn-info float-right ml-2" 
+                                onclick="changeStatus('RECEIVED')">Mark as Received</button>
+                        {% endif %}
+                        
+                        {% if purchase_order.status != 'RECEIVED' and purchase_order.status != 'CANCELLED' %}
+                        <button type="button" class="btn btn-danger float-right" 
+                                onclick="if(confirm('Are you sure you want to cancel this purchase order?')) changeStatus('CANCELLED')">
+                            Cancel PO
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select2 initialization if available
+        if ($.fn.select2) {
+            $('.select2').select2();
+        }
+        
+        // ============= LOCATION ADDRESS FUNCTIONALITY =============
+        // Fetch all locations to use in the address blocks
+        const locations = [];
+        
+        // Set up location data from template
+        function setupLocationsFromTemplate() {
+            // This will be populated by Django template tags with location data
+            const locationData = {{ locations_json|safe }};
+            
+            locations.push(...locationData);
+            setupLocationSelectors();
+            updateInitialAddressBlocks();
+        }
+        
+        // Setup event listeners for location selectors
+        function setupLocationSelectors() {
+            const billToSelect = document.getElementById('id_bill_to');
+            const shipToSelect = document.getElementById('id_ship_to');
+            
+            if (billToSelect) {
+                billToSelect.addEventListener('change', function() {
+                    updateAddressBlock('bill_to', this.value);
+                });
+            }
+            
+            if (shipToSelect) {
+                shipToSelect.addEventListener('change', function() {
+                    updateAddressBlock('ship_to', this.value);
+                });
+            }
+        }
+        
+        // Update address block based on selected location
+        function updateAddressBlock(blockType, locationId) {
+            const addressBlock = document.getElementById(blockType + '_address');
+            
+            if (!locationId || locationId === '') {
+                if (addressBlock) addressBlock.style.display = 'none';
+                return;
+            }
+            
+            const location = locations.find(loc => loc.id == locationId);
+            
+            if (location && addressBlock) {
+                // Update address block fields
+                document.getElementById(blockType + '_name').textContent = location.name;
+                document.getElementById(blockType + '_address1').textContent = location.address || '';
+                document.getElementById(blockType + '_city_state_zip').textContent = 
+                    `${location.city || ''}, ${location.state || ''} ${location.zip || ''}`;
+                document.getElementById(blockType + '_phone').textContent = location.phone || '';
+                
+                // Show the address block
+                addressBlock.style.display = 'block';
+            } else {
+                if (addressBlock) addressBlock.style.display = 'none';
+            }
+        }
+        
+        // Update address blocks for initial values
+        function updateInitialAddressBlocks() {
+            const billToSelect = document.getElementById('id_bill_to');
+            const shipToSelect = document.getElementById('id_ship_to');
+            
+            if (billToSelect && billToSelect.value) {
+                updateAddressBlock('bill_to', billToSelect.value);
+            }
+            
+            if (shipToSelect && shipToSelect.value) {
+                updateAddressBlock('ship_to', shipToSelect.value);
+            }
+        }
+        
+        // Function to update extended costs and totals
+        window.updateExtendedCost = function(input, productId) {
+            const quantity = parseInt(input.value) || 0;
+            const netCost = parseFloat(input.getAttribute('data-net-cost')) || 0;
+            const extCost = quantity * netCost;
+            
+            // Update extended cost cell
+            const extCostCell = document.getElementById(`ext_cost_${productId}`);
+            if (extCostCell) {
+                extCostCell.textContent = `$${extCost.toFixed(2)}`;
+            }
+            
+            // Recalculate total extended cost
+            updateTotals();
+        };
+        
+        // Function to update all totals
+        function updateTotals() {
+            // Recalculate subtotal from all line items
+            let subtotal = 0;
+            const extCostCells = document.querySelectorAll('.ext-cost');
+            extCostCells.forEach(cell => {
+                const value = parseFloat(cell.textContent.replace('$', '')) || 0;
+                subtotal += value;
+            });
+            
+            // Get current values for calculations
+            const discountRate = parseFloat(document.getElementById('id_discount').value) || 0;
+            const lumpSumFee = parseFloat(document.getElementById('id_lump_sum_fee').value) || 0;
+            const deductLumpSum = document.getElementById('id_deduct_lump_sum').checked;
+            const fee1 = parseFloat(document.getElementById('id_fee1').value) || 0;
+            
+            // Get CRV total if available
+            let crvTotal = 0;
+            const crvCell = document.getElementById('summary_crv');
+            if (crvCell) {
+                crvTotal = parseFloat(crvCell.textContent.replace('$', '')) || 0;
+            }
+            
+            // Calculate discount amount
+            const discountAmount = subtotal * (discountRate / 100);
+            
+            // Calculate total
+            let total = subtotal;
+            if (deductLumpSum) {
+                total -= lumpSumFee;
+            }
+            total += fee1 + crvTotal;
+            
+            // Calculate early payment total
+            const earlyPaymentTotal = total - discountAmount;
+            
+            // Update summary displays
+            document.getElementById('summary_subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('total_ext_cost').textContent = `$${subtotal.toFixed(2)}`;
+            
+            if (discountRate > 0) {
+                document.getElementById('summary_discount').textContent = `-$${discountAmount.toFixed(2)}`;
+                document.getElementById('summary_discount_row').style.display = 'table-row';
+                document.getElementById('summary_early_payment_row').style.display = 'table-row';
+            } else {
+                document.getElementById('summary_discount_row').style.display = 'none';
+                document.getElementById('summary_early_payment_row').style.display = 'none';
+            }
+            
+            if (lumpSumFee > 0) {
+                document.getElementById('summary_lump_sum').textContent = 
+                    `${deductLumpSum ? '-' : ''}$${lumpSumFee.toFixed(2)}`;
+                document.getElementById('summary_lump_sum_row').style.display = 'table-row';
+            } else {
+                document.getElementById('summary_lump_sum_row').style.display = 'none';
+            }
+            
+            if (fee1 > 0) {
+                document.getElementById('summary_fee1').textContent = `$${fee1.toFixed(2)}`;
+                document.getElementById('summary_fee1_row').style.display = 'table-row';
+            } else {
+                document.getElementById('summary_fee1_row').style.display = 'none';
+            }
+            
+            document.getElementById('summary_total').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('summary_early_payment').textContent = `$${earlyPaymentTotal.toFixed(2)}`;
+        }
+        
+        // Initialize location functionality
+        try {
+            setupLocationsFromTemplate();
+        } catch (error) {
+            console.error('Error initializing locations:', error);
+        }
+        
+        // Add event listeners for real-time calculations
+        document.getElementById('id_discount').addEventListener('input', updateTotals);
+        document.getElementById('id_lump_sum_fee').addEventListener('input', updateTotals);
+        document.getElementById('id_deduct_lump_sum').addEventListener('change', updateTotals);
+        document.getElementById('id_fee1').addEventListener('input', updateTotals);
+        
+        // Initialize extended costs
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            const productId = input.id.replace('quantity_', '');
+            updateExtendedCost(input, productId);
+        });
+        
+        // Initial calculation of totals
+        updateTotals();
+    });
+    
+    // Function to change PO status
+    function changeStatus(status) {
+        // Create form for status change
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'purchase_orders:update_po_status' purchase_order_id=purchase_order.purchase_order_id %}";
+        
+        // Add CSRF token
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        form.appendChild(csrfInput);
+        
+        // Add status input
+        const statusInput = document.createElement('input');
+        statusInput.type = 'hidden';
+        statusInput.name = 'status';
+        statusInput.value = status;
+        form.appendChild(statusInput);
+        
+        // Submit the form
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Direct fix for extended cost calculation - runs immediately
+(function() {
+  console.log('Running immediate ext cost calculation');
+  
+  // Calculate all extended costs initially
+  document.querySelectorAll('.quantity-input').forEach(input => {
+    const productId = input.id.replace('quantity_', '');
+    const quantity = parseInt(input.value) || 0;
+    const netCost = parseFloat(input.getAttribute('data-net-cost')) || 0;
+    const extCost = quantity * netCost;
+    
+    console.log(`Product ${productId}: Quantity=${quantity}, NetCost=${netCost}, ExtCost=${extCost}`);
+    
+    // Find and update the ext cost cell
+    const extCostCell = document.getElementById(`ext_cost_${productId}`);
+    if (extCostCell) {
+      extCostCell.textContent = `$${extCost.toFixed(2)}`;
+      console.log(`Updated ext_cost_${productId} to $${extCost.toFixed(2)}`);
+    } else {
+      console.warn(`Could not find ext_cost_${productId} element`);
+    }
+  });
+
+  // Also ensure extended costs are updated when quantities change
+  document.querySelectorAll('.quantity-input').forEach(input => {
+    input.addEventListener('change', function() {
+      const productId = this.id.replace('quantity_', '');
+      const quantity = parseInt(this.value) || 0;
+      const netCost = parseFloat(this.getAttribute('data-net-cost')) || 0;
+      const extCost = quantity * netCost;
+      
+      // Update extended cost cell
+      const extCostCell = document.getElementById(`ext_cost_${productId}`);
+      if (extCostCell) {
+        extCostCell.textContent = `$${extCost.toFixed(2)}`;
+      }
+      
+      // Recalculate totals
+      updateOrderTotals();
+    });
+  });
+
+  // Function to update order totals
+  function updateOrderTotals() {
+    // Calculate total from all ext costs
+    let total = 0;
+    document.querySelectorAll('.ext-cost').forEach(cell => {
+      const value = parseFloat(cell.textContent.replace('$', '')) || 0;
+      total += value;
+    });
+    
+    // Update total display
+    const totalElement = document.getElementById('total_ext_cost');
+    if (totalElement) {
+      totalElement.textContent = `$${total.toFixed(2)}`;
+    }
+    
+    // Update summary subtotal
+    const summarySubtotal = document.getElementById('summary_subtotal');
+    if (summarySubtotal) {
+      summarySubtotal.textContent = `$${total.toFixed(2)}`;
+    }
+  }
+  
+  // Calculate initial totals
+  updateOrderTotals();
+})();
+</script>
+{% endblock %}
