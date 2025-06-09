@@ -478,7 +478,7 @@ export function ComprehensiveProductEdit({
               </div>
               
               <div>
-                <Label htmlFor="crv">CRV (per unit)</Label>
+                <Label htmlFor="crv">Purchase CRV</Label>
                 <Input
                   id="crv"
                   type="number"
