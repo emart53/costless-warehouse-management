@@ -755,18 +755,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const { pool } = await import("./db.js");
       
-      // First try to get from product_transfers table with configuration name lookup
+      // First try to get from product_transfers table
       const transferResult = await pool.query(`
         SELECT 
-          pt.product_transfer_id as id,
-          pt.transfer_case_qty as transferCaseQty,
-          pt.transfer_unit_ct as transferUnitCt,
-          pt.transfer_weight as transferWeight,
-          pt.transfer_crv as transferCrv,
-          c.configuration_name as transferCfg
-        FROM product_transfers pt
-        LEFT JOIN configurations c ON pt.trans_cfg = c.configuration_id
-        WHERE pt.product_id = $1
+          product_transfer_id as id,
+          transfer_case_qty as transferCaseQty,
+          transfer_unit_ct as transferUnitCt,
+          transfer_weight as transferWeight,
+          transfer_crv as transferCrv,
+          trans_cfg as transferCfg
+        FROM product_transfers 
+        WHERE product_id = $1
       `, [id]);
       
       // If no transfer data in related table, get from main products table
@@ -797,11 +796,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Create a properly formatted response object with camelCase fields
           const formattedResult = {
             id: result.id,
-            transferCaseQty: parseInt(result.transfercaseqty) || 1,
-            transferUnitCt: parseInt(result.transferunitct) || 1, 
-            transferWeight: parseFloat(result.transferweight) || 0,
-            transferCrv: parseFloat(result.transfercrv) || 0,
-            transferCfg: result.transfercfg
+            transferCaseQty: parseInt(result.transferCaseQty) || 1,
+            transferUnitCt: parseInt(result.transferUnitCt) || 1, 
+            transferWeight: parseFloat(result.transferWeight) || 0,
+            transferCrv: parseFloat(result.transferCrv) || 0,
+            transferCfg: result.transferCfg
           };
           res.json(formattedResult);
         } else {
