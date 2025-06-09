@@ -498,7 +498,11 @@ export function ComprehensiveProductEdit({
           </Card>
 
           {/* Transfer Configuration Card - 20% width */}
-          <Card className="lg:w-[20%] flex-shrink-0 min-w-0 border-2 border-blue-200 bg-blue-50">
+          <Card className={`lg:w-[20%] flex-shrink-0 min-w-0 ${
+            formData.transferConfig.transferCaseQty !== formData.purchaseConfig.purchaseCaseQty 
+              ? 'border-2 border-orange-200 bg-orange-50' 
+              : 'border border-gray-200 bg-white'
+          }`}>
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Truck className="h-5 w-5" />
@@ -815,25 +819,28 @@ export function ComprehensiveProductEdit({
             <div className="space-y-2">
               <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Pricing Analysis</h4>
               <div className="text-xs space-y-1">
-                <div>Transfer Cost: <span className="font-medium">${(() => {
-                  if (formData.transferConfig.transferCostOverride) {
-                    return formData.transferConfig.transferCost.toFixed(2);
-                  }
+                {(() => {
                   const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                   const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                  return (netCost * ratio).toFixed(2);
-                })()}</span> {formData.transferConfig.transferCostOverride && <span className="text-orange-600 text-xs">(Override)</span>}</div>
-                <div>Unit Cost: <span className="font-medium">${(() => {
-                  const transferCost = formData.transferConfig.transferCostOverride ? 
-                    formData.transferConfig.transferCost :
-                    (() => {
-                      const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
-                      const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                      return netCost * ratio;
-                    })();
+                  const autoCalculatedCost = netCost * ratio;
+                  const actualTransferCost = formData.transferConfig.transferCostOverride ? formData.transferConfig.transferCost : autoCalculatedCost;
                   const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
-                  return unitCount > 0 ? (transferCost / unitCount).toFixed(4) : transferCost.toFixed(4);
-                })()}</span></div>
+                  const autoCalculatedUnitCost = unitCount > 0 ? (autoCalculatedCost / unitCount) : autoCalculatedCost;
+                  const actualUnitCost = unitCount > 0 ? (actualTransferCost / unitCount) : actualTransferCost;
+                  const variance = actualTransferCost - autoCalculatedCost;
+                  
+                  return (
+                    <>
+                      <div>Auto-Calc Transfer: <span className="font-medium text-blue-600">${autoCalculatedCost.toFixed(2)}</span></div>
+                      <div>Actual Transfer: <span className="font-medium">${actualTransferCost.toFixed(2)}</span> {formData.transferConfig.transferCostOverride && <span className="text-orange-600 text-xs">(Override)</span>}</div>
+                      {formData.transferConfig.transferCostOverride && (
+                        <div>Cost Variance: <span className={`font-medium ${variance >= 0 ? 'text-red-600' : 'text-green-600'}`}>${variance >= 0 ? '+' : ''}${variance.toFixed(2)}</span></div>
+                      )}
+                      <div>Auto-Calc Unit: <span className="font-medium text-blue-600">${autoCalculatedUnitCost.toFixed(4)}</span></div>
+                      <div>Actual Unit Cost: <span className="font-medium">${actualUnitCost.toFixed(4)}</span></div>
+                    </>
+                  );
+                })()}
                 <div>Retail Price: <span className="font-medium">${formData.retailPrice.toFixed(2)}</span></div>
                 <div className="border-t pt-1">Gross Margin: <span className={`font-medium ${(() => {
                   const transferCost = formData.transferConfig.transferCostOverride ? 
