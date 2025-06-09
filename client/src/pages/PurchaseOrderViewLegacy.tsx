@@ -320,7 +320,7 @@ export default function PurchaseOrderViewLegacy() {
                 return sum + (weight * (item.quantityOrdered || 0));
               }, 0).toFixed(2)}
             </div>
-            <div className="border-r border-gray-300 px-2 text-right">
+            <div className="border-r border-gray-300 px-1 text-right">
               ${purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
@@ -330,7 +330,7 @@ export default function PurchaseOrderViewLegacy() {
                 return sum + billedCost;
               }, 0).toFixed(2)}
             </div>
-            <div className={`border-r border-gray-300 px-2 text-right ${hasCRV ? '' : 'border-r-0'}`}>
+            <div className={`border-r border-gray-300 px-1 text-right ${hasCRV ? '' : 'border-r-0'}`}>
               ${purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
@@ -341,7 +341,7 @@ export default function PurchaseOrderViewLegacy() {
               }, 0).toFixed(2)}
             </div>
             {hasCRV && (
-              <div className="border-r border-gray-300 px-2 text-right">
+              <div className="border-r border-gray-300 px-1 text-right">
                 ${purchaseOrder.items?.reduce((sum, item) => {
                   const crv = parseFloat(item.product?.crv?.toString() || '0');
                   return sum + crv;
@@ -349,7 +349,7 @@ export default function PurchaseOrderViewLegacy() {
               </div>
             )}
             {hasCRV && (
-              <div className="px-2 text-right">
+              <div className="px-1 text-right">
                 ${purchaseOrder.items?.reduce((sum, item) => {
                   const quantity = item.quantityOrdered || 0;
                   const crv = parseFloat(item.product?.crv?.toString() || '0');
@@ -382,12 +382,10 @@ export default function PurchaseOrderViewLegacy() {
               <div className="flex justify-between">
                 <span>Backhaul Allowance:</span>
                 <span>$0.00</span>
-                <span className="text-xs ml-2">Back Haul will be Deducted</span>
               </div>
               <div className="flex justify-between">
                 <span>Lump Sum Allowance:</span>
                 <span>${totals.lumpSumAllowance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                <span className="text-xs ml-2">Lump Sum will be Deducted</span>
               </div>
               <div className="flex justify-between">
                 <span>Delivery Charge:</span>
