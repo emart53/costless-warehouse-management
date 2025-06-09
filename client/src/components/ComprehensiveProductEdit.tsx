@@ -117,9 +117,12 @@ export function ComprehensiveProductEdit({
   const [overrideEndDate, setOverrideEndDate] = useState('');
   const [reminderDate, setReminderDate] = useState('');
 
+  // Track if form has been initialized to prevent overwriting user changes
+  const [isFormInitialized, setIsFormInitialized] = useState(false);
+
   // Fetch configuration data when product changes
   useEffect(() => {
-    if (product?.id) {
+    if (product?.id && !isFormInitialized) {
       const fetchConfigurations = async () => {
         try {
           // Fetch all configuration data in a single optimized request
@@ -201,6 +204,8 @@ export function ComprehensiveProductEdit({
             retailPrice: parseFloat(pricingData?.retailprice) || 0,
             transferCost: parseFloat(overrideData?.override_cost || pricingData?.transfercost) || 0
           });
+          
+          setIsFormInitialized(true);
         } catch (error) {
           console.error('Error fetching product configurations:', error);
           // Fallback to basic product data
@@ -238,12 +243,19 @@ export function ComprehensiveProductEdit({
             listCost: Number(product.listCost || 0),
             retailPrice: Number(product.retailPrice || 0)
           });
+          
+          setIsFormInitialized(true);
         }
       };
       
       fetchConfigurations();
     }
   }, [product]);
+
+  // Reset form initialization when product changes
+  useEffect(() => {
+    setIsFormInitialized(false);
+  }, [product?.id]);
 
   const handleSave = async () => {
     setIsSaving(true);
