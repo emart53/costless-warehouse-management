@@ -113,11 +113,7 @@ export function ComprehensiveProductEdit({
           };
           
           const determineTransferConfig = (config: any) => {
-            // Override incorrect database values with business logic
-            const caseQty = config?.transferCaseQty || 1;
-            if (caseQty >= 8 && caseQty <= 24) return 'Layer';
-            if (caseQty > 24) return 'Pallet';
-            if (caseQty === 1) return 'Case';
+            // Use the actual configuration set by the user
             return config?.transferCfg || config?.transfer_cfg || 'Case';
           };
           
