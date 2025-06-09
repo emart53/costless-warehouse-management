@@ -249,11 +249,11 @@ export function ComprehensiveProductEdit({
         </div>
       </div>
 
-      {/* ENHANCED RESPONSIVE LAYOUT - NO FIXED WIDTHS */}
+      {/* ENHANCED RESPONSIVE LAYOUT - CUSTOM WIDTHS */}
       <div className="flex flex-col lg:flex-row gap-4 w-full">
           
-          {/* Product Information Card */}
-          <Card className="flex-1 min-w-0">
+          {/* Product Information Card - 30% width */}
+          <Card className="lg:w-[30%] flex-shrink-0 min-w-0">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Package className="h-5 w-5" />
@@ -402,8 +402,8 @@ export function ComprehensiveProductEdit({
             </CardContent>
           </Card>
 
-          {/* Purchase Configuration Card */}
-          <Card className="flex-1 min-w-0">
+          {/* Purchase Configuration Card - 20% width */}
+          <Card className="lg:w-[20%] flex-shrink-0 min-w-0">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
@@ -491,7 +491,8 @@ export function ComprehensiveProductEdit({
             </CardContent>
           </Card>
 
-          <Card className="flex-1 min-w-0 border-2 border-blue-200 bg-blue-50">
+          {/* Transfer Configuration Card - 20% width */}
+          <Card className="lg:w-[20%] flex-shrink-0 min-w-0 border-2 border-blue-200 bg-blue-50">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Truck className="h-5 w-5" />
@@ -612,7 +613,7 @@ export function ComprehensiveProductEdit({
             </CardContent>
           </Card>
 
-          {/* Product Pricing Card */}
+          {/* Product Pricing Card - Remaining width */}
           <Card className="flex-1 min-w-0">
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
