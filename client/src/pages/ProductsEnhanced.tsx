@@ -88,7 +88,7 @@ interface ProductUpc {
 
 export default function ProductsEnhanced() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('Active');
   const [vendorFilter, setVendorFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -322,8 +322,10 @@ export default function ProductsEnhanced() {
   });
 
   const filteredProducts = products.filter((product) => {
-    // Filter by status first (case-insensitive, with "All" showing everything)
-    const statusMatch = statusFilter === 'All' || product.status?.toLowerCase() === statusFilter.toLowerCase();
+    // Smart status filtering: When searching, include all products regardless of status filter
+    // When not searching, respect the status filter
+    const isSearching = searchTerm.length > 0;
+    const statusMatch = isSearching || statusFilter === 'All' || product.status?.toLowerCase() === statusFilter.toLowerCase();
     
     // Filter by vendor (with "All" showing everything)
     const productVendorId = product.vendorId || product.vendorid;
@@ -337,6 +339,7 @@ export default function ProductsEnhanced() {
       product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendorNameToSearch.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.productId.toString().includes(searchTerm) ||
       product.id.toString().includes(searchTerm);
     
     return statusMatch && vendorMatch && searchMatch;
