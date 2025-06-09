@@ -17,9 +17,8 @@ import { ComprehensiveProductEdit } from '@/components/ComprehensiveProductEdit'
 interface Product {
   id: number;
   productId: number;
-  name: string;
-  description: string;
-  brand: string;
+  name: string; // Primary description field (includes brand, name, details)
+  productDescription?: string; // Legacy compatibility field
   unitSize?: string;
   unitsize?: string; // API returns lowercase field
   casePack?: number;

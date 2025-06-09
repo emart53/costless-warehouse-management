@@ -26,6 +26,26 @@ const formatCurrency = (value: number): string => {
   }).format(value || 0);
 };
 
+// Product description formatting utility for reports and forms
+const formatProductDescription = (name: string, casePack?: number, size?: string, includePackSize = false): string => {
+  let description = name || '';
+  
+  if (includePackSize) {
+    const packInfo = [];
+    if (casePack && casePack > 1) {
+      packInfo.push(`${casePack}pk`);
+    }
+    if (size) {
+      packInfo.push(size);
+    }
+    if (packInfo.length > 0) {
+      description += ` (${packInfo.join(' ')})`;
+    }
+  }
+  
+  return description;
+};
+
 interface ComprehensiveProductEditProps {
   product: any;
   vendors: any[];
@@ -49,8 +69,7 @@ export function ComprehensiveProductEdit({
     // Product Information
     id: '',
     productId: '',
-    name: '',
-    productDescription: '',
+    name: '', // Single field for complete product description
     caseUpc: '',
     casePack: 1,
     size: '',
@@ -320,23 +339,16 @@ export function ComprehensiveProductEdit({
               </div>
 
               <div>
-                <Label htmlFor="name">Product Name</Label>
+                <Label htmlFor="name">Product Description</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  placeholder="Enter product name"
+                  placeholder="Enter complete product description (including brand if applicable)"
                 />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Product Description</Label>
-                <Input
-                  id="description"
-                  value={formData.productDescription}
-                  onChange={(e) => setFormData({...formData, productDescription: e.target.value})}
-                  placeholder="Enter detailed description"
-                />
+                <div className="text-xs text-gray-500 mt-1">
+                  Include brand, product name, and key details. Case pack and size will be appended automatically in reports.
+                </div>
               </div>
 
               <div>

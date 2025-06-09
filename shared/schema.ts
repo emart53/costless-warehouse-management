@@ -101,7 +101,8 @@ export const locations = pgTable("locations", {
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   productId: integer("product_id").notNull().unique(), // Legacy ProductId
-  productDescription: text("product_description"), // No length limit for legacy descriptions
+  name: text("name").notNull(), // Primary product name/description field
+  productDescription: text("product_description"), // Legacy field for compatibility
   caseUpc: varchar("case_upc", { length: 20 }), // Increased for legacy UPCs
   casePack: integer("case_pack").notNull(),
   size: text("size"), // No limit for legacy size variations
@@ -114,10 +115,6 @@ export const products = pgTable("products", {
   // Additional fields from actual database
   sku: varchar("sku", { length: 50 }),
   upc: varchar("upc", { length: 20 }),
-  name: text("name"),
-  description: text("description"),
-  category: text("category"),
-  subcategory: text("subcategory"),
   unit: text("unit"),
   unitSize: text("unit_size"),
   minStockLevel: integer("min_stock_level"),
