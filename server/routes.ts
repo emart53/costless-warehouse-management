@@ -1000,7 +1000,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             purchase_cost as purchaseCost,
             off_invoice as offInvoice,
             bill_back as billBack,
-            list_cost as listCost,
+            unit_cost as unitCost,
+            transfer_cost as transferCost,
             retail_price as retailPrice,
             effective_date as effectiveDate
           FROM product_prices 
