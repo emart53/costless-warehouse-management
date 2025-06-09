@@ -81,6 +81,9 @@ export function ComprehensiveProductEdit({
   const [isSaving, setIsSaving] = useState(false);
   const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
   const [tempOverrideValue, setTempOverrideValue] = useState(0);
+  const [overrideReason, setOverrideReason] = useState('');
+  const [overrideEndDate, setOverrideEndDate] = useState('');
+  const [reminderDate, setReminderDate] = useState('');
 
   // Fetch configuration data when product changes
   useEffect(() => {
@@ -912,12 +915,50 @@ export function ComprehensiveProductEdit({
                 />
               </div>
 
+              <div>
+                <Label htmlFor="overrideReason">Reason for Override</Label>
+                <Input
+                  id="overrideReason"
+                  type="text"
+                  value={overrideReason}
+                  onChange={(e) => setOverrideReason(e.target.value)}
+                  placeholder="Enter business justification for cost override"
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="overrideEndDate">Override End Date</Label>
+                  <Input
+                    id="overrideEndDate"
+                    type="date"
+                    value={overrideEndDate}
+                    onChange={(e) => setOverrideEndDate(e.target.value)}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="reminderDate">Review Reminder Date</Label>
+                  <Input
+                    id="reminderDate"
+                    type="date"
+                    value={reminderDate}
+                    onChange={(e) => setReminderDate(e.target.value)}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+              </div>
+
               <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                   <div className="text-xs text-red-700">
                     <div className="font-medium mb-1">Warning: Manual Override</div>
-                    <div>This will override automatic cost calculations. Unit costs and margins will be based on your custom value.</div>
+                    <div>This will override automatic cost calculations. Unit costs and margins will be based on your custom value. Please provide a business reason and schedule regular reviews.</div>
                   </div>
                 </div>
               </div>
@@ -950,17 +991,33 @@ export function ComprehensiveProductEdit({
               </Button>
               <Button
                 onClick={() => {
+                  // Validate required fields
+                  if (!overrideReason.trim() || !overrideEndDate || !reminderDate) {
+                    alert('Please fill in all required fields: Reason, End Date, and Reminder Date');
+                    return;
+                  }
+                  
                   setFormData({
                     ...formData,
                     transferConfig: {
                       ...formData.transferConfig,
                       transferCostOverride: true,
-                      transferCost: tempOverrideValue
+                      transferCost: tempOverrideValue,
+                      overrideReason: overrideReason,
+                      overrideEndDate: overrideEndDate,
+                      reminderDate: reminderDate,
+                      overrideCreatedDate: new Date().toISOString().split('T')[0]
                     }
                   });
                   setIsOverrideModalOpen(false);
+                  
+                  // Reset modal fields
+                  setOverrideReason('');
+                  setOverrideEndDate('');
+                  setReminderDate('');
                 }}
                 className="flex-1"
+                disabled={!overrideReason.trim() || !overrideEndDate || !reminderDate}
               >
                 Apply Override
               </Button>
