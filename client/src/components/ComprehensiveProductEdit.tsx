@@ -79,7 +79,6 @@ export function ComprehensiveProductEdit({
   });
 
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
   const [tempOverrideValue, setTempOverrideValue] = useState(0);
   const [overrideReason, setOverrideReason] = useState('');
@@ -198,8 +197,6 @@ export function ComprehensiveProductEdit({
             listCost: Number(product.listCost || 0),
             retailPrice: Number(product.retailPrice || 0)
           });
-        } finally {
-          setIsLoading(false);
         }
       };
       
@@ -271,29 +268,6 @@ export function ComprehensiveProductEdit({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-            {isLoading ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                  <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="productId">Product ID</Label>
@@ -432,8 +406,6 @@ export function ComprehensiveProductEdit({
                   </SelectContent>
                 </Select>
               </div>
-              </div>
-              )}
             </CardContent>
           </Card>
 
