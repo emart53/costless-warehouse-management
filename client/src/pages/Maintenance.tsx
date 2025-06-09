@@ -163,7 +163,7 @@ type VendorFormData = z.infer<typeof vendorFormSchema>;
 export default function Maintenance() {
   const [searchTerm, setSearchTerm] = useState('');
   const [vendorSearchTerm, setVendorSearchTerm] = useState('');
-  const [vendorStatusFilter, setVendorStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [vendorStatusFilter, setVendorStatusFilter] = useState<'all' | 'active' | 'inactive'>('active');
   const [isDepartmentDialogOpen, setIsDepartmentDialogOpen] = useState(false);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [isLocationDialogOpen, setIsLocationDialogOpen] = useState(false);
