@@ -792,7 +792,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(result || null);
       } else {
         const result = transferResult.rows[0];
-        console.log('Transfer result from database:', result);
         res.json(result || null);
       }
     } catch (error) {
