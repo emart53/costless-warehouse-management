@@ -281,7 +281,7 @@ export default function PurchaseOrderViewLegacy() {
           const listCost = parseFloat(item.listCost?.toString() || '0');
           const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
           const billBack = parseFloat(item.billBack?.toString() || '0');
-          const weight = parseFloat(item.purchaseWeight?.toString() || item.product?.weight?.toString() || '0');
+          const weight = parseFloat(item.purchaseWeight?.toString() || '0');
           const productCrv = parseFloat(item.product?.crv?.toString() || '0');
           const billedCost = listCost - offInvoice - billBack;
           const extendedWeight = weight * quantity;
@@ -316,7 +316,7 @@ export default function PurchaseOrderViewLegacy() {
             <div className={`px-2 text-right ${hasCRV ? 'col-span-7' : hasBillBack ? 'col-span-6' : 'col-span-5'}`}>Total:</div>
             <div className="border-r border-gray-300 px-2 text-right">
               {purchaseOrder.items?.reduce((sum, item) => {
-                const weight = parseFloat(item.purchaseWeight?.toString() || item.product?.weight?.toString() || '0');
+                const weight = parseFloat(item.purchaseWeight?.toString() || '0');
                 return sum + (weight * (item.quantityOrdered || 0));
               }, 0).toFixed(2)}
             </div>
