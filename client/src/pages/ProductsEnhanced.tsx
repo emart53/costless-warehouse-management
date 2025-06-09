@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Search, Package, History, Truck, Barcode, DollarSign, Eye, TrendingUp, Filter, Edit } from 'lucide-react';
@@ -110,14 +110,29 @@ export default function ProductsEnhanced() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   
-  // Add cache-busting timestamp for fresh data
-  const [refreshTimestamp, setRefreshTimestamp] = useState(Date.now());
-  
-  const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ['/api/products', refreshTimestamp],
-    staleTime: 0,
-    gcTime: 0,
-  });
+  // Direct product state management to bypass cache issues
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchProducts = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/products');
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const { data: vendors = [] } = useQuery({
     queryKey: ['/api/vendors'],
@@ -237,8 +252,8 @@ export default function ProductsEnhanced() {
       return response.json();
     },
     onSuccess: async (updatedProduct) => {
-      // Force immediate refresh by updating timestamp
-      setRefreshTimestamp(Date.now());
+      // Immediately refresh products list
+      await fetchProducts();
       
       setIsEditDialogOpen(false);
       toast({
