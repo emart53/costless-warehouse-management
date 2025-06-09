@@ -1,7 +1,9 @@
 /**
- * Format numbers with commas for thousands separators
+ * Format currency values with consistent 2-decimal precision
+ * Handles costs, allowances, CRV, and all financial values
  */
-export function formatCurrency(value: string | number): string {
+export function formatCurrency(value: string | number | null | undefined): string {
+  if (value === null || value === undefined || value === '') return '$0.00';
   const num = typeof value === 'string' ? parseFloat(value.replace(/[$,]/g, '')) : value;
   if (isNaN(num)) return '$0.00';
   return new Intl.NumberFormat('en-US', {

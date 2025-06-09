@@ -17,8 +17,14 @@ export const PurchaseOrderPDF: React.FC<PurchaseOrderPDFProps> = ({ purchaseOrde
   };
 
   const formatCurrency = (amount: string | number) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-    return isNaN(num) ? '0.00' : num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const num = typeof amount === 'string' ? parseFloat(amount.replace(/[$,]/g, '')) : amount;
+    if (isNaN(num)) return '$0.00';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(num);
   };
 
   const formatWeight = (weight: number) => {

@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { ComprehensiveProductEdit } from '@/components/ComprehensiveProductEdit';
+import { formatCurrency } from '@/lib/formatNumber';
 
 interface Product {
   id: number;
@@ -352,13 +353,6 @@ export default function ProductsEnhanced() {
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product);
     setIsDetailOpen(true);
-  };
-
-  const formatCurrency = (amount?: number | string) => {
-    if (amount === null || amount === undefined) return 'N/A';
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    if (isNaN(numAmount)) return 'N/A';
-    return `$${numAmount.toFixed(2)}`;
   };
 
   const formatDate = (dateString: string) => {

@@ -130,11 +130,15 @@ export default function ProductCalculations({
     transferConfig.transferCfg
   ]);
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | string) => {
+    const numValue = typeof amount === 'string' ? parseFloat(amount.replace(/[$,]/g, '')) : amount;
+    if (isNaN(numValue)) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
-    }).format(amount);
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(numValue);
   };
 
   return (

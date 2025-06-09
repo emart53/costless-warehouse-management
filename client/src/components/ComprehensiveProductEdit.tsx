@@ -17,13 +17,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Package, ShoppingCart, Truck, Calculator, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
 
 // Currency formatting utility
-const formatCurrency = (value: number): string => {
+const formatCurrency = (value: number | string): string => {
+  const numValue = typeof value === 'string' ? parseFloat(value.replace(/[$,]/g, '')) : value;
+  if (isNaN(numValue)) return '$0.00';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(value || 0);
+  }).format(numValue);
 };
 
 // Product description formatting utility for reports and forms
