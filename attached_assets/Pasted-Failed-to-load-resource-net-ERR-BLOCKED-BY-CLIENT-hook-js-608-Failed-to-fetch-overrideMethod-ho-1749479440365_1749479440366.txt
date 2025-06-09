@@ -1,0 +1,401 @@
+Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+hook.js:608  Failed to fetch
+overrideMethod @ hook.js:608
+hook.js:608  [analytics.js] Failed to load Analytics.js TypeError: Failed to fetch
+    at o (sdk.min.js:1:23763)
+    at index.ts:34:26
+    at tslib.es6.js:103:23
+    at Object.next (tslib.es6.js:108:37)
+    at tslib.es6.js:80:8
+    at new Promise (<anonymous>)
+    at u (tslib.es6.js:72:27)
+    at re (index.ts:239:4)
+    at index.ts:338:7
+overrideMethod @ hook.js:608
+api.segment.io/v1/m:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+hook.js:608  Error sending segment performance metrics TypeError: Failed to fetch
+    at o (sdk.min.js:1:23763)
+    at t.<anonymous> (remote-metrics.ts:138:12)
+    at tslib.es6.js:103:23
+    at Object.next (tslib.es6.js:108:37)
+    at tslib.es6.js:80:8
+    at new Promise (<anonymous>)
+    at u (tslib.es6.js:72:27)
+    at t.send (sdk.min.js:1:22021)
+    at t.<anonymous> (remote-metrics.ts:125:16)
+    at tslib.es6.js:103:23
+overrideMethod @ hook.js:608
+/~:1  Tracking Prevention blocked an XHR request to https://api.segment.io/v1/m.
+1009-9c5989e4d59aa4fb.js:1 Replit version 38009618, pid2 version 0.0.1384
+_app-f6ba4b39e79322fd.js:37 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+22Tracking Prevention blocked access to storage for <URL>.
+hook.js:608  Invalid response from client. No executionId provided.
+overrideMethod @ hook.js:608
+_app-f6ba4b39e79322fd.js:37 [LaunchDarkly] LaunchDarkly client initialized
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+/~:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+ [Report Only] Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
+
+classifier.js:1 [Report Only] Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
+
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ chrome-extension://m…s-content-edge.js:1
+apa-all-frames-content-edge.js:1  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+    at g (recaptcha__en.js:542:425)
+o @ apa-all-frames-content-edge.js:1
+apa-all-frames-content-edge.js:1  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ apa-all-frames-content-edge.js:1
+apa-all-frames-content-edge.js:1  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ apa-all-frames-content-edge.js:1
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=d00f8dce-31c4-44c4-8918-682a2e4c2187:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=a6d2b237-f9e7-458b-b660-a18cc2996df7:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+r.stripe.com/b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+shared-bf82ce6722faa798a6176221ca6c8dbc.js:1  Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-bf82ce6722faa798a6176221ca6c8dbc.js:1:210710
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f893538f-530e-4b0a-8edf-e74f78df55b6:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=88fceaca-ab44-45ed-922b-d0efc129e341:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=fe7769d7-cd1c-4e2e-a214-5c18c08e9007:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=e3dc50fb-bbf4-41b9-bde1-7a66275e6ce2:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=928c271c-6e39-4b65-962b-2cd268a5dfc1:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=dd955d04-ecd8-4d08-8408-cf13477c0cf8:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+6WARNING: Too many active WebGL contexts. Oldest context will be lost.
+_app-f6ba4b39e79322fd.js:37 webglcontextlost event received
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=9617b9e5-c8d4-4816-aa05-4c0cb568d302:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=3adabc2f-05b8-4084-b5dd-083ab7938e0a:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+_app-f6ba4b39e79322fd.js:37 webglcontextlost event received
+hook.js:608  webgl context not restored; firing onContextLoss
+overrideMethod @ hook.js:608
+_app-f6ba4b39e79322fd.js:37 webglcontextlost event received
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=d1fa15ea-401a-489d-97ab-ba454be4df4b:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=863dbced-d4dd-43e1-9262-e44ef5a09a36:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+hook.js:608  webglcontextrestored event received
+overrideMethod @ hook.js:608
+48WebGL: INVALID_OPERATION: delete: object does not belong to this context
+hook.js:608  webglcontextrestored event received
+overrideMethod @ hook.js:608
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=e3551284-04ae-43f6-bcc0-fef368c98d13:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=307479c1-dbfd-4351-a42f-d6e2781f31da:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+framework-6d757b38e15e7d51.js:1  Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'battery'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'layout-animations'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'navigation-override'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'oversized-images'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'publickey-credentials'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'speaker-selection'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'unoptimized-images'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'unsized-media'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Unrecognized feature: 'pointer-lock'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-6d757b38e15e7d51.js:1
+framework-6d757b38e15e7d51.js:1  Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-6d757b38e15e7d51.js:1
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'ambient-light-sensor'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'battery'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'execution-while-not-rendered'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'execution-while-out-of-viewport'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'layout-animations'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'legacy-image-formats'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'navigation-override'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'oversized-images'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'publickey-credentials'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'speaker-selection'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'unoptimized-images'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Unrecognized feature: 'unsized-media'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Allow attribute will take precedence over 'allowfullscreen'.
+462c238f-a59d-48ff-8844-9dc4c0289fca-00-3jgut0djj2ypu.riker.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arum%3A:32  Allow attribute will take precedence over 'allowpaymentrequest'.
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=7ca94fca-0dca-4fb3-9eec-bc62f61f7566:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8d1333dc-4132-4427-89b7-3b29638ad11c:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=5b80fc9d-393b-42c3-8bff-01ac09891727:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f47562d0-081a-482e-84d4-386edcd45dc5:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8d7248e9-8bc0-4e86-982d-719f45ccf9fe:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=6d8a766d-ee72-4b8c-9062-5eae23165a9f:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=17f6454f-52c8-4041-b09a-6552aece3757:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=d5105e4d-4dbf-4a7d-b785-9c8b12085cc8:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=787f8f7d-55a8-427f-882a-8758be885cf8:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=d4b4fa30-077f-4331-8778-b98ae8c6c5c3:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f2e0e84f-5aae-46e6-bb4d-86c667d3302f:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=4010c443-bf90-418a-ab86-1ea565895503:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=dc96f6b6-d220-4949-874a-ae3a5d7744b2:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=e85c56ad-d6eb-4424-b4e4-e18c4cb3f577:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=12e70d1e-b589-41ab-b1f5-ed0c86b84fc4:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=154812fd-45cf-4ba6-9fc4-652cf5a6f672:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=20621e3a-2c42-421b-b566-79a06ff6f546:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=7267644e-ab0d-477e-919e-64e64719ef42:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+workspace_iframe.html:32  Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Console.js:61 [vite] connecting...
+Console.js:61 [vite] connected.
+Console.js:61 Override data changed: Array(0)
+Console.js:61 Override data changed: Array(0)
+apa-all-frames-content-edge.js:1  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+o @ apa-all-frames-content-edge.js:1
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=9e2058fd-c5e9-45ff-b76b-3722d11b9d41:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=50047285-151c-4e19-a80a-6adb855dab2d:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+Console.js:61  Error initializing iframe page platform api server Error: Max RPC calls retries reached: rpcPageServerShouldStart
+    at apa-all-frames-content-edge.js:1:8579
+Mt.forEach.n.<computed> @ Console.js:61
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=329902e0-6b70-46cf-a5e6-c3dcbeb82916:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=fc70f920-72a5-4970-85a4-7bd414400cb7:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=e172f29e-2a25-48cb-8010-0660f0a68273:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=1704ceaa-8f55-4cdd-871d-e22ad54cd616:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=6b8d4d84-7784-4a5e-a229-eec51981060a:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=1a370f0a-3cc3-4141-bf5a-f8fa0c1a9c98:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Afetch%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=3c87eb62-7da2-4093-b2d1-d4a7f0202ed7:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Axhr%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A38009618&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f1b3bf84-3b94-4119-9502-c20cad829b20:1 
+            
+            
+            Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+_app-f6ba4b39e79322fd.js:37  task queue exceeded allotted deadline by 21ms
+overrideMethod @ hook.js:608
+(anonymous) @ _app-f6ba4b39e79322fd.js:37
+_process @ 1c7fb644.ea33e9d77b0594f3.js:3
+(anonymous) @ 1c7fb644.ea33e9d77b0594f3.js:3
+r @ _app-f6ba4b39e79322fd.js:37
+setTimeout
+(anonymous) @ _app-f6ba4b39e79322fd.js:37
+_requestCallback @ 1c7fb644.ea33e9d77b0594f3.js:3
+_start @ 1c7fb644.ea33e9d77b0594f3.js:3
+enqueue @ 1c7fb644.ea33e9d77b0594f3.js:3
+set @ 1c7fb644.ea33e9d77b0594f3.js:3
+handleResize @ 1c7fb644.ea33e9d77b0594f3.js:3
+(anonymous) @ 1c7fb644.ea33e9d77b0594f3.js:3
+fire @ 1c7fb644.ea33e9d77b0594f3.js:3
+(anonymous) @ 1c7fb644.ea33e9d77b0594f3.js:3
+fire @ 1c7fb644.ea33e9d77b0594f3.js:3
+resize @ 1c7fb644.ea33e9d77b0594f3.js:3
+resize @ 1c7fb644.ea33e9d77b0594f3.js:3
+resize @ 1c7fb644.ea33e9d77b0594f3.js:3
+resize @ 1c7fb644.ea33e9d77b0594f3.js:3
+fit @ 1669.cb7d8a02a8ed06cf.js:1
+fit @ 2049-bfec5e270e75a80b.js:1
+B.type @ 2049-bfec5e270e75a80b.js:1
+(anonymous) @ _app-f6ba4b39e79322fd.js:20
+b @ _app-f6ba4b39e79322fd.js:40
+w @ _app-f6ba4b39e79322fd.js:40
+E @ _app-f6ba4b39e79322fd.js:40
+r @ _app-f6ba4b39e79322fd.js:37
