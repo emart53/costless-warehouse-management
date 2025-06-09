@@ -171,15 +171,19 @@ export default function PurchaseOrderViewLegacy() {
           {/* Vendor Info */}
           <div className="col-span-3">
             <div className="font-bold text-base">{purchaseOrder.vendor?.name || 'N/A'}</div>
-            {purchaseOrder.vendor?.address && (
+            {purchaseOrder.vendor?.address ? (
               <div className="text-sm">
                 {purchaseOrder.vendor.address}<br />
                 {purchaseOrder.vendor.city && purchaseOrder.vendor.state && 
                   `${purchaseOrder.vendor.city}, ${purchaseOrder.vendor.state} ${purchaseOrder.vendor.zipCode || ''}`}
               </div>
+            ) : (
+              <div className="text-sm text-gray-500 italic">Address on file</div>
             )}
-            {purchaseOrder.vendor?.phone && (
+            {purchaseOrder.vendor?.phone ? (
               <div className="text-sm mt-2">{purchaseOrder.vendor.phone}</div>
+            ) : (
+              <div className="text-sm mt-2 text-gray-500 italic">Phone on file</div>
             )}
             {purchaseOrder.vendor?.contactName && (
               <div className="text-sm font-medium mt-2">{purchaseOrder.vendor.contactName}</div>
