@@ -250,10 +250,11 @@ export default function PurchaseOrderViewLegacy() {
           <div className="grid grid-cols-12 gap-2 text-sm font-bold">
             <div className="col-span-1">Qty</div>
             <div className="col-span-1">UPC</div>
-            <div className="col-span-4">Item Description</div>
+            <div className="col-span-3">Item Description</div>
             <div className="col-span-1 text-right">List Cost</div>
             <div className="col-span-1 text-right">Off Invoice</div>
             {hasBillBackValues && <div className="col-span-1 text-right">Bill Back</div>}
+            {hasCrvValues && <div className="col-span-1 text-right">CRV</div>}
             <div className="col-span-1 text-right">Total Weight</div>
             <div className="col-span-1 text-right">Billed Cost</div>
             <div className="col-span-1 text-right">Extended Cost</div>
@@ -267,6 +268,7 @@ export default function PurchaseOrderViewLegacy() {
           const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
           const billBack = parseFloat(item.billBack?.toString() || '0');
           const weight = parseFloat(item.purchaseWeight?.toString() || '0');
+          const crv = parseFloat(item.purchaseCrv?.toString() || '0');
           const netCost = listCost - offInvoice;
           const extendedCost = quantity * netCost;
 
@@ -275,11 +277,16 @@ export default function PurchaseOrderViewLegacy() {
               <div className="grid grid-cols-12 gap-2 text-sm">
                 <div className="col-span-1">{quantity}</div>
                 <div className="col-span-1">{item.product?.caseUpc || ''}</div>
-                <div className="col-span-4">{item.product?.productDescription || 'N/A'}</div>
+                <div className="col-span-3">
+              {item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
+            </div>
                 <div className="col-span-1 text-right">${listCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 <div className="col-span-1 text-right">${offInvoice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 {hasBillBackValues && (
                   <div className="col-span-1 text-right">${billBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                )}
+                {hasCrvValues && (
+                  <div className="col-span-1 text-right">${crv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 )}
                 <div className="col-span-1 text-right">{weight.toFixed(2)}</div>
                 <div className="col-span-1 text-right">${netCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
