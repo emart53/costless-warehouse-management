@@ -95,13 +95,13 @@ export function ComprehensiveProductEdit({
           const pricingData = pricingResponse.ok ? await pricingResponse.json() : null;
           
           // Determine configuration names based on business logic
-          const determinePurchaseConfig = (config) => {
+          const determinePurchaseConfig = (config: any) => {
             if (config?.purchaseCfg) return config.purchaseCfg;
             const caseQty = config?.purchaseCaseQty || 1;
             return caseQty > 24 ? 'Pallet' : 'Case';
           };
           
-          const determineTransferConfig = (config) => {
+          const determineTransferConfig = (config: any) => {
             if (config?.transferCfg) return config.transferCfg;
             const caseQty = config?.transferCaseQty || 1;
             return caseQty > 24 ? 'Pallet' : 'Case';
@@ -224,14 +224,30 @@ export function ComprehensiveProductEdit({
 
   return (
     <div className="w-full space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-2 pb-4 border-b">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          Edit Product Configuration
-          <Badge variant="outline">
-            ID: {formData.productId}
-          </Badge>
-        </h2>
+      {/* Enhanced Header with Product Summary */}
+      <div className="flex items-center justify-between pb-4 border-b">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            Edit Product Configuration
+            <Badge variant="outline">
+              ID: {formData.productId}
+            </Badge>
+          </h2>
+          <div className="flex items-center gap-2">
+            <Badge variant={formData.status === 'Active' ? 'default' : 'secondary'}>
+              {formData.status}
+            </Badge>
+            {formData.name && (
+              <span className="text-sm text-gray-600 max-w-md truncate">
+                {formData.name}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Calculator className="h-4 w-4" />
+          <span>Auto-calculating unit conversions</span>
+        </div>
       </div>
 
       {/* Horizontal Card Layout - 25% width each for 4 containers */}
@@ -398,15 +414,27 @@ export function ComprehensiveProductEdit({
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="purchaseConfigName">Configuration Name</Label>
-                <Input
-                  id="purchaseConfigName"
+                <Select
                   value={formData.purchaseConfig.configName}
-                  onChange={(e) => setFormData({
+                  onValueChange={(value) => setFormData({
                     ...formData,
-                    purchaseConfig: {...formData.purchaseConfig, configName: e.target.value}
+                    purchaseConfig: {...formData.purchaseConfig, configName: value}
                   })}
-                  placeholder="e.g., Case, Each, Pack"
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select configuration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Case">Case</SelectItem>
+                    <SelectItem value="Each">Each</SelectItem>
+                    <SelectItem value="Pack">Pack</SelectItem>
+                    <SelectItem value="Layer">Layer</SelectItem>
+                    <SelectItem value="Pallet">Pallet</SelectItem>
+                    <SelectItem value="Bag">Bag</SelectItem>
+                    <SelectItem value="Box">Box</SelectItem>
+                    <SelectItem value="Carton">Carton</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
@@ -477,33 +505,51 @@ export function ComprehensiveProductEdit({
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="transferConfigName">Configuration Name</Label>
-                <Input
-                  id="transferConfigName"
+                <Select
                   value={formData.transferConfig.configName}
-                  onChange={(e) => {
-                    const newConfigName = e.target.value;
-                    const isSameConfig = newConfigName === formData.purchaseConfig.configName;
+                  onValueChange={(value) => {
+                    const isSameConfig = value === formData.purchaseConfig.configName;
                     
                     setFormData({
                       ...formData,
                       transferConfig: {
                         ...formData.transferConfig, 
-                        configName: newConfigName,
+                        configName: value,
                         // Auto-sync if same configuration
                         ...(isSameConfig ? {
                           transferCaseQty: formData.purchaseConfig.purchaseCaseQty,
                           transferUnitCt: formData.purchaseConfig.purchaseUnitCt,
                           transferWeight: formData.purchaseConfig.purchaseWeight,
-                          transferCrv: formData.purchaseConfig.purchaseCrv
+                          transferCrv: formData.purchaseConfig.purchaseCrv || 0
                         } : {})
                       }
                     });
                   }}
-                  placeholder="e.g., Case, Each, Pack"
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select configuration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Case">Case</SelectItem>
+                    <SelectItem value="Each">Each</SelectItem>
+                    <SelectItem value="Pack">Pack</SelectItem>
+                    <SelectItem value="Layer">Layer</SelectItem>
+                    <SelectItem value="Pallet">Pallet</SelectItem>
+                    <SelectItem value="Bag">Bag</SelectItem>
+                    <SelectItem value="Box">Box</SelectItem>
+                    <SelectItem value="Carton">Carton</SelectItem>
+                  </SelectContent>
+                </Select>
                 {formData.transferConfig.configName === formData.purchaseConfig.configName && (
-                  <div className="text-xs text-green-600 mt-1">
-                    ✓ Same as purchase configuration - values will auto-sync
+                  <div className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                    <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                    Same as purchase configuration - values auto-sync
+                  </div>
+                )}
+                {formData.transferConfig.configName !== formData.purchaseConfig.configName && formData.transferConfig.configName && (
+                  <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+                    <span className="inline-block w-2 h-2 bg-orange-500 rounded-full"></span>
+                    Different configuration - manual adjustment needed
                   </div>
                 )}
               </div>
@@ -699,6 +745,79 @@ export function ComprehensiveProductEdit({
 
             </CardContent>
           </Card>
+        </div>
+
+        {/* Calculation Summary Panel */}
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Calculation Summary
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Purchase Configuration</h4>
+              <div className="text-xs space-y-1">
+                <div>Config: <span className="font-medium">{formData.purchaseConfig.configName}</span></div>
+                <div>Case Qty: <span className="font-medium">{formData.purchaseConfig.purchaseCaseQty}</span></div>
+                <div>Unit Count: <span className="font-medium">{formData.purchaseConfig.purchaseCaseQty * formData.casePack}</span></div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Transfer Configuration</h4>
+              <div className="text-xs space-y-1">
+                <div>Config: <span className="font-medium">{formData.transferConfig.configName}</span></div>
+                <div>Case Qty: <span className="font-medium">{formData.transferConfig.transferCaseQty}</span></div>
+                <div>Unit Count: <span className="font-medium">{formData.transferConfig.transferCaseQty * formData.casePack}</span></div>
+                <div>CRV Total: <span className="font-medium">${((formData.crv || 0) * formData.transferConfig.transferCaseQty).toFixed(2)}</span></div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Cost Breakdown</h4>
+              <div className="text-xs space-y-1">
+                <div>Purchase Cost: <span className="font-medium">${formData.purchaseCost.toFixed(2)}</span></div>
+                <div>Less Off Invoice: <span className="font-medium text-red-600">-${formData.offInvoice.toFixed(2)}</span></div>
+                <div>Less Bill Back: <span className="font-medium text-red-600">-${formData.billBack.toFixed(2)}</span></div>
+                <div className="border-t pt-1">Net Cost: <span className="font-medium">${(formData.purchaseCost - formData.offInvoice - formData.billBack).toFixed(2)}</span></div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Pricing Analysis</h4>
+              <div className="text-xs space-y-1">
+                <div>Transfer Cost: <span className="font-medium">${(() => {
+                  const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                  const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                  return (netCost * ratio).toFixed(2);
+                })()}</span></div>
+                <div>Unit Cost: <span className="font-medium">${(() => {
+                  const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                  const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                  const transferCost = netCost * ratio;
+                  const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
+                  return unitCount > 0 ? (transferCost / unitCount).toFixed(4) : transferCost.toFixed(4);
+                })()}</span></div>
+                <div>Retail Price: <span className="font-medium">${formData.retailPrice.toFixed(2)}</span></div>
+                <div className="border-t pt-1">Gross Margin: <span className={`font-medium ${(() => {
+                  const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                  const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                  const transferCost = netCost * ratio;
+                  const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
+                  const unitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
+                  const margin = formData.retailPrice > 0 && unitCost > 0 ? ((formData.retailPrice - unitCost) / formData.retailPrice) * 100 : 0;
+                  return margin >= 25 ? 'text-green-600' : margin >= 15 ? 'text-yellow-600' : 'text-red-600';
+                })()}`}>{(() => {
+                  const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                  const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                  const transferCost = netCost * ratio;
+                  const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
+                  const unitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
+                  return formData.retailPrice > 0 && unitCost > 0 ? (((formData.retailPrice - unitCost) / formData.retailPrice) * 100).toFixed(1) + '%' : '0.0%';
+                })()}</span></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Action Buttons */}
