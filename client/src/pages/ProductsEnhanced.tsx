@@ -335,8 +335,6 @@ export default function ProductsEnhanced() {
     const vendorNameToSearch = product.vendorName || product.vendorname || '';
     const searchMatch = searchTerm === '' || 
       product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendorNameToSearch?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.productId?.toString().includes(searchTerm) ||
       product.id?.toString().includes(searchTerm);
@@ -487,8 +485,7 @@ export default function ProductsEnhanced() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-base font-semibold">Product ID</TableHead>
-                  <TableHead className="text-base font-semibold">Name</TableHead>
-                  <TableHead className="text-base font-semibold">Brand</TableHead>
+                  <TableHead className="text-base font-semibold">Description</TableHead>
                   <TableHead className="text-base font-semibold">Case Pack</TableHead>
                   <TableHead className="text-base font-semibold">Size</TableHead>
                   <TableHead className="text-base font-semibold">Vendor</TableHead>
@@ -502,7 +499,6 @@ export default function ProductsEnhanced() {
                   <TableRow key={product.id} className="text-base">
                     <TableCell className="font-mono text-base">{product.id}</TableCell>
                     <TableCell className="font-medium text-base">{product.name}</TableCell>
-                    <TableCell className="text-base">{product.brand || 'N/A'}</TableCell>
                     <TableCell className="text-base">{product.casePack || product.casepack || 'N/A'}</TableCell>
                     <TableCell className="text-base">{product.unitSize || product.unitsize || 'N/A'}</TableCell>
                     <TableCell className="text-base">{product.vendorName || product.vendorname || (product.vendorId || product.vendorid ? `Vendor ${product.vendorId || product.vendorid}` : 'No Vendor')}</TableCell>
@@ -629,9 +625,7 @@ export default function ProductsEnhanced() {
                     <h4 className="font-semibold">Basic Information</h4>
                     <div className="space-y-1 text-sm">
                       <div><strong>Product ID:</strong> {selectedProduct.id}</div>
-                      <div><strong>Name:</strong> {selectedProduct.name}</div>
-                      <div><strong>Description:</strong> {selectedProduct.description}</div>
-                      <div><strong>Brand:</strong> {selectedProduct.brand || 'N/A'}</div>
+                      <div><strong>Description:</strong> {selectedProduct.name}</div>
                       <div><strong>Size:</strong> {selectedProduct.unitSize}</div>
                       <div><strong>Case Pack:</strong> {selectedProduct.casePack}</div>
                     </div>
