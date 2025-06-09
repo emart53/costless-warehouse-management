@@ -265,7 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Update main product record
         await client.query(`
           UPDATE products SET
-            name = COALESCE($2, name),
+            product_name = COALESCE($2, product_name),
             product_description = COALESCE($3, product_description),
             brand = COALESCE($4, brand),
             size = COALESCE($5, size),
