@@ -16,6 +16,16 @@ import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Package, ShoppingCart, Truck, Calculator, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
 
+// Currency formatting utility
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value || 0);
+};
+
 interface ComprehensiveProductEditProps {
   product: any;
   vendors: any[];
@@ -648,38 +658,53 @@ export function ComprehensiveProductEdit({
               {/* Purchase Cost Fields */}
               <div>
                 <Label htmlFor="purchaseCost">Purchase Cost</Label>
-                <Input
-                  id="purchaseCost"
-                  type="number"
-                  step="0.01"
-                  value={formData.purchaseCost}
-                  onChange={(e) => setFormData({...formData, purchaseCost: parseFloat(e.target.value) || 0})}
-                  placeholder="$0.00"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="purchaseCost"
+                    type="number"
+                    step="0.01"
+                    value={formData.purchaseCost}
+                    onChange={(e) => setFormData({...formData, purchaseCost: parseFloat(e.target.value) || 0})}
+                    placeholder="0.00"
+                    className="pl-8"
+                  />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.purchaseCost)}</div>
               </div>
 
               <div>
                 <Label htmlFor="offInvoice">Off Invoice</Label>
-                <Input
-                  id="offInvoice"
-                  type="number"
-                  step="0.01"
-                  value={formData.offInvoice}
-                  onChange={(e) => setFormData({...formData, offInvoice: parseFloat(e.target.value) || 0})}
-                  placeholder="$0.00"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="offInvoice"
+                    type="number"
+                    step="0.01"
+                    value={formData.offInvoice}
+                    onChange={(e) => setFormData({...formData, offInvoice: parseFloat(e.target.value) || 0})}
+                    placeholder="0.00"
+                    className="pl-8"
+                  />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.offInvoice)}</div>
               </div>
 
               <div>
                 <Label htmlFor="billBack">Bill Back</Label>
-                <Input
-                  id="billBack"
-                  type="number"
-                  step="0.01"
-                  value={formData.billBack}
-                  onChange={(e) => setFormData({...formData, billBack: parseFloat(e.target.value) || 0})}
-                  placeholder="$0.00"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="billBack"
+                    type="number"
+                    step="0.01"
+                    value={formData.billBack}
+                    onChange={(e) => setFormData({...formData, billBack: parseFloat(e.target.value) || 0})}
+                    placeholder="0.00"
+                    className="pl-8"
+                  />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.billBack)}</div>
               </div>
 
               <div>
@@ -698,33 +723,46 @@ export function ComprehensiveProductEdit({
                     {formData.transferConfig.transferCostOverride ? 'MANUAL OVERRIDE ACTIVE' : 'Override Cost'}
                   </Button>
                 </Label>
-                <Input
-                  id="transferCost"
-                  type="number"
-                  step="0.01"
-                  value={formData.transferConfig.transferCostOverride ? 
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <Input
+                    id="transferCost"
+                    type="number"
+                    step="0.01"
+                    value={formData.transferConfig.transferCostOverride ? 
+                      formData.transferConfig.transferCost : 
+                      (() => {
+                        const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
+                        const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
+                        return (netCost * ratio).toFixed(2);
+                      })()
+                    }
+                    onChange={(e) => {
+                      if (formData.transferConfig.transferCostOverride) {
+                        setFormData({
+                          ...formData,
+                          transferConfig: {
+                            ...formData.transferConfig,
+                            transferCost: parseFloat(e.target.value) || 0
+                          }
+                        });
+                      }
+                    }}
+                    readOnly={!formData.transferConfig.transferCostOverride}
+                    className={`pl-8 ${formData.transferConfig.transferCostOverride ? "border-orange-300" : "bg-gray-50"}`}
+                    placeholder="0.00"
+                  />
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {formatCurrency(formData.transferConfig.transferCostOverride ? 
                     formData.transferConfig.transferCost : 
                     (() => {
                       const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                       const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                      return (netCost * ratio).toFixed(2);
+                      return netCost * ratio;
                     })()
-                  }
-                  onChange={(e) => {
-                    if (formData.transferConfig.transferCostOverride) {
-                      setFormData({
-                        ...formData,
-                        transferConfig: {
-                          ...formData.transferConfig,
-                          transferCost: parseFloat(e.target.value) || 0
-                        }
-                      });
-                    }
-                  }}
-                  readOnly={!formData.transferConfig.transferCostOverride}
-                  className={formData.transferConfig.transferCostOverride ? "border-orange-300" : "bg-gray-50"}
-                  placeholder="$0.00"
-                />
+                  )}
+                </div>
                 {formData.transferConfig.transferCostOverride && (
                   <div className="text-xs text-red-600 mt-1 font-semibold">⚠️ Manual override enabled - custom cost active</div>
                 )}
