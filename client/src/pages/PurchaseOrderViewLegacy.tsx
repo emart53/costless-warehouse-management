@@ -210,7 +210,7 @@ export default function PurchaseOrderViewLegacy() {
               {purchaseOrder.expectedDate && (
                 <div><span className="font-medium">Expected Delivery Date:</span> {new Date(purchaseOrder.expectedDate).toLocaleDateString()}</div>
               )}
-              <div><span className="font-medium">Terms:</span> Net 30</div>
+              <div><span className="font-medium">Terms:</span> {purchaseOrder.vendor?.paymentTerms || 'Net 30'}</div>
             </div>
             
             {purchaseOrder.specialInstructions && (
