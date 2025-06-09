@@ -144,7 +144,7 @@ export function ComprehensiveProductEdit({
               transferCaseQty: Number(transferConfig?.transferCaseQty || 1),
               transferUnitCt: Number(transferConfig?.transferUnitCt || 1),
               transferWeight: Number(transferConfig?.transferWeight || 0),
-              transferCost: parseFloat(overrideData?.override_cost || pricingData?.transferCost) || 0,
+              transferCost: parseFloat(overrideData?.override_cost || pricingData?.transfercost) || 0,
               transferCrv: Number(transferConfig?.transferCrv || 0),
               transferCostOverride: !!overrideData?.override_cost,
               overrideReason: overrideData?.reason || '',
@@ -161,21 +161,13 @@ export function ComprehensiveProductEdit({
             retailPrice: parseFloat(pricingData?.retailprice) || 0
           });
           
-          console.log('Raw pricing data types:', {
-            purchaseCost: typeof pricingData?.purchaseCost,
-            offInvoice: typeof pricingData?.offInvoice,
-            billBack: typeof pricingData?.billBack,
-            unitCost: typeof pricingData?.unitCost,
-            retailPrice: typeof pricingData?.retailPrice
-          });
-          
           console.log('Form pricing values set:', {
-            purchaseCost: parseFloat(pricingData?.purchaseCost) || 0,
-            offInvoice: parseFloat(pricingData?.offInvoice) || 0,
-            billBack: parseFloat(pricingData?.billBack) || 0,
-            listCost: parseFloat(pricingData?.unitCost) || 0,
-            retailPrice: parseFloat(pricingData?.retailPrice) || 0,
-            transferCost: parseFloat(overrideData?.override_cost || pricingData?.transferCost) || 0
+            purchaseCost: parseFloat(pricingData?.purchasecost) || 0,
+            offInvoice: parseFloat(pricingData?.offinvoice) || 0,
+            billBack: parseFloat(pricingData?.billback) || 0,
+            listCost: parseFloat(pricingData?.unitcost) || 0,
+            retailPrice: parseFloat(pricingData?.retailprice) || 0,
+            transferCost: parseFloat(overrideData?.override_cost || pricingData?.transfercost) || 0
           });
         } catch (error) {
           console.error('Error fetching product configurations:', error);
