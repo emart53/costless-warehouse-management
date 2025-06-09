@@ -770,7 +770,6 @@ export function ComprehensiveProductEdit({
                     className="pl-8"
                   />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">{formatCurrency(formData.retailPrice)}</div>
               </div>
 
               <div>
@@ -797,20 +796,7 @@ export function ComprehensiveProductEdit({
                     placeholder="0.0000"
                   />
                 </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {(() => {
-                    const transferCost = formData.transferConfig.transferCostOverride ? 
-                      formData.transferConfig.transferCost :
-                      (() => {
-                        const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
-                        const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                        return netCost * ratio;
-                      })();
-                    const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
-                    const unitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
-                    return formatCurrency(unitCost);
-                  })()}
-                </div>
+
               </div>
 
               <div>
