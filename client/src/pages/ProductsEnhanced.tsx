@@ -88,7 +88,7 @@ interface ProductUpc {
 
 export default function ProductsEnhanced() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('Active');
+  const [statusFilter, setStatusFilter] = useState('All');
   const [vendorFilter, setVendorFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
