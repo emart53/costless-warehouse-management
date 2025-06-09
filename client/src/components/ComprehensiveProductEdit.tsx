@@ -91,16 +91,19 @@ export function ComprehensiveProductEdit({
     if (product?.id) {
       const fetchConfigurations = async () => {
         try {
-          // Fetch purchase, transfer configurations and pricing data from separate endpoints using productId
-          const [purchaseResponse, transferResponse, pricingResponse] = await Promise.all([
+          // Fetch purchase, transfer configurations, pricing data, and transfer cost overrides
+          const [purchaseResponse, transferResponse, pricingResponse, overrideResponse] = await Promise.all([
             fetch(`/api/products/${product.productId}/purchase`),
             fetch(`/api/products/${product.productId}/transfer`),
-            fetch(`/api/products/${product.productId}/pricing`)
+            fetch(`/api/products/${product.productId}/pricing`),
+            fetch(`/api/products/${product.productId}/overrides`)
           ]);
           
           const purchaseConfig = purchaseResponse.ok ? await purchaseResponse.json() : null;
           const transferConfig = transferResponse.ok ? await transferResponse.json() : null;
           const pricingData = pricingResponse.ok ? await pricingResponse.json() : null;
+          const overrideArray = overrideResponse.ok ? await overrideResponse.json() : null;
+          const overrideData = overrideArray && overrideArray.length > 0 ? overrideArray[0] : null;
           
           // Determine configuration names based on business logic
           const determinePurchaseConfig = (config: any) => {
@@ -140,10 +143,14 @@ export function ComprehensiveProductEdit({
               transferCaseQty: transferConfig?.transferCaseQty || 1,
               transferUnitCt: transferConfig?.transferUnitCt || 1,
               transferWeight: Number(transferConfig?.transferWeight || 0),
-              transferCost: 0, // Will be calculated
+              transferCost: overrideData?.override_cost || 0,
               transferCrv: Number(transferConfig?.transferCrv || 0),
-              transferCostOverride: false
-            },
+              transferCostOverride: !!overrideData?.override_cost,
+              overrideReason: overrideData?.reason || '',
+              overrideEndDate: overrideData?.end_date || '',
+              reminderDate: overrideData?.reminder_date || '',
+              overrideCreatedDate: overrideData?.created_at || ''
+            } as any,
             
             // Product Pricing - using fetched pricing data
             purchaseCost: Number(pricingData?.purchaseCost || 0),
