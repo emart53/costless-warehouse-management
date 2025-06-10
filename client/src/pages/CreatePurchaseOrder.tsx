@@ -178,7 +178,7 @@ export default function CreatePurchaseOrder() {
     });
 
     // Calculate vendor discount on list cost (standard industry practice)
-    const vendorDiscountPercent = parseFloat(selectedVendor?.discount_percent || '0');
+    const vendorDiscountPercent = parseFloat((selectedVendor as any)?.discount_percent || '0');
     const vendorDiscountAmount = (totalListCost * vendorDiscountPercent) / 100;
 
     const netCost = totalListCost - totalOffInvoice - totalBillBack - vendorDiscountAmount;
