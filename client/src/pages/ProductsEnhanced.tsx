@@ -1205,7 +1205,7 @@ export default function ProductsEnhanced() {
                                   </TableCell>
                                   <TableCell>
                                     <div className="space-y-1">
-                                      <div className={`text-sm ${rec.costDifference >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                      <div className={`text-sm {formatCurrency(rec.costDifference >= 0 ? 'text-red-600' : 'text-green-600')}`}>
                                         {rec.costDifference >= 0 ? '+' : ''}{formatCurrency(rec.costDifference)}
                                       </div>
                                       <div className={`text-sm ${rec.marginDifference >= 0 ? 'text-green-600' : 'text-red-600'}`}>

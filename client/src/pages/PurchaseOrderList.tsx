@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Eye, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
-import { formatCurrency, formatNumber } from "@/lib/formatNumber";
+import { formatCurrency, formatNumber , formatCurrencyInput, parseCurrency } from "@/lib/formatNumber";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

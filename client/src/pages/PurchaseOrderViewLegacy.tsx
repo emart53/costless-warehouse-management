@@ -261,11 +261,11 @@ export default function PurchaseOrderViewLegacy() {
               </div>
               <div className="flex justify-between">
                 <span>Lump Sum:</span>
-                <span>${Math.abs(totals.lumpSumAllowance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span>{formatCurrency(Math.abs(totals.lumpSumAllowance))}</span>
               </div>
               <div className="flex justify-between">
                 <span>Delivery Charge:</span>
-                <span>${totals.deliveryCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span>{formatCurrency(totals.deliveryCharge)}</span>
               </div>
             </div>
           </div>
@@ -312,9 +312,9 @@ export default function PurchaseOrderViewLegacy() {
                   {item.product?.name || item.product?.productDescription || 'N/A'} {item.product?.casePack && `${item.product.casePack}/`}{item.product?.size || ''}
                 </div>
                 <div className="border-r border-gray-300 px-1 text-center">{item.configuration?.configurationName || 'Case'}</div>
-                <div className="border-r border-gray-300 px-1 text-right">${listCost.toFixed(2)}</div>
-                <div className="border-r border-gray-300 px-1 text-right">${offInvoice.toFixed(2)}</div>
-                {hasBillBack && <div className="border-r border-gray-300 px-1 text-right">${billBack.toFixed(2)}</div>}
+                <div className="border-r border-gray-300 px-1 text-right">{formatCurrency(listCost.toFixed(2))}</div>
+                <div className="border-r border-gray-300 px-1 text-right">{formatCurrency(offInvoice.toFixed(2))}</div>
+                {hasBillBack && <div className="border-r border-gray-300 px-1 text-right">{formatCurrency(billBack.toFixed(2))}</div>}
                 <div className="border-r border-gray-300 px-1 text-right">{weight.toFixed(2)}</div>
                 <div className="border-r border-gray-300 px-1 text-right">{extendedWeight.toFixed(2)}</div>
                 <div className="border-r border-gray-300 px-1 text-right">${billedCost.toFixed(2)}</div>
@@ -345,13 +345,13 @@ export default function PurchaseOrderViewLegacy() {
             </div>
             <div className="border-r border-gray-300 px-1 text-right"></div>
             <div className="border-r border-gray-300 px-1 text-right">
-              ${purchaseOrder.items?.reduce((sum, item) => {
+              {formatCurrency(purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
                 const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
                 const billedCost = listCost - offInvoice;
                 return sum + (quantity * billedCost);
-              }, 0).toFixed(2)}
+              }, 0) || 0)}
             </div>
             {hasCRV && <div className="border-r border-gray-300 px-1 text-right"></div>}
             {hasCRV && <div className="border-r border-gray-300 px-1 text-right">
@@ -362,11 +362,11 @@ export default function PurchaseOrderViewLegacy() {
               }, 0).toFixed(2)}
             </div>}
             <div className="px-1 text-right">
-              ${purchaseOrder.items?.reduce((sum, item) => {
+              {formatCurrency(purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
                 return sum + (quantity * listCost);
-              }, 0).toFixed(2)}
+              )}, 0).toFixed(2)}
             </div>
           </div>
         </div>
@@ -402,14 +402,14 @@ export default function PurchaseOrderViewLegacy() {
               {totals.lumpSumAllowance > 0 && (
                 <div className="flex justify-between">
                   <span>Lump Sum Allowance:</span>
-                  <span>-${totals.lumpSumAllowance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>-{formatCurrency(totals.lumpSumAllowance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                 </div>
               )}
               
               {totals.vendorDiscount > 0 && (
                 <div className="flex justify-between">
                   <span>Early Payment Discount ({(totals.vendorDiscountPercent * 100).toFixed(1)}%):</span>
-                  <span>-${totals.vendorDiscount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>-{formatCurrency(totals.vendorDiscount)}</span>
                 </div>
               )}
               
@@ -417,7 +417,7 @@ export default function PurchaseOrderViewLegacy() {
               {totals.deliveryCharge > 0 && (
                 <div className="flex justify-between">
                   <span>Delivery Charge:</span>
-                  <span>${totals.deliveryCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>{formatCurrency(totals.deliveryCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                 </div>
               )}
               

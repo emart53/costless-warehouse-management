@@ -730,11 +730,11 @@ export function PurchaseOrderForm({ purchaseOrder, onSubmit, onCancel, isLoading
                     </div>
                     <div className="flex justify-between">
                       <span>Delivery Charge:</span>
-                      <span>${deliveryCharge.toFixed(2)}</span>
+                      <span>{formatCurrency(deliveryCharge.toFixed(2))}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Lump Sum Allowance:</span>
-                      <span>-${lumpSumAllowance.toFixed(2)}</span>
+                      <span>-{formatCurrency(lumpSumAllowance.toFixed(2))}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-bold text-lg">

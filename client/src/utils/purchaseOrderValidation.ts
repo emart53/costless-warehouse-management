@@ -98,7 +98,7 @@ export function validatePurchaseOrder(
     }
     
     if (unitCost <= 0) {
-      errors.push(`Line ${index + 1}: Invalid unit cost (${unitCost})`);
+      errors.push(`Line ${index + 1}: Invalid unit cost ({formatCurrency(unitCost)})`);
     }
     
     // Get authentic pricing data
@@ -114,7 +114,7 @@ export function validatePurchaseOrder(
     // Validate against authentic data
     if (Math.abs(unitCost - pricing.listCost) > 0.01) {
       warnings.push(
-        `Line ${index + 1}: Unit cost ${unitCost} differs from authentic data ${pricing.listCost}`
+        `Line ${index + 1}: Unit cost {formatCurrency(unitCost)} differs from authentic data {formatCurrency(pricing.listCost)}`
       );
     }
     

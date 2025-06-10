@@ -853,11 +853,11 @@ export default function PurchaseOrders() {
                                 {product.case_pack || product.casePack}/{product.size}
                               </div>
                               <div className="text-xs text-gray-700">
-                                <div>List: ${listCost.toFixed(2)}</div>
-                                <div>Net: ${netCost.toFixed(2)}</div>
+                                <div>List: {formatCurrency(listCost.toFixed(2))}</div>
+                                <div>Net: {formatCurrency(netCost.toFixed(2))}</div>
                                 {quantity > 0 && (
                                   <div className="font-medium text-green-700">
-                                    Total: ${(quantity * netCost).toFixed(2)}
+                                    Total: {formatCurrency((quantity * netCost).toFixed(2))}
                                   </div>
                                 )}
                               </div>
@@ -1031,7 +1031,7 @@ export default function PurchaseOrders() {
                                             <span className="font-medium">{product.brand}</span> {(product.product_description || product.productDescription)}
                                           </div>
                                           <div className="text-gray-600 text-xs">
-                                            {product.case_pack || product.casePack}/{product.size} • ${parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2)} each
+                                            {product.case_pack || product.casePack}/{product.size} • {formatCurrency(parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2))} each
                                           </div>
                                         </div>
                                       </div>
@@ -1125,13 +1125,13 @@ export default function PurchaseOrders() {
                                     {(product.product_description || product.productDescription)} {product.case_pack || product.casePack}/{product.size}
                                   </div>
                                   <div className="text-xs text-right pr-2">
-                                    ${listCost.toFixed(2)}
+                                    {formatCurrency(listCost.toFixed(2))}
                                   </div>
                                   <div className="text-xs text-right pr-2">
-                                    ${offInvoice.toFixed(2)}
+                                    {formatCurrency(offInvoice.toFixed(2))}
                                   </div>
                                   <div className="text-xs text-right pr-2 font-medium">
-                                    ${netCost.toFixed(2)}
+                                    {formatCurrency(netCost.toFixed(2))}
                                   </div>
                                   <div className="text-xs text-right pr-2 font-medium">
                                     ${extCost.toFixed(2)}
@@ -1189,7 +1189,7 @@ export default function PurchaseOrders() {
                               {(product.product_description || product.productDescription)} {product.case_pack || product.casePack}/{product.size}
                             </div>
                           </div>
-                          <div className="text-xs text-gray-500">${parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2)}</div>
+                          <div className="text-xs text-gray-500">{formatCurrency(parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2))}</div>
                         </div>
                       ))}
                       {vendorProducts.length > 20 && (

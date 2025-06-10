@@ -197,16 +197,16 @@ export default function VendorProductLookup() {
                               </div>
                               {product.offInvoice > 0 && (
                                 <div className="text-green-600">
-                                  Off Invoice: -${product.offInvoice.toFixed(2)}
+                                  Off Invoice: -{formatCurrency(product.offInvoice.toFixed(2))}
                                 </div>
                               )}
                               {product.billBack > 0 && (
                                 <div className="text-blue-600">
-                                  Bill Back: -${product.billBack.toFixed(2)}
+                                  Bill Back: -{formatCurrency(product.billBack.toFixed(2))}
                                 </div>
                               )}
                               <div className="font-medium">
-                                Net: ${product.netCost.toFixed(2)}
+                                Net: {formatCurrency(product.netCost.toFixed(2))}
                               </div>
                             </div>
                           </TableCell>

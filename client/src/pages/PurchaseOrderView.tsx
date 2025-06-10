@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Printer, Download } from "lucide-react";
 import { useLocation } from "wouter";
-import { formatCurrency, formatNumber } from "@/lib/formatNumber";
+import { formatCurrency, formatNumber , formatCurrencyInput, parseCurrency } from "@/lib/formatNumber";
 
 export default function PurchaseOrderView() {
   const { id } = useParams();

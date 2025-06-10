@@ -308,7 +308,7 @@ export function OrderEntry({ orderType, onSave, onCancel }: OrderEntryProps) {
                         />
                       </div>
                       <div className="col-span-1 text-sm">
-                        ${(item.unitCost || 0).toFixed(2)}
+                        {formatCurrency((item.unitCost || 0).toFixed(2))}
                       </div>
                       <div className="col-span-1">
                         <Button

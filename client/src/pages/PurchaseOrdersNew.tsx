@@ -756,15 +756,15 @@ export default function PurchaseOrders() {
                                         {product.unit_cost && parseFloat(product.unit_cost) > 0 && parseFloat(product.unit_cost) !== parseFloat(product.purchase_cost || product.purchaseCost || "0") ? (
                                           <>
                                             <div className="text-xs text-gray-600">
-                                              Unit Cost: ${parseFloat(product.unit_cost).toFixed(2)}
+                                              Unit Cost: {formatCurrency(parseFloat(product.unit_cost).toFixed(2))}
                                             </div>
                                             <div className="font-medium text-gray-900">
-                                              {product.configuration_name || 'Case'}: ${parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2)}
+                                              {product.configuration_name || 'Case'}: {formatCurrency(parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2))}
                                             </div>
                                           </>
                                         ) : (
                                           <div className="font-medium text-gray-900">
-                                            Cost: ${parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2)}
+                                            Cost: {formatCurrency(parseFloat(product.purchase_cost || product.purchaseCost || "0").toFixed(2))}
                                           </div>
                                         )}
                                         {product.off_invoice && parseFloat(product.off_invoice) !== 0 && (
@@ -789,13 +789,13 @@ export default function PurchaseOrders() {
                                         )}
                                         {(product.off_invoice || product.billback || product.case_allowance || product.vendor_allowance) && (
                                           <div className="text-xs font-medium text-gray-700 pt-1 border-t">
-                                            Net Cost: ${(
+                                            Net Cost: {formatCurrency((
                                               parseFloat(product.purchase_cost || product.purchaseCost || "0") -
                                               parseFloat(product.off_invoice || "0") -
                                               parseFloat(product.billback || "0") -
                                               parseFloat(product.case_allowance || "0") -
                                               parseFloat(product.vendor_allowance || "0")
-                                            ).toFixed(2)}
+                                            ).toFixed(2))}
                                           </div>
                                         )}
                                       </div>
@@ -1054,9 +1054,9 @@ export default function PurchaseOrders() {
                                     </div>
                                   </td>
                                   <td className="text-right p-2">{quantity}</td>
-                                  <td className="text-right p-2">${unitCost.toFixed(4)}</td>
-                                  <td className="text-right p-2">${offInvoice.toFixed(4)}</td>
-                                  <td className="text-right p-2">${billBack.toFixed(4)}</td>
+                                  <td className="text-right p-2">{formatCurrency(unitCost.toFixed(4))}</td>
+                                  <td className="text-right p-2">{formatCurrency(offInvoice.toFixed(4))}</td>
+                                  <td className="text-right p-2">{formatCurrency(billBack.toFixed(4))}</td>
                                   <td className="text-right p-2">${crv.toFixed(4)}</td>
                                   <td className="text-right p-2 font-medium">${extendedList.toFixed(2)}</td>
                                   <td className="text-right p-2 font-medium">${extendedNet.toFixed(2)}</td>
@@ -1133,11 +1133,11 @@ export default function PurchaseOrders() {
                               </div>
                               <div className="flex justify-between">
                                 <span>Lump Sum Allowance:</span>
-                                <span className="font-medium text-green-600">-${lumpSumAllowance.toFixed(2)}</span>
+                                <span className="font-medium text-green-600">-{formatCurrency(lumpSumAllowance.toFixed(2))}</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>Delivery Charge:</span>
-                                <span className="font-medium">${deliveryCharge.toFixed(2)}</span>
+                                <span className="font-medium">{formatCurrency(deliveryCharge.toFixed(2))}</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>Early Payment Discount ({earlyPayDiscount}%):</span>

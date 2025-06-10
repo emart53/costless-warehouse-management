@@ -887,9 +887,9 @@ export function ComprehensiveProductEdit({
               <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Cost Breakdown</h4>
               <div className="text-xs space-y-1">
                 <div>Purchase Cost: <span className="font-medium">${formData.purchaseCost.toFixed(2)}</span></div>
-                <div>Less Off Invoice: <span className="font-medium text-red-600">-${formData.offInvoice.toFixed(2)}</span></div>
-                <div>Less Bill Back: <span className="font-medium text-red-600">-${formData.billBack.toFixed(2)}</span></div>
-                <div className="border-t pt-1">Net Cost: <span className="font-medium">${(formData.purchaseCost - formData.offInvoice - formData.billBack).toFixed(2)}</span></div>
+                <div>Less Off Invoice: <span className="font-medium text-red-600">-{formatCurrency(formData.offInvoice.toFixed(2))}</span></div>
+                <div>Less Bill Back: <span className="font-medium text-red-600">-{formatCurrency(formData.billBack.toFixed(2))}</span></div>
+                <div className="border-t pt-1">Net Cost: <span className="font-medium">{formatCurrency((formData.purchaseCost - formData.offInvoice - formData.billBack).toFixed(2))}</span></div>
               </div>
             </div>
             
@@ -919,14 +919,14 @@ export function ComprehensiveProductEdit({
                   );
                 })()}
                 <div>Retail Price: <span className="font-medium">${formData.retailPrice.toFixed(2)}</span></div>
-                <div className="border-t pt-1">Gross Margin: <span className={`font-medium ${(() => {
+                <div className="border-t pt-1">Gross Margin: <span className={`font-medium {formatCurrency((() => {
                   const transferCost = formData.transferConfig.transferCostOverride ? 
                     formData.transferConfig.transferCost :
                     (() => {
                       const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                       const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
                       return netCost * ratio;
-                    })();
+                    )})();
                   const unitCount = formData.transferConfig.transferCaseQty * formData.casePack;
                   const unitCost = unitCount > 0 ? transferCost / unitCount : transferCost;
                   const margin = formData.retailPrice > 0 && unitCost > 0 ? ((formData.retailPrice - unitCost) / formData.retailPrice) * 100 : 0;
@@ -982,14 +982,14 @@ export function ComprehensiveProductEdit({
                 <h4 className="text-sm font-medium text-yellow-800 mb-2">Current Calculation</h4>
                 <div className="text-xs text-yellow-700 space-y-1">
                   <div>Purchase Cost: ${formData.purchaseCost.toFixed(2)}</div>
-                  <div>Less Off Invoice: -${formData.offInvoice.toFixed(2)}</div>
-                  <div>Less Bill Back: -${formData.billBack.toFixed(2)}</div>
+                  <div>Less Off Invoice: -{formatCurrency(formData.offInvoice.toFixed(2))}</div>
+                  <div>Less Bill Back: -{formatCurrency(formData.billBack.toFixed(2))}</div>
                   <div className="border-t pt-1 font-medium">
-                    Auto Calculated: ${(() => {
+                    Auto Calculated: {formatCurrency((() => {
                       const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                       const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
                       return (netCost * ratio).toFixed(2);
-                    })()}
+                    )})()}
                   </div>
                 </div>
               </div>

@@ -188,9 +188,9 @@ export default function PurchaseOrderViewAuthentic() {
                       <div className="font-medium">{item.product?.productDescription}</div>
                       <div className="text-gray-500">{item.product?.brand} - {item.product?.size}</div>
                     </td>
-                    <td className="border border-gray-300 p-2 text-right">${unitCost.toFixed(2)}</td>
-                    <td className="border border-gray-300 p-2 text-right">${offInvoiceAllowance.toFixed(2)}</td>
-                    <td className="border border-gray-300 p-2 text-right">${billBackPerCase.toFixed(2)}</td>
+                    <td className="border border-gray-300 p-2 text-right">{formatCurrency(unitCost.toFixed(2))}</td>
+                    <td className="border border-gray-300 p-2 text-right">{formatCurrency(offInvoiceAllowance.toFixed(2))}</td>
+                    <td className="border border-gray-300 p-2 text-right">{formatCurrency(billBackPerCase.toFixed(2))}</td>
                     <td className="border border-gray-300 p-2 text-right">${billedCostPerCase.toFixed(2)}</td>
                     <td className="border border-gray-300 p-2 text-right">${extendedBilledCost.toFixed(2)}</td>
                   </tr>
@@ -226,7 +226,7 @@ export default function PurchaseOrderViewAuthentic() {
               </div>
               <div className="flex justify-between">
                 <span>Delivery Charge:</span>
-                <span>${deliveryChargeAmount.toFixed(2)}</span>
+                <span>{formatCurrency(deliveryChargeAmount.toFixed(2))}</span>
               </div>
               <div className="border-t pt-2 flex justify-between font-bold">
                 <span>Net Invoice Total:</span>

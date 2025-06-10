@@ -302,7 +302,7 @@ export default function DeliverySchedulingCalendar() {
                           </div>
                         )}
                         <div className="text-xs font-medium">
-                          ${formatNumber(schedule.purchaseOrder.totalAmount)}
+                          {formatCurrency(schedule.purchaseOrder.totalAmount)}
                         </div>
                         {schedule.priority === 'urgent' && (
                           <div className="text-xs text-red-600 font-medium">
@@ -354,7 +354,7 @@ export default function DeliverySchedulingCalendar() {
                     {po.vendor?.name}
                   </div>
                   <div className="text-sm font-medium">
-                    ${formatNumber(po.totalAmount || 0)}
+                    {formatCurrency(po.totalAmount || 0)}
                   </div>
                   {po.expectedDate && (
                     <div className="text-xs text-blue-600 mt-1">

@@ -329,7 +329,7 @@ export default function PurchaseOrdersEnhanced() {
               <Package className="h-4 w-4 text-green-600" />
               <div>
                 <p className="text-xs font-medium text-muted-foreground">Total Value</p>
-                <p className="text-sm font-bold">${formatNumber(totals.totalValue)}</p>
+                <p className="text-sm font-bold">{formatCurrency(totals.totalValue)}</p>
               </div>
             </div>
           </CardContent>
@@ -456,7 +456,7 @@ export default function PurchaseOrdersEnhanced() {
                         {getStatusBadge(po.status)}
                       </TableCell>
                       <TableCell className="font-medium py-1 text-sm">
-                        ${formatNumber(parseFloat(po.totalAmount || "0"))}
+                        {formatCurrency(parseFloat(po.totalAmount || "0"))}
                       </TableCell>
                       <TableCell className="py-1">
                         <div className="flex items-center gap-0.5">

@@ -153,12 +153,12 @@ export default function PurchaseOrderViewCSV() {
             </div>
             <div className="flex justify-between">
               <span className="text-sm font-medium text-gray-500">Delivery Charge:</span>
-              <span className="text-sm font-medium">${totals.deliveryCharge.toFixed(2)}</span>
+              <span className="text-sm font-medium">{formatCurrency(totals.deliveryCharge.toFixed(2))}</span>
             </div>
             {totals.lumpSumAllowance > 0 && (
               <div className="flex justify-between">
                 <span className="text-sm font-medium text-gray-500">Lump Sum Allowance:</span>
-                <span className="text-sm font-medium text-green-600">-${totals.lumpSumAllowance.toFixed(2)}</span>
+                <span className="text-sm font-medium text-green-600">-{formatCurrency(totals.lumpSumAllowance.toFixed(2))}</span>
               </div>
             )}
             <Separator />
@@ -200,12 +200,12 @@ export default function PurchaseOrderViewCSV() {
                     <td className="text-right py-2">{item.quantity}</td>
                     <td className="text-right py-2">${item.purchaseCost.toFixed(2)}</td>
                     <td className="text-right py-2 text-green-600">
-                      {item.offInvoice > 0 ? `-$${item.offInvoice.toFixed(2)}` : '$0.00'}
+                      {item.offInvoice > 0 ? `-${formatCurrency(item.offInvoice.toFixed(2))}` : '$0.00'}
                     </td>
                     <td className="text-right py-2 text-orange-600">
-                      {item.billBack > 0 ? `-$${item.billBack.toFixed(2)}` : '$0.00'}
+                      {item.billBack > 0 ? `-${formatCurrency(item.billBack.toFixed(2))}` : '$0.00'}
                     </td>
-                    <td className="text-right py-2 font-medium">${item.netCost.toFixed(2)}</td>
+                    <td className="text-right py-2 font-medium">{formatCurrency(item.netCost.toFixed(2))}</td>
                     <td className="text-right py-2">{item.purchaseWeight.toFixed(2)}</td>
                     <td className="text-right py-2 font-medium">
                       ${(item.purchaseCost * item.quantity).toFixed(2)}

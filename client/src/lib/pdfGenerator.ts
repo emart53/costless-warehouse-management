@@ -220,9 +220,9 @@ export function generatePOPrintHTML(po: PDFPurchaseOrder): string {
               <td>${item.description}</td>
               <td>${item.configuration}</td>
               <td class="number">${item.quantity}</td>
-              <td class="number">$${item.unitCost.toFixed(2)}</td>
-              <td class="number">$${item.offInvoice.toFixed(2)}</td>
-              <td class="number">$${item.billBack.toFixed(2)}</td>
+              <td class="number">${formatCurrency(item.unitCost.toFixed(2))}</td>
+              <td class="number">${formatCurrency(item.offInvoice.toFixed(2))}</td>
+              <td class="number">${formatCurrency(item.billBack.toFixed(2))}</td>
               <td class="number">$${item.extendedCost.toFixed(2)}</td>
             </tr>
           `).join('')}
@@ -237,19 +237,19 @@ export function generatePOPrintHTML(po: PDFPurchaseOrder): string {
           </tr>
           <tr>
             <td>Off Invoice Total:</td>
-            <td class="number">-$${po.totals.offInvoiceTotal.toFixed(2)}</td>
+            <td class="number">-${formatCurrency(po.totals.offInvoiceTotal.toFixed(2))}</td>
           </tr>
           <tr>
             <td>Bill Back Total:</td>
-            <td class="number">-$${po.totals.billBackTotal.toFixed(2)}</td>
+            <td class="number">-${formatCurrency(po.totals.billBackTotal.toFixed(2))}</td>
           </tr>
           <tr>
             <td>Lump Sum Allowance:</td>
-            <td class="number">-$${po.totals.lumpSumAllowance.toFixed(2)}</td>
+            <td class="number">-${formatCurrency(po.totals.lumpSumAllowance.toFixed(2))}</td>
           </tr>
           <tr>
             <td>Delivery Charge:</td>
-            <td class="number">$${po.totals.deliveryCharge.toFixed(2)}</td>
+            <td class="number">${formatCurrency(po.totals.deliveryCharge.toFixed(2))}</td>
           </tr>
           <tr>
             <td>Early Pay Discount:</td>

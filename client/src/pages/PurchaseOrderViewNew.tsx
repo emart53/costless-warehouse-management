@@ -308,15 +308,15 @@ export default function PurchaseOrderViewNew() {
                     {purchaseOrder.lumpSumAllowance && parseFloat(purchaseOrder.lumpSumAllowance) !== 0 && (
                       <div>
                         <span className="text-gray-500">Lump Sum {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'Charge' : 'Allowance'}:</span><br />
-                        <span className={`font-medium ${parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                          {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}${Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        <span className={`font-medium {formatCurrency(parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'text-red-600' : 'text-green-600')}`}>
+                          {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}{formatCurrency(Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}
                         </span>
                       </div>
                     )}
                     {purchaseOrder.deliveryCharge && parseFloat(purchaseOrder.deliveryCharge) !== 0 && (
                       <div>
                         <span className="text-gray-500">Delivery Charge:</span><br />
-                        <span className="font-medium text-red-600">${parseFloat(purchaseOrder.deliveryCharge).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span className="font-medium text-red-600">{formatCurrency(parseFloat(purchaseOrder.deliveryCharge).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                       </div>
                     )}
                   </div>
@@ -417,20 +417,20 @@ export default function PurchaseOrderViewNew() {
                 <div className="flex justify-between">
                   <span>Subtotal (before allowances):</span>
                   <span className="font-medium">
-                    ${(() => {
+                    {formatCurrency((() => {
                       const items = purchaseOrder.items || [];
                       const total = items.reduce((sum, item) => sum + ((item.listCost || 0) * (item.quantityOrdered || 0)), 0);
-                      return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                      return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )});
                     })()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Off Invoice Allowances:</span>
                   <span className="font-medium text-green-600">
-                    -${(() => {
+                    -{formatCurrency((() => {
                       const items = purchaseOrder.items || [];
                       const total = items.reduce((sum, item) => sum + ((item.offInvoice || 0) * (item.quantityOrdered || 0)), 0);
-                      return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                      return total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )});
                     })()}
                   </span>
                 </div>
@@ -486,8 +486,8 @@ export default function PurchaseOrderViewNew() {
                 {purchaseOrder.lumpSumAllowance && parseFloat(purchaseOrder.lumpSumAllowance) !== 0 && (
                   <div className="flex justify-between">
                     <span>Lump Sum {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'Charge' : 'Allowance'}:</span>
-                    <span className={`font-medium ${parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}${Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    <span className={`font-medium {formatCurrency(parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? 'text-red-600' : 'text-green-600')}`}>
+                      {parseFloat(purchaseOrder.lumpSumAllowance) > 0 ? '+' : ''}{formatCurrency(Math.abs(parseFloat(purchaseOrder.lumpSumAllowance)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}
                     </span>
                   </div>
                 )}
@@ -495,14 +495,14 @@ export default function PurchaseOrderViewNew() {
                   <div className="flex justify-between">
                     <span>Delivery Charge:</span>
                     <span className="font-medium text-red-600">
-                      +${parseFloat(purchaseOrder.deliveryCharge).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      +{formatCurrency(parseFloat(purchaseOrder.deliveryCharge).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between border-t pt-2">
                   <span className="font-bold text-lg">Order Total:</span>
                   <span className="font-bold text-lg">
-                    ${(() => {
+                    {formatCurrency((() => {
                       const items = purchaseOrder.items || [];
                       const subtotal = items.reduce((sum, item) => sum + ((item.listCost || 0) * (item.quantityOrdered || 0)), 0);
                       const offInvoice = items.reduce((sum, item) => sum + ((item.offInvoice || 0) * (item.quantityOrdered || 0)), 0);
@@ -517,7 +517,7 @@ export default function PurchaseOrderViewNew() {
                       if (discountPercent > 0) {
                         const discountAmount = subtotal * discountPercent;
                         netAfterAllowances -= discountAmount;
-                      }
+                      )}
                       
                       // Add CRV, lump sum, and delivery charges
                       const lumpSum = parseFloat(purchaseOrder.lumpSumAllowance || '0');

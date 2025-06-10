@@ -114,15 +114,15 @@ export function validateAgainstAuthenticData(
   }
   
   if (Math.abs(calculatedValues.offInvoice - authentic.offInvoice) > tolerance) {
-    errors.push(`Off invoice mismatch: calculated ${calculatedValues.offInvoice}, authentic ${authentic.offInvoice}`);
+    errors.push(`Off invoice mismatch: calculated {formatCurrency(calculatedValues.offInvoice)}, authentic {formatCurrency(authentic.offInvoice)}`);
   }
   
   if (Math.abs(calculatedValues.billBack - authentic.billBack) > tolerance) {
-    errors.push(`Bill back mismatch: calculated ${calculatedValues.billBack}, authentic ${authentic.billBack}`);
+    errors.push(`Bill back mismatch: calculated {formatCurrency(calculatedValues.billBack)}, authentic {formatCurrency(authentic.billBack)}`);
   }
   
   if (Math.abs(calculatedValues.netCost - authentic.netCost) > tolerance) {
-    errors.push(`Net cost mismatch: calculated ${calculatedValues.netCost}, authentic ${authentic.netCost}`);
+    errors.push(`Net cost mismatch: calculated {formatCurrency(calculatedValues.netCost)}, authentic {formatCurrency(authentic.netCost)}`);
   }
   
   return {

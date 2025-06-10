@@ -452,8 +452,8 @@ export default function CreatePurchaseOrder() {
           <CardHeader>
             <CardTitle>
               {(vendorProducts as any[]).length <= 12 
-                ? `Products (${formatNumber((vendorProducts as any[]).length)} - All Displayed)`
-                : `Product Entry (${formatNumber((vendorProducts as any[]).length)} available)`
+                ? `Products ({formatCurrency((vendorProducts as any[]).length)} - All Displayed)`
+                : `Product Entry ({formatCurrency((vendorProducts as any[]).length)} available)`
               }
             </CardTitle>
             {(vendorProducts as any[]).length > 12 && (

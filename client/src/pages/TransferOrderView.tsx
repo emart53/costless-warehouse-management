@@ -246,7 +246,7 @@ export default function TransferOrderView() {
                           ${(parseFloat(item.transferCost?.toString() || '0')).toFixed(2)}
                         </td>
                         <td className="p-3 text-right font-mono font-medium">
-                          ${(parseFloat(item.totalCost?.toString() || '0')).toFixed(2)}
+                          {formatCurrency((parseFloat(item.totalCost?.toString() || '0')).toFixed(2))}
                         </td>
                         <td className="p-3 text-right font-mono text-sm">
                           {(parseFloat(item.transferWeight?.toString() || '0')).toFixed(1)}
@@ -275,7 +275,7 @@ export default function TransferOrderView() {
                   <div className="text-right">
                     <div className="text-sm text-muted-foreground">Subtotal:</div>
                     <div className="font-medium">
-                      ${transferOrder.items.reduce((sum, item) => sum + (parseFloat(item.totalCost) || 0), 0).toFixed(2)}
+                      {formatCurrency(transferOrder.items.reduce((sum, item) => sum + (parseFloat(item.totalCost) || 0), 0).toFixed(2))}
                     </div>
                   </div>
                   <div className="text-right">

@@ -185,7 +185,7 @@ export function PurchaseOrderDetailTableNew({
                         min="0"
                       />
                     ) : (
-                      <span className="text-xs">${(item.listCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span className="text-xs">{formatCurrency((item.listCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                     )}
                   </td>
                   
@@ -201,7 +201,7 @@ export function PurchaseOrderDetailTableNew({
                         min="0"
                       />
                     ) : (
-                      <span className="text-xs">${(item.offInvoice || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span className="text-xs">{formatCurrency((item.offInvoice || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                     )}
                   </td>
                   
@@ -218,14 +218,14 @@ export function PurchaseOrderDetailTableNew({
                           min="0"
                         />
                       ) : (
-                        <span className="text-xs">${(item.billBack || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span className="text-xs">{formatCurrency((item.billBack || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                       )}
                     </td>
                   )}
                   
                   {/* Net Cost → net_cost (decimal 12,4) (list_cost - off_invoice) */}
                   <td className="border border-gray-300 px-1 py-1 text-right">
-                    <span className="text-xs">${(item.netCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className="text-xs">{formatCurrency((item.netCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
                   </td>
                   
                   {/* Weight → purchase_weight (decimal 10,4) */}
@@ -330,7 +330,7 @@ export function PurchaseOrderDetailTableNew({
               {/* Column 10: Ext. Net - show total */}
               <td className="border border-gray-300 px-1 py-2 text-right">
                 <span className="text-xs font-bold">
-                  ${items.reduce((sum, item) => sum + ((item.netCost || 0) * (item.quantityOrdered || 0)), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(items.reduce((sum, item) => sum + ((item.netCost || 0) * (item.quantityOrdered || 0)), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}
                 </span>
               </td>
               {/* Column 11: Ext. Weight - show total */}
@@ -353,7 +353,7 @@ export function PurchaseOrderDetailTableNew({
               {/* Column 13: Ext. List - show total */}
               <td className="border border-gray-300 px-1 py-2 text-right">
                 <span className="text-xs font-bold">
-                  ${items.reduce((sum, item) => sum + ((item.listCost || 0) * (item.quantityOrdered || 0)), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(items.reduce((sum, item) => sum + ((item.listCost || 0) * (item.quantityOrdered || 0)), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}
                 </span>
               </td>
               {/* Column 14: Actions (conditional) - empty */}

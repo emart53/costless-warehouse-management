@@ -191,7 +191,7 @@ export function PurchaseOrderDetailTable({
                   
                   {/* Net Cost → net_cost (list_cost - off_invoice) */}
                   <td className="border border-gray-300 px-2 py-1 text-xs bg-gray-100">
-                    ${extValues.netCost.toFixed(4)}
+                    {formatCurrency(extValues.netCost.toFixed(4))}
                   </td>
                   
                   {/* Weight → purchase_weight */}

@@ -385,7 +385,7 @@ export default function PurchaseOrderEditor() {
                             <span>{product.name}</span>
                             <span className="text-xs text-gray-500 ml-4">
                               ${product.purchaseCost.toFixed(2)}
-                              {product.offInvoice > 0 && ` (-$${product.offInvoice.toFixed(2)})`}
+                              {product.offInvoice > 0 && ` (-${formatCurrency(product.offInvoice.toFixed(2))})`}
                             </span>
                           </div>
                         </SelectItem>
@@ -425,9 +425,9 @@ export default function PurchaseOrderEditor() {
                         </div>
                         <div className="grid grid-cols-2 gap-4 mt-2 text-xs">
                           <div>Purchase Cost: ${product.purchaseCost.toFixed(2)}</div>
-                          <div>Net Cost: ${product.netCost.toFixed(2)}</div>
-                          {product.offInvoice > 0 && <div className="text-green-600">Off Invoice: -${product.offInvoice.toFixed(2)}</div>}
-                          {product.billBack > 0 && <div className="text-blue-600">Bill Back: -${product.billBack.toFixed(2)}</div>}
+                          <div>Net Cost: {formatCurrency(product.netCost.toFixed(2))}</div>
+                          {product.offInvoice > 0 && <div className="text-green-600">Off Invoice: -{formatCurrency(product.offInvoice.toFixed(2))}</div>}
+                          {product.billBack > 0 && <div className="text-blue-600">Bill Back: -{formatCurrency(product.billBack.toFixed(2))}</div>}
                         </div>
                       </div>
                     ) : null;
@@ -467,7 +467,7 @@ export default function PurchaseOrderEditor() {
                         <TableCell className="text-right">{item.quantity}</TableCell>
                         <TableCell className="text-right">${item.purchaseCost.toFixed(2)}</TableCell>
                         <TableCell className="text-right">
-                          {item.offInvoice > 0 ? `-$${item.offInvoice.toFixed(2)}` : '$0.00'}
+                          {item.offInvoice > 0 ? `-${formatCurrency(item.offInvoice.toFixed(2))}` : '$0.00'}
                         </TableCell>
                         <TableCell className="text-right font-medium">
                           ${item.extendedCost.toFixed(2)}
@@ -520,12 +520,12 @@ export default function PurchaseOrderEditor() {
               </div>
               <div className="flex justify-between">
                 <span className="text-sm font-medium text-gray-500">Delivery Charge:</span>
-                <span className="text-sm font-medium">${header.deliveryCharge.toFixed(2)}</span>
+                <span className="text-sm font-medium">{formatCurrency(header.deliveryCharge.toFixed(2))}</span>
               </div>
               {header.lumpSumAllowance > 0 && (
                 <div className="flex justify-between">
                   <span className="text-sm font-medium text-gray-500">Lump Sum Allowance:</span>
-                  <span className="text-sm font-medium text-green-600">-${header.lumpSumAllowance.toFixed(2)}</span>
+                  <span className="text-sm font-medium text-green-600">-{formatCurrency(header.lumpSumAllowance.toFixed(2))}</span>
                 </div>
               )}
               <div className="flex justify-between">
