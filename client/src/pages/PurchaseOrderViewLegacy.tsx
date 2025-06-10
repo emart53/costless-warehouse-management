@@ -82,7 +82,7 @@ export default function PurchaseOrderViewLegacy() {
     );
   }
 
-  // Calculate totals like legacy system
+  // Calculate totals like legacy system - CORRECTED BILL BACK LOGIC
   const calculateTotals = () => {
     let subtotal = 0;
     let totalWeight = 0;
@@ -101,12 +101,16 @@ export default function PurchaseOrderViewLegacy() {
         const crv = quantity * productCrv;
         const extendedListCost = quantity * listCost;
 
-        const netCost = listCost - offInvoice;
-        const extendedCost = quantity * netCost;
+        // CORRECTED: Billed cost is List Cost - Off Invoice (NOT minus bill back)
+        const billedCost = listCost - offInvoice;
+        const extendedBilledCost = quantity * billedCost;
         
-        subtotal += extendedCost;
+        // CORRECTED: Extended bill back is calculated separately per item
+        const extendedBillBack = quantity * billBack;
+        
+        subtotal += extendedBilledCost;
         totalWeight += weight;
-        totalBillBack += billBack;
+        totalBillBack += extendedBillBack;
         totalCrv += crv;
         totalExtendedListCost += extendedListCost;
       });
@@ -115,9 +119,9 @@ export default function PurchaseOrderViewLegacy() {
     const deliveryCharge = parseFloat(purchaseOrder.deliveryCharge || '0');
     const lumpSumAllowance = parseFloat(purchaseOrder.lumpSumAllowance || '0');
     
-    // Calculate vendor discount if available
+    // CORRECTED: 2% discount calculated on Extended List Cost, not subtotal
     const vendorDiscountPercent = parseFloat(purchaseOrder.vendor?.discountPercent || '0');
-    const vendorDiscount = subtotal * vendorDiscountPercent;
+    const vendorDiscount = totalExtendedListCost * vendorDiscountPercent;
     
     const netInvoiceCost = subtotal + deliveryCharge + totalCrv;
     const totalInvoiceCost = netInvoiceCost - totalBillBack - lumpSumAllowance - vendorDiscount;
@@ -295,7 +299,7 @@ export default function PurchaseOrderViewLegacy() {
           const weight = parseFloat(item.purchaseWeight?.toString() || '0');
           const productCrv = parseFloat(item.product?.crv?.toString() || '0');
           const extendedListCost = listCost * quantity;
-          const billedCost = listCost - offInvoice - billBack;
+          const billedCost = listCost - offInvoice;
           const extendedWeight = weight * quantity;
           const extendedCost = billedCost * quantity;
           const extendedCrv = productCrv * quantity;
@@ -345,8 +349,7 @@ export default function PurchaseOrderViewLegacy() {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
                 const offInvoice = parseFloat(item.offInvoice?.toString() || '0');
-                const billBack = parseFloat(item.billBack?.toString() || '0');
-                const billedCost = listCost - offInvoice - billBack;
+                const billedCost = listCost - offInvoice;
                 return sum + (quantity * billedCost);
               }, 0).toFixed(2)}
             </div>
