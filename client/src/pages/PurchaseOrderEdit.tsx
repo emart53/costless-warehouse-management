@@ -126,8 +126,9 @@ export default function PurchaseOrderEdit() {
       return sum + (crvPerUnit * qty);
     }, 0);
     
-    // Apply 2% discount to Extended Net (already includes off-invoice deductions)
-    const vendorDiscountPercent = 0.02;
+    // Apply vendor discount to Extended Net (use actual vendor discount rate)
+    const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
+    const vendorDiscountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) / 100 : 0;
     const discountAmount = subtotal * vendorDiscountPercent;
     const netTotal = subtotal - discountAmount;
     const finalTotal = netTotal - totalBillBack + totalCrv + Number(lumpSum || 0) + Number(delivery || 0);
@@ -332,7 +333,11 @@ export default function PurchaseOrderEdit() {
         description: `Purchase order ${id ? 'updated' : 'created'} successfully`,
       });
       queryClient.invalidateQueries({ queryKey: ['/api/purchase-orders'] });
-      setLocation('/purchase-orders');
+      queryClient.invalidateQueries({ queryKey: [`/api/purchase-orders/${id}`] });
+      // Stay on edit page to show updated data
+      if (!id) {
+        setLocation('/purchase-orders');
+      }
     },
     onError: (error: any) => {
       toast({
