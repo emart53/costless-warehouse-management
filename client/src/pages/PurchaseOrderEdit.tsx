@@ -554,9 +554,9 @@ export default function PurchaseOrderEdit() {
                 <div className="flex-1 p-2 border rounded-md bg-gray-50">
                   {existingPO && (existingPO as any).billToLocation ? 
                     (existingPO as any).billToLocation.name :
-                    formData.billToLocationId > 0 && locations ? 
-                      (locations as any[]).find(l => l.id === formData.billToLocationId)?.name || 'Unknown Location' :
-                      'No location selected'
+                    formData.billToLocationId > 0 && stores ? 
+                      (stores as any[]).find(s => s.id === formData.billToLocationId)?.name || 'Unknown Store' :
+                      'No store selected'
                   }
                 </div>
                 <Select 
@@ -567,9 +567,9 @@ export default function PurchaseOrderEdit() {
                     <SelectValue>Change</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {(locations as any[])?.map((location) => (
-                      <SelectItem key={location.id} value={location.id.toString()}>
-                        {location.name}
+                    {(stores as any[])?.filter(store => store.locationType === 'office' || store.locationType === 'warehouse')?.map((store) => (
+                      <SelectItem key={store.id} value={store.id.toString()}>
+                        {store.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
