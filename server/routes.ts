@@ -475,20 +475,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         LIMIT 50
       `, [vendorId]);
       
-      // Group products by category for better organization
-      const products = result.rows.map(row => ({
-        ...row,
-        category: row.categoryName ? {
-          id: row.categoryId,
-          name: row.categoryName
-        } : null,
-        department: row.departmentName ? {
-          id: row.departmentId,
-          name: row.departmentName
-        } : null
-      }));
-      
-      res.json(products);
+      res.json(result.rows);
     } catch (error) {
       console.error('Vendor products API error:', error);
       res.status(500).json({ message: 'Failed to fetch vendor products' });
