@@ -2146,8 +2146,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         INSERT INTO purchase_orders (
           po_number, vendor_id, order_date, expected_date, 
           delivery_charge, lump_sum_allowance, default_ship_to_store_id,
-          notes, special_instructions, status, total_amount, created_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
+          notes, special_instructions, status, total_amount
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING id
       `, [
         poNumber, vendorId, orderDate, expectedDeliveryDate,
@@ -2162,8 +2162,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await pool.query(`
           INSERT INTO purchase_order_items (
             po_id, product_id, quantity_ordered, list_cost, 
-            off_invoice, bill_back, created_at
-          ) VALUES ($1, $2, $3, $4, $5, $6, NOW())
+            off_invoice, bill_back
+          ) VALUES ($1, $2, $3, $4, $5, $6)
         `, [
           poId, item.productId, item.quantityOrdered, 
           item.listCost, item.offInvoice, item.billBack
