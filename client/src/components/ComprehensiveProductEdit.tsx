@@ -988,8 +988,8 @@ export function ComprehensiveProductEdit({
                     Auto Calculated: {formatCurrency((() => {
                       const netCost = formData.purchaseCost - formData.offInvoice - formData.billBack;
                       const ratio = formData.purchaseConfig.purchaseCaseQty > 0 ? (formData.transferConfig.transferCaseQty / formData.purchaseConfig.purchaseCaseQty) : 1;
-                      return (netCost * ratio).toFixed(2);
-                    )})()}
+                      return netCost * ratio;
+                    })())}
                   </div>
                 </div>
               </div>
