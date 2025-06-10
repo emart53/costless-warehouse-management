@@ -456,6 +456,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           p.id,
           p.product_id as "productId",
           COALESCE(p.product_description, p.description, p.name, 'Product ' || p.product_id) as description,
+          COALESCE(p.product_name, p.name) as name,
           p.brand,
           p.unit_size as "unitSize",
           p.size,
@@ -469,8 +470,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           COALESCE(p.crv, 0) as "crvPerUnit",
           COALESCE(p.purchase_weight, 0) as "caseWeight"
         FROM products p
-        WHERE p.preferred_vendor_id = $1 AND p.status = 'Active'
-        ORDER BY p.category, p.product_description
+        WHERE p.vendor_id = $1 AND p.status = 'Active'
+        ORDER BY p.category, COALESCE(p.product_description, p.name)
         LIMIT 50
       `, [vendorId]);
       
@@ -1894,46 +1895,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/vendors/:id/products", async (req, res) => {
-    try {
-      const vendorId = parseInt(req.params.id);
-      const { pool } = await import("./db.js");
-      
-      // Get products for this vendor with authentic pricing information
-      const result = await pool.query(`
-        SELECT DISTINCT
-          p.id,
-          p.product_id as "productId",
-          COALESCE(p.product_name, p.product_description) as name,
-          p.product_description as description,
-          p.brand,
-          p.size as "unitSize",
-          p.case_pack as "casePack",
-          p.status,
-          p.case_upc as sku,
-          p.vendor_id as "vendorId",
-          p.category_id as "categoryId",
-          p.department_id as "departmentId",
-          COALESCE(pp.purchase_cost, p.last_cost, p.purchase_cost, 0.00)::numeric(10,2) as "lastCost",
-          COALESCE(pp.purchase_cost, p.purchase_cost, 0.00)::numeric(10,2) as "purchaseCost",
-          COALESCE(pp.off_invoice, 0.00)::numeric(10,2) as "offInvoice",
-          COALESCE(pp.bill_back, 0.00)::numeric(10,2) as "billBack"
-        FROM products p
-        LEFT JOIN product_prices pp ON p.product_id = pp.product_id 
-          AND (pp.end_date IS NULL OR pp.end_date > CURRENT_DATE)
-        WHERE p.vendor_id = $1 
-        AND p.product_description IS NOT NULL
-        AND p.product_description != ''
-        ORDER BY p.product_id
-        LIMIT 50
-      `, [vendorId]);
-      
-      res.json(result.rows);
-    } catch (error) {
-      console.error("Error fetching vendor products:", error);
-      res.status(500).json({ message: "Failed to fetch vendor products" });
-    }
-  });
+
 
   // Enhanced products endpoint for rapid transfer entry with department filtering
   app.get("/api/products", async (req, res) => {
