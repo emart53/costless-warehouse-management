@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
 import { PurchaseOrderDetailTable } from "@/components/PurchaseOrderDetailTable";
+import { formatCurrency, formatCurrencyInput, parseCurrency } from "@/lib/formatNumber";
 
 interface PurchaseOrderItem {
   id?: number;
@@ -489,7 +490,7 @@ export default function PurchaseOrderEdit() {
               </Select>
               {/* Vendor Details */}
               {formData.vendorId > 0 && vendors && Array.isArray(vendors) && (
-                <VendorDetailsDisplay vendorId={formData.vendorId} vendors={vendors} />
+                <VendorDetailsDisplay vendorId={formData.vendorId} vendors={vendors as any[]} />
               )}
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -581,20 +582,20 @@ export default function PurchaseOrderEdit() {
                 <Label htmlFor="lumpSum">Lump Sum Allowance</Label>
                 <Input
                   id="lumpSum"
-                  type="number"
-                  step="0.01"
-                  value={formData.lumpSumAllowance}
-                  onChange={(e) => setFormData({ ...formData, lumpSumAllowance: parseFloat(e.target.value) || 0 })}
+                  type="text"
+                  value={formatCurrencyInput(formData.lumpSumAllowance)}
+                  onChange={(e) => setFormData({ ...formData, lumpSumAllowance: parseCurrency(e.target.value) })}
+                  placeholder="0.00"
                 />
               </div>
               <div>
                 <Label htmlFor="delivery">Delivery Charge</Label>
                 <Input
                   id="delivery"
-                  type="number"
-                  step="0.01"
-                  value={formData.deliveryCharge}
-                  onChange={(e) => setFormData({ ...formData, deliveryCharge: parseFloat(e.target.value) || 0 })}
+                  type="text"
+                  value={formatCurrencyInput(formData.deliveryCharge)}
+                  onChange={(e) => setFormData({ ...formData, deliveryCharge: parseCurrency(e.target.value) })}
+                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -720,32 +721,35 @@ export default function PurchaseOrderEdit() {
                           <td className="py-2 px-2">
                             <Input
                               type="text"
-                              value={formatNumber(item.listCost)}
-                              onChange={(e) => updateItemCost(index, parseFormattedNumber(e.target.value))}
+                              value={formatCurrencyInput(item.listCost)}
+                              onChange={(e) => updateItemCost(index, parseCurrency(e.target.value))}
                               className="w-24 text-right"
+                              placeholder="0.00"
                             />
                           </td>
                           <td className="py-2 px-2 text-right font-medium">
-                            ${formatNumber(extended)}
+                            {formatCurrency(extended)}
                           </td>
                           <td className="py-2 px-2">
                             <Input
                               type="text"
-                              value={formatNumber(item.offInvoice || 0)}
-                              onChange={(e) => updateItemOffInvoice(index, parseFormattedNumber(e.target.value))}
+                              value={formatCurrencyInput(item.offInvoice || 0)}
+                              onChange={(e) => updateItemOffInvoice(index, parseCurrency(e.target.value))}
                               className="w-24 text-right"
+                              placeholder="0.00"
                             />
                           </td>
                           <td className="py-2 px-2">
                             <Input
                               type="text"
-                              value={formatNumber(item.billBack || 0)}
-                              onChange={(e) => updateItemBillBack(index, parseFormattedNumber(e.target.value))}
+                              value={formatCurrencyInput(item.billBack || 0)}
+                              onChange={(e) => updateItemBillBack(index, parseCurrency(e.target.value))}
                               className="w-24 text-right"
+                              placeholder="0.00"
                             />
                           </td>
                           <td className="py-2 px-2 text-right font-medium">
-                            ${formatNumber(netCost)}
+                            {formatCurrency(netCost)}
                           </td>
                           <td className="py-2 px-2 text-center">
                             <Button
