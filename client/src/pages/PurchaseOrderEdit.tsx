@@ -210,7 +210,7 @@ export default function PurchaseOrderEdit() {
   // Load reference data
   const { data: products } = useQuery({ queryKey: ['/api/products'] });
   const { data: vendors } = useQuery({ queryKey: ['/api/vendors'] });
-  const { data: locations } = useQuery({ queryKey: ['/api/locations'] });
+  const { data: stores } = useQuery({ queryKey: ['/api/stores'] });
   
   // Load vendor-specific products when vendor is selected
   const { data: vendorProducts } = useQuery({
@@ -263,16 +263,16 @@ export default function PurchaseOrderEdit() {
         };
       }) || [];
 
-      // Force complete state replacement - set proper defaults for ship-to and bill-to
-      const shipToId = po.shipToLocationId || po.defaultShipToStoreId || 1; // Default to location 1 (Main Warehouse)
-      const billToId = 2; // Default to location 2 (Administrative Office) for billing
+      // Force complete state replacement - use authentic Cost Less store locations
+      const shipToId = po.shipToLocationId || po.defaultShipToStoreId || 1; // Default to store 1 (Cost Less Warehouse)
+      const billToId = 2; // Default to store 2 (Cost Less Accounting) for billing - authentic from your legacy system
       setFormData({
         poNumber: po.poNumber || '',
         vendorId: po.vendorId || 0,
         orderDate: po.orderDate ? po.orderDate.split(' ')[0] : '',
         expectedDate: po.expectedDate ? po.expectedDate.split(' ')[0] : '',
         shipToLocationId: shipToId,
-        billToLocationId: billToId, // Set to Administrative Office by default
+        billToLocationId: billToId, // Cost Less Accounting - authentic location from legacy data
         lumpSumAllowance: parseFloat(po.lumpSumAllowance || '0'),
         deliveryCharge: parseFloat(po.deliveryCharge || '0'),
         notes: po.notes || '',
@@ -524,11 +524,11 @@ export default function PurchaseOrderEdit() {
               <Label htmlFor="shipTo">Ship To Location</Label>
               <div className="flex items-center space-x-2">
                 <div className="flex-1 p-2 border rounded-md bg-gray-50">
-                  {existingPO && (existingPO as any).shipToLocation ? 
-                    (existingPO as any).shipToLocation.name :
-                    formData.shipToLocationId > 0 && locations ? 
-                      (locations as any[]).find(l => l.id === formData.shipToLocationId)?.name || 'Unknown Location' :
-                      'No location selected'
+                  {existingPO && (existingPO as any).defaultShipToStore ? 
+                    (existingPO as any).defaultShipToStore.name :
+                    formData.shipToLocationId > 0 && stores ? 
+                      (stores as any[]).find(s => s.id === formData.shipToLocationId)?.name || 'Unknown Store' :
+                      'No store selected'
                   }
                 </div>
                 <Select 
@@ -539,9 +539,9 @@ export default function PurchaseOrderEdit() {
                     <SelectValue>Change</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {(locations as any[])?.map((location) => (
-                      <SelectItem key={location.id} value={location.id.toString()}>
-                        {location.name}
+                    {(stores as any[])?.map((store) => (
+                      <SelectItem key={store.id} value={store.id.toString()}>
+                        {store.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
