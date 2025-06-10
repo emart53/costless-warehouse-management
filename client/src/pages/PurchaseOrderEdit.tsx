@@ -421,6 +421,42 @@ export default function PurchaseOrderEdit() {
                   ))}
                 </SelectContent>
               </Select>
+              {/* Vendor Details */}
+              {formData.vendorId > 0 && vendors && (
+                <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                  {(() => {
+                    const selectedVendor = (vendors as any[]).find(v => v.id === formData.vendorId);
+                    if (!selectedVendor) return null;
+                    
+                    return (
+                      <div className="text-sm">
+                        <div className="font-medium text-gray-900 mb-2">{selectedVendor.name}</div>
+                        {selectedVendor.address || selectedVendor.city || selectedVendor.state ? (
+                          <div className="space-y-1">
+                            {selectedVendor.address && <div>{selectedVendor.address}</div>}
+                            {(selectedVendor.city || selectedVendor.state) && (
+                              <div>
+                                {selectedVendor.city}{selectedVendor.city && selectedVendor.state ? ', ' : ''}{selectedVendor.state} {selectedVendor.zipCode}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="text-gray-500 italic">Address not on file</div>
+                        )}
+                        {selectedVendor.phone && (
+                          <div className="mt-2">Phone: {selectedVendor.phone}</div>
+                        )}
+                        {selectedVendor.contactName && (
+                          <div>Contact: {selectedVendor.contactName}</div>
+                        )}
+                        {selectedVendor.email && (
+                          <div>Email: {selectedVendor.email}</div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -579,11 +615,14 @@ export default function PurchaseOrderEdit() {
                               <div className="flex items-center space-x-2">
                                 <div className="flex-1 text-sm">
                                   <div className="font-medium">
-                                    {item.product.productDescription || item.product.name || item.product.description || 'Product ' + item.productId}
+                                    {(item.product as any)?.productDescription || (item.product as any)?.product_description || item.product?.name || item.product?.description || `Product #${item.productId} (No Description)`}
                                   </div>
                                   <div className="text-gray-500">
-                                    {item.product.casePack && item.product.size && 
-                                      `${item.product.casePack}/${item.product.size}`
+                                    {item.product?.casePack && item.product?.size ? 
+                                      `${item.product.casePack}/${item.product.size}` :
+                                      (item.product as any)?.case_pack && (item.product as any)?.unit_size ?
+                                      `${(item.product as any).case_pack}/${(item.product as any).unit_size}` : 
+                                      'Case Pack/Size not available'
                                     }
                                   </div>
                                 </div>
