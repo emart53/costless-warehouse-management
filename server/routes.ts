@@ -2145,7 +2145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const poResult = await pool.query(`
         INSERT INTO purchase_orders (
           po_number, vendor_id, order_date, expected_date, 
-          delivery_charge, lump_sum_discount, ship_to_location,
+          delivery_charge, lump_sum_allowance, default_ship_to_store_id,
           notes, special_instructions, status, total_amount, created_at
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
         RETURNING id
