@@ -2154,36 +2154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/purchase-orders", async (req, res) => {
-    try {
-      // Generate sequential PO number to maintain 19-year numbering system
-      // Get the highest existing PO number and increment by 1
-      const lastPO = await storage.getLastPurchaseOrder();
-      let nextPoNumber = 21022; // Starting point based on historical data (21021 was last)
-      
-      if (lastPO && lastPO.poNumber) {
-        // Extract number from PO number (handle both formats: "21022" or "PO250603-001")
-        const match = lastPO.poNumber.match(/(\d+)$/);
-        if (match) {
-          const lastNumber = parseInt(match[1]);
-          nextPoNumber = Math.max(nextPoNumber, lastNumber + 1);
-        }
-      }
 
-      const poData = {
-        ...req.body,
-        poNumber: nextPoNumber.toString(),
-        orderDate: new Date(req.body.orderDate),
-        expectedDate: req.body.expectedDate ? new Date(req.body.expectedDate) : null,
-      };
-
-      const po = await storage.createPurchaseOrder(poData);
-      res.status(201).json(po);
-    } catch (error) {
-      console.error("Error creating purchase order:", error);
-      res.status(500).json({ message: "Failed to create purchase order" });
-    }
-  });
 
   app.post("/api/purchase-orders", async (req, res) => {
     try {
@@ -2207,11 +2178,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { pool } = await import("./db.js");
 
-      // Generate PO number
+      // Generate PO number - get highest number from all PO formats
       const numberResult = await pool.query(`
-        SELECT COALESCE(MAX(CAST(SUBSTRING(po_number FROM 4) AS INTEGER)), 21000) + 1 as next_number
+        SELECT COALESCE(MAX(CAST(SUBSTRING(po_number FROM '[0-9]+$') AS INTEGER)), 21000) + 1 as next_number
         FROM purchase_orders 
-        WHERE po_number LIKE 'PO-%'
+        WHERE po_number ~ '^PO-[0-9]+$'
       `);
       const poNumber = `PO-${String(numberResult.rows[0].next_number)}`;
 
