@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash2, Plus } from "lucide-react";
 import { useState } from "react";
+import { formatCurrency } from '@/lib/formatNumber';
 
 interface PurchaseOrderItem {
   id?: number;

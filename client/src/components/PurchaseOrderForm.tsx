@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus, Trash2, Calculator, Package, DollarSign, Calendar, Building2, User, Save, X } from "lucide-react";
 import { format } from "date-fns";
+import { formatCurrency } from '@/lib/formatNumber';
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

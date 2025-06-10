@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, Printer } from "lucide-react";
 import logoPath from "@assets/logo_1749078044715.png";
+import { formatCurrency } from "@/lib/formatNumber";
 
 interface PurchaseOrderItem {
   id?: number;
