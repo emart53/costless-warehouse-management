@@ -2196,19 +2196,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const { items, ...poData } = req.body;
       
-      // Update the purchase order header
+      // Update the purchase order items first
+      if (items && Array.isArray(items)) {
+        await storage.updatePurchaseOrderItems(id, items);
+      }
+      
+      // Calculate total amount from items
+      let totalAmount = 0;
+      if (items && Array.isArray(items)) {
+        totalAmount = items.reduce((sum, item) => {
+          return sum + (parseFloat(item.netCost || 0) * parseFloat(item.quantityOrdered || 0));
+        }, 0);
+      }
+      
+      // Update the purchase order header with calculated total
       const po = await storage.updatePurchaseOrder(id, {
         ...poData,
+        totalAmount: totalAmount,
         expectedDate: poData.expectedDate ? new Date(poData.expectedDate) : null,
       });
       
       if (!po) {
         return res.status(404).json({ message: "Purchase order not found" });
-      }
-      
-      // Update the purchase order items
-      if (items && Array.isArray(items)) {
-        await storage.updatePurchaseOrderItems(id, items);
       }
       
       // Fetch and return the updated PO with items

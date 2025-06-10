@@ -359,7 +359,19 @@ export default function PurchaseOrderEdit() {
       });
       return;
     }
-    saveMutation.mutate(formData);
+    
+    // Calculate total amount from items
+    const totalAmount = formData.items.reduce((sum, item) => {
+      return sum + (item.netCost * item.quantityOrdered);
+    }, 0);
+    
+    // Include total amount in the save data
+    const saveData = {
+      ...formData,
+      totalAmount: totalAmount
+    };
+    
+    saveMutation.mutate(saveData);
   };
 
   return (
