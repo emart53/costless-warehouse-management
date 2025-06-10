@@ -148,20 +148,11 @@ export default function PurchaseOrderEdit() {
     setTotals(newTotals);
   }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge]);
 
-  // Load existing PO data if editing - force fresh data every time
-  const { data: existingPO, refetch } = useQuery({
-    queryKey: [`/api/purchase-orders/${id}`, Date.now()], // Force unique query key
+  // Load existing PO data if editing
+  const { data: existingPO } = useQuery({
+    queryKey: [`/api/purchase-orders/${id}`],
     enabled: !!id,
-    staleTime: 0,
-    gcTime: 0,
   });
-
-  // Force data refresh on component mount
-  useEffect(() => {
-    if (id && refetch) {
-      refetch();
-    }
-  }, [id, refetch]);
 
   // Load reference data
   const { data: products } = useQuery({ queryKey: ['/api/products'] });
@@ -375,10 +366,17 @@ export default function PurchaseOrderEdit() {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
-        <div>
+        <div className="text-center">
           <h1 className="text-3xl font-bold">
-            {id ? `Edit Purchase Order #${formData.poNumber}` : 'Create Purchase Order'}
+            {id ? `Edit Purchase Order ${formData.poNumber}` : 'Create Purchase Order'}
           </h1>
+          {id && (
+            <p className="text-sm text-gray-600 mt-1">
+              ID: {id} | Vendor: {vendors && formData.vendorId ? 
+                (vendors as any[]).find(v => v.id === formData.vendorId)?.name || 'Unknown Vendor' : 
+                'No Vendor Selected'}
+            </p>
+          )}
         </div>
         <Button onClick={handleSave} disabled={saveMutation.isPending}>
           <Save className="h-4 w-4 mr-2" />
