@@ -246,7 +246,7 @@ export default function CreatePurchaseOrder() {
   const { itemCount, totalListCost, totalOffInvoice, totalBillBack, totalCrv, totalWeight, vendorDiscountAmount, netCost, total } = calculateTotals();
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center">
           <Button variant="outline" onClick={() => setLocation('/purchase-orders')}>
@@ -628,11 +628,11 @@ export default function CreatePurchaseOrder() {
                     <table className="w-full border-collapse border border-gray-300">
                       <thead>
                         <tr className="bg-gray-100">
-                          <th className="border border-gray-300 p-2 text-left">Product</th>
-                          <th className="border border-gray-300 p-2 text-center">QTY</th>
-                          <th className="border border-gray-300 p-2 text-right">Net Cost</th>
-                          <th className="border border-gray-300 p-2 text-right">Extended</th>
-                          <th className="border border-gray-300 p-2 text-center">Action</th>
+                          <th className="border border-gray-300 p-2 text-left w-2/5">Product</th>
+                          <th className="border border-gray-300 p-2 text-center w-24">QTY</th>
+                          <th className="border border-gray-300 p-2 text-right w-28">Net Cost</th>
+                          <th className="border border-gray-300 p-2 text-right w-32">Extended</th>
+                          <th className="border border-gray-300 p-2 text-center w-24">Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -655,8 +655,9 @@ export default function CreatePurchaseOrder() {
                                   type="number"
                                   value={item.quantityOrdered}
                                   onChange={(e) => handleQuantityChange(item.productId, e.target.value)}
-                                  className="w-20 text-center"
+                                  className="w-32 text-center font-mono"
                                   min="0"
+                                  placeholder="0"
                                 />
                               </td>
                               <td className="border border-gray-300 p-2 text-right">
@@ -712,7 +713,7 @@ export default function CreatePurchaseOrder() {
                   </div>
                   {vendorDiscountAmount > 0 && (
                     <div className="flex justify-between text-green-700">
-                      <span>Less: Vendor Discount ({parseFloat(selectedVendor?.discount_percent || '0')}%):</span>
+                      <span>Less: Vendor Discount ({parseFloat((selectedVendor as any)?.discount_percent || '0')}%):</span>
                       <span className="font-medium">-{formatCurrency(vendorDiscountAmount)}</span>
                     </div>
                   )}
