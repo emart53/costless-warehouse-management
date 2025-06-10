@@ -554,7 +554,7 @@ export function PurchaseOrderForm({ purchaseOrder, onSubmit, onCancel, isLoading
                       >
                         <div className="flex-1">
                           <div className="font-medium text-sm">
-                            {product.productId} - {product.name || product.description}
+                            {product.productId} - {product.name || product.description} {product.casePack || '1'}/{product.size || 'EA'}
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {product.brand && `${product.brand} • `}
@@ -595,7 +595,7 @@ export function PurchaseOrderForm({ purchaseOrder, onSubmit, onCancel, isLoading
                       onClick={() => addProduct(product)}
                     >
                       <div>
-                        <div className="font-medium">{product.productId} - {product.name}</div>
+                        <div className="font-medium">{product.productId} - {product.name} {product.casePack || '1'}/{product.size || 'EA'}</div>
                         <div className="text-sm text-muted-foreground">{product.description}</div>
                       </div>
                       <Badge variant="outline">${product.lastCost || "0.00"}</Badge>
