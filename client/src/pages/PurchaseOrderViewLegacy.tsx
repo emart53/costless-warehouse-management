@@ -332,6 +332,7 @@ export default function PurchaseOrderViewLegacy() {
             <div className="border-r border-gray-300 px-1 text-right"></div>
             <div className="border-r border-gray-300 px-1 text-right"></div>
             {hasBillBack && <div className="border-r border-gray-300 px-1 text-right"></div>}
+            <div className="border-r border-gray-300 px-1 text-right"></div>
             <div className="border-r border-gray-300 px-1 text-right">
               {purchaseOrder.items?.reduce((sum, item) => {
                 const weight = parseFloat(item.purchaseWeight?.toString() || '0');
