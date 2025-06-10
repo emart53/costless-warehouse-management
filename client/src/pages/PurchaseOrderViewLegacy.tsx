@@ -391,8 +391,8 @@ export default function PurchaseOrderViewLegacy() {
                 <span>${totals.netInvoiceCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               
-              {/* Allowances as negative values */}
-              {hasBillBackValues && (
+              {/* Allowances as negative values - only show if they have values */}
+              {totals.totalBillBack > 0 && (
                 <div className="flex justify-between">
                   <span>Bill Back Allowance:</span>
                   <span>-${totals.totalBillBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -406,14 +406,14 @@ export default function PurchaseOrderViewLegacy() {
                 </div>
               )}
               
-              {totals.vendorDiscountPercent > 0 && (
+              {totals.vendorDiscount > 0 && (
                 <div className="flex justify-between">
                   <span>Early Payment Discount ({(totals.vendorDiscountPercent * 100).toFixed(1)}%):</span>
                   <span>-${totals.vendorDiscount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               )}
               
-              {/* Charges as positive values */}
+              {/* Charges as positive values - only show if they have values */}
               {totals.deliveryCharge > 0 && (
                 <div className="flex justify-between">
                   <span>Delivery Charge:</span>
@@ -421,7 +421,7 @@ export default function PurchaseOrderViewLegacy() {
                 </div>
               )}
               
-              {hasCrvValues && (
+              {totals.totalCrv > 0 && (
                 <div className="flex justify-between">
                   <span>Net Extended CRV:</span>
                   <span>${totals.totalCrv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
