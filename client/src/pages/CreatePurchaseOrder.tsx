@@ -177,7 +177,11 @@ export default function CreatePurchaseOrder() {
       }
     });
 
-    const netCost = totalListCost - totalOffInvoice - totalBillBack;
+    // Calculate vendor discount on list cost (standard industry practice)
+    const vendorDiscountPercent = parseFloat(selectedVendor?.discount_percent || '0');
+    const vendorDiscountAmount = (totalListCost * vendorDiscountPercent) / 100;
+
+    const netCost = totalListCost - totalOffInvoice - totalBillBack - vendorDiscountAmount;
     const total = netCost + totalCrv + deliveryCharge - lumpSumDiscount;
     
     return { 
@@ -187,6 +191,7 @@ export default function CreatePurchaseOrder() {
       totalBillBack,
       totalCrv,
       totalWeight,
+      vendorDiscountAmount,
       netCost,
       total
     };
@@ -238,7 +243,7 @@ export default function CreatePurchaseOrder() {
     },
   });
 
-  const { itemCount, totalListCost, totalOffInvoice, totalBillBack, totalCrv, totalWeight, netCost, total } = calculateTotals();
+  const { itemCount, totalListCost, totalOffInvoice, totalBillBack, totalCrv, totalWeight, vendorDiscountAmount, netCost, total } = calculateTotals();
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -705,6 +710,12 @@ export default function CreatePurchaseOrder() {
                     <span>Less: Bill Back Allowances:</span>
                     <span className="font-medium">-{formatCurrency(totalBillBack)}</span>
                   </div>
+                  {vendorDiscountAmount > 0 && (
+                    <div className="flex justify-between text-green-700">
+                      <span>Less: Vendor Discount ({parseFloat(selectedVendor?.discount_percent || '0')}%):</span>
+                      <span className="font-medium">-{formatCurrency(vendorDiscountAmount)}</span>
+                    </div>
+                  )}
                   <hr className="my-2" />
                   <div className="flex justify-between font-semibold">
                     <span>Net Product Cost:</span>
