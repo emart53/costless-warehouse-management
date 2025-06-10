@@ -335,14 +335,14 @@ export default function CreatePurchaseOrder() {
               <div>
                 <h3 className="font-semibold mb-2">Terms & Conditions</h3>
                 <div className="text-sm space-y-1">
-                  {(selectedVendor as any).discountPercent && (selectedVendor as any).epDays && (selectedVendor as any).netDays ? (
+                  {(selectedVendor as any).discount_percent && parseFloat((selectedVendor as any).discount_percent) > 0 ? (
                     <p className="font-medium">
-                      {parseFloat((selectedVendor as any).discountPercent * 100).toFixed(1)}% {(selectedVendor as any).epDays} Days Net {(selectedVendor as any).netDays}
+                      {parseFloat((selectedVendor as any).discount_percent).toFixed(1)}% Early Pay Discount
                     </p>
                   ) : (selectedVendor as any).paymentTerms ? (
                     <p>{(selectedVendor as any).paymentTerms}</p>
                   ) : (
-                    <p>Standard Terms</p>
+                    <p>Net 30 Days</p>
                   )}
                   {(selectedVendor as any).leadTime && <p>Lead Time: {(selectedVendor as any).leadTime} days</p>}
                 </div>
@@ -554,8 +554,9 @@ export default function CreatePurchaseOrder() {
                               type="number"
                               value={item.quantityOrdered || ''}
                               onChange={(e) => handleQuantityChange(item.productId, e.target.value)}
-                              className="w-16 text-center text-sm"
+                              className="w-20 text-center text-sm font-mono"
                               min="0"
+                              placeholder="0"
                             />
                           </td>
                           <td className="border border-gray-300 p-2 text-right">
@@ -614,7 +615,9 @@ export default function CreatePurchaseOrder() {
                       type="number"
                       value={rapidQuantity}
                       onChange={(e) => setRapidQuantity(e.target.value)}
+                      className="font-mono text-center"
                       min="1"
+                      placeholder="Qty"
                     />
                   </div>
                   <Button onClick={addRapidProduct} disabled={!rapidProductId || !rapidQuantity}>
