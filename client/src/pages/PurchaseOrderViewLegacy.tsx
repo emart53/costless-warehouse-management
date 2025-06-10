@@ -386,41 +386,48 @@ export default function PurchaseOrderViewLegacy() {
 
             {/* Right: Financial Summary */}
             <div className="text-sm space-y-1">
+              <div className="flex justify-between font-bold">
+                <span>Net Invoice Cost:</span>
+                <span>${totals.netInvoiceCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              </div>
+              
+              {/* Allowances as negative values */}
+              {hasBillBackValues && (
+                <div className="flex justify-between">
+                  <span>Bill Back Allowance:</span>
+                  <span>-${totals.totalBillBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+              )}
+              
+              {totals.lumpSumAllowance > 0 && (
+                <div className="flex justify-between">
+                  <span>Lump Sum Allowance:</span>
+                  <span>-${totals.lumpSumAllowance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+              )}
+              
               {totals.vendorDiscountPercent > 0 && (
                 <div className="flex justify-between">
                   <span>Early Payment Discount ({(totals.vendorDiscountPercent * 100).toFixed(1)}%):</span>
-                  <span>${totals.vendorDiscount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>-${totals.vendorDiscount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               )}
-              <div className="flex justify-between">
-                <span>Backhaul Allowance:</span>
-                <span>$0.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Lump Sum Allowance:</span>
-                <span>${totals.lumpSumAllowance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Delivery Charge:</span>
-                <span>${totals.deliveryCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
+              
+              {/* Charges as positive values */}
+              {totals.deliveryCharge > 0 && (
+                <div className="flex justify-between">
+                  <span>Delivery Charge:</span>
+                  <span>${totals.deliveryCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+              )}
+              
               {hasCrvValues && (
                 <div className="flex justify-between">
                   <span>Net Extended CRV:</span>
                   <span>${totals.totalCrv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               )}
-              <div className="flex justify-between font-bold">
-                <span>Net Invoice Cost:</span>
-                <span>${totals.netInvoiceCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              {hasBillBackValues && (
-                <div className="flex justify-between">
-                  <span>Total Bill Back:</span>
-                  <span>${totals.totalBillBack.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                  <span className="text-xs ml-2">Bill Back will be Deducted</span>
-                </div>
-              )}
+              
               <div className="flex justify-between font-bold text-base border-t pt-2">
                 <span>Total Invoice Cost:</span>
                 <span>${totals.totalInvoiceCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
