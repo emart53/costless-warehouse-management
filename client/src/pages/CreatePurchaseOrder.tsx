@@ -203,7 +203,7 @@ export default function CreatePurchaseOrder() {
       const poData = {
         vendorId: selectedVendorId,
         orderDate,
-        expectedDeliveryDate,
+        expectedDeliveryDate: expectedDeliveryDate || null,
         deliveryCharge,
         lumpSumDiscount,
         shipToLocation,

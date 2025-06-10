@@ -2150,7 +2150,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING id
       `, [
-        poNumber, vendorId, orderDate, expectedDeliveryDate,
+        poNumber, vendorId, orderDate, expectedDeliveryDate || null,
         deliveryCharge || 0, lumpSumDiscount || 0, shipToLocation,
         notes, specialInstructions, status || 'draft', totalAmount
       ]);
