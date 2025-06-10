@@ -530,7 +530,9 @@ export default function CreatePurchaseOrder() {
                         <tr key={item.productId} className={item.quantityOrdered > 0 ? 'bg-blue-50' : ''}>
                           <td className="border border-gray-300 p-2">
                             <div>
-                              <div className="font-medium">{item.product?.description || 'Product Description'}</div>
+                              <div className="font-medium">
+                                {item.product?.description || item.product?.name || 'Product Description'} {item.product?.casePack || item.product?.case_pack || '1'}/{item.product?.size || 'EA'}
+                              </div>
                               <div className="text-xs text-gray-600">
                                 {item.product?.brand || ''} {item.product?.brand && item.product?.category ? ' | ' : ''} {item.product?.category || ''}
                               </div>
@@ -594,7 +596,7 @@ export default function CreatePurchaseOrder() {
                       <SelectContent>
                         {(vendorProducts as any[]).map((product: any) => (
                           <SelectItem key={product.id} value={product.id.toString()}>
-                            {product.id} - {product.description}
+                            {product.productId || product.id} - {product.description || product.name} {product.casePack || '1'}/{product.size || 'EA'}
                           </SelectItem>
                         ))}
                       </SelectContent>
