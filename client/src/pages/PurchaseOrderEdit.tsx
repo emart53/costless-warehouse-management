@@ -13,7 +13,57 @@ import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
 import { PurchaseOrderDetailTable } from "@/components/PurchaseOrderDetailTable";
 
-
+// Vendor Details Display Component
+function VendorDetailsDisplay({ vendorId, vendors }: { vendorId: number; vendors: any[] }) {
+  const vendor = vendors.find((v: any) => v.id === vendorId);
+  
+  if (!vendor) {
+    return (
+      <div className="mt-3 p-3 bg-gray-50 rounded-md">
+        <div className="text-sm text-gray-500">Vendor information not available</div>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="mt-3 p-3 bg-gray-50 rounded-md">
+      <div className="text-sm">
+        <div className="font-medium text-gray-900 mb-2">{vendor.name}</div>
+        <div className="space-y-1">
+          {/* Address Information */}
+          {vendor.address || vendor.city || vendor.state ? (
+            <div>
+              {vendor.address && <div>{vendor.address}</div>}
+              {(vendor.city || vendor.state) && (
+                <div>
+                  {vendor.city}{vendor.city && vendor.state ? ', ' : ''}{vendor.state} {vendor.zipCode}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-gray-500 italic">Address not on file</div>
+          )}
+          
+          {/* Contact Information */}
+          {vendor.phone && (
+            <div className="mt-2">Phone: {vendor.phone}</div>
+          )}
+          {vendor.contactName && (
+            <div>Contact: {vendor.contactName}</div>
+          )}
+          {vendor.email && (
+            <div>Email: {vendor.email}</div>
+          )}
+          
+          {/* Payment Terms */}
+          {vendor.paymentTerms && (
+            <div className="mt-2 text-gray-600">Terms: {vendor.paymentTerms}</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface PurchaseOrderItem {
   id?: number;
@@ -437,47 +487,7 @@ export default function PurchaseOrderEdit() {
               </Select>
               {/* Vendor Details */}
               {formData.vendorId > 0 && vendors && Array.isArray(vendors) && (
-                <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                  <div className="text-sm">
-                    <div className="font-medium text-gray-900 mb-2">
-                      {vendors.find((v: any) => v.id === formData.vendorId)?.name || 'Unknown Vendor'}
-                    </div>
-                    <div className="space-y-1">
-                      {(() => {
-                        const vendor = vendors.find((v: any) => v.id === formData.vendorId);
-                        if (!vendor) return <div className="text-gray-500">Vendor information not available</div>;
-                        
-                        const hasAddress = vendor.address || vendor.city || vendor.state;
-                        
-                        return (
-                          <>
-                            {hasAddress ? (
-                              <div>
-                                {vendor.address && <div>{vendor.address}</div>}
-                                {(vendor.city || vendor.state) && (
-                                  <div>
-                                    {vendor.city}{vendor.city && vendor.state ? ', ' : ''}{vendor.state} {vendor.zipCode}
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="text-gray-500 italic">Address not on file</div>
-                            )}
-                            {vendor.phone && (
-                              <div className="mt-2">Phone: {vendor.phone}</div>
-                            )}
-                            {vendor.contactName && (
-                              <div>Contact: {vendor.contactName}</div>
-                            )}
-                            {vendor.email && (
-                              <div>Email: {vendor.email}</div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                </div>
+                <VendorDetailsDisplay vendorId={formData.vendorId} vendors={vendors} />
               )}
             </div>
             <div className="grid grid-cols-2 gap-4">
