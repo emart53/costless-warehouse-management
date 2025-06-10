@@ -536,16 +536,16 @@ export class DatabaseStorage implements IStorage {
     const result = await db.execute(sql`
       SELECT 
         poi.*,
-        COALESCE(p.name, p.product_description, 'Product ' || poi.product_id::text) as product_name,
+        COALESCE(p.product_description, p.name, 'Product ' || poi.product_id::text) as product_name,
         COALESCE(p.product_description, p.name, 'Product ' || poi.product_id::text) as product_description,
         COALESCE(p.case_pack, 1) as case_pack,
-        COALESCE(p.size, '') as size,
+        COALESCE(p.unit_size, p.size, '') as size,
         p.case_upc,
         COALESCE(p.crv, 0) as crv,
         COALESCE(p.purchase_weight, 0) as product_weight,
         COALESCE(c.configuration_name, 'Case') as configuration_name
       FROM purchase_order_items poi
-      LEFT JOIN products p ON poi.product_id = p.product_id
+      LEFT JOIN products p ON poi.product_id = p.id
       LEFT JOIN configurations c ON poi.purchase_cfg = c.configuration_id
       WHERE poi.po_id = ${poId}
       ORDER BY poi.id

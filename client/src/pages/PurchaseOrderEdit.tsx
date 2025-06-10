@@ -436,12 +436,46 @@ export default function PurchaseOrderEdit() {
                 </SelectContent>
               </Select>
               {/* Vendor Details */}
-              {formData.vendorId > 0 && (
+              {formData.vendorId > 0 && vendors && Array.isArray(vendors) && (
                 <div className="mt-3 p-3 bg-gray-50 rounded-md">
                   <div className="text-sm">
-                    <div className="font-medium text-gray-900 mb-2">UNFI</div>
-                    <div className="text-gray-500 italic">Address not on file</div>
-                    <div className="mt-2">Phone: (800) 242-9907</div>
+                    <div className="font-medium text-gray-900 mb-2">
+                      {vendors.find((v: any) => v.id === formData.vendorId)?.name || 'Unknown Vendor'}
+                    </div>
+                    <div className="space-y-1">
+                      {(() => {
+                        const vendor = vendors.find((v: any) => v.id === formData.vendorId);
+                        if (!vendor) return <div className="text-gray-500">Vendor information not available</div>;
+                        
+                        const hasAddress = vendor.address || vendor.city || vendor.state;
+                        
+                        return (
+                          <>
+                            {hasAddress ? (
+                              <div>
+                                {vendor.address && <div>{vendor.address}</div>}
+                                {(vendor.city || vendor.state) && (
+                                  <div>
+                                    {vendor.city}{vendor.city && vendor.state ? ', ' : ''}{vendor.state} {vendor.zipCode}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="text-gray-500 italic">Address not on file</div>
+                            )}
+                            {vendor.phone && (
+                              <div className="mt-2">Phone: {vendor.phone}</div>
+                            )}
+                            {vendor.contactName && (
+                              <div>Contact: {vendor.contactName}</div>
+                            )}
+                            {vendor.email && (
+                              <div>Email: {vendor.email}</div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
                   </div>
                 </div>
               )}
