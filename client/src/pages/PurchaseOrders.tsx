@@ -1368,25 +1368,25 @@ export default function PurchaseOrders() {
           ) : (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>PO Number</TableHead>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Order Date</TableHead>
-                  <TableHead>Expected Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Total Amount</TableHead>
-                  <TableHead>Actions</TableHead>
+                <TableRow className="h-12">
+                  <TableHead className="text-base font-semibold">PO Number</TableHead>
+                  <TableHead className="text-base font-semibold">Vendor</TableHead>
+                  <TableHead className="text-base font-semibold">Order Date</TableHead>
+                  <TableHead className="text-base font-semibold">Expected Date</TableHead>
+                  <TableHead className="text-base font-semibold">Status</TableHead>
+                  <TableHead className="text-base font-semibold">Total Amount</TableHead>
+                  <TableHead className="text-base font-semibold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredPOs.map((po: any) => (
-                  <TableRow key={po.id}>
-                    <TableCell className="font-medium">{po.poNumber}</TableCell>
-                    <TableCell>{po.vendor?.name || 'Unknown'}</TableCell>
-                    <TableCell>{po.orderDate ? format(new Date(po.orderDate), "MM/dd/yyyy") : 'N/A'}</TableCell>
-                    <TableCell>{po.expectedDate ? format(new Date(po.expectedDate), "MM/dd/yyyy") : 'TBD'}</TableCell>
-                    <TableCell>{getStatusBadge(po.status)}</TableCell>
-                    <TableCell>${po.totalAmount ? parseFloat(po.totalAmount).toFixed(2) : '0.00'}</TableCell>
+                  <TableRow key={po.id} className="h-14 hover:bg-gray-50">
+                    <TableCell className="font-semibold text-base">{po.poNumber}</TableCell>
+                    <TableCell className="text-base">{po.vendor?.name || 'Unknown'}</TableCell>
+                    <TableCell className="text-base">{po.orderDate ? format(new Date(po.orderDate), "MM/dd/yyyy") : 'N/A'}</TableCell>
+                    <TableCell className="text-base">{po.expectedDate ? format(new Date(po.expectedDate), "MM/dd/yyyy") : 'TBD'}</TableCell>
+                    <TableCell className="text-base">{getStatusBadge(po.status)}</TableCell>
+                    <TableCell className="text-base font-semibold">${po.totalAmount ? parseFloat(po.totalAmount).toFixed(2) : '0.00'}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Link href={`/purchase-orders/view/${po.id}`}>
