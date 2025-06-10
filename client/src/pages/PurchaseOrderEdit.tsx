@@ -263,14 +263,16 @@ export default function PurchaseOrderEdit() {
         };
       }) || [];
 
-      // Force complete state replacement
+      // Force complete state replacement - set proper defaults for ship-to and bill-to
+      const shipToId = po.shipToLocationId || po.defaultShipToStoreId || 1; // Default to location 1 (Main Warehouse)
+      const billToId = 2; // Default to location 2 (Administrative Office) for billing
       setFormData({
         poNumber: po.poNumber || '',
         vendorId: po.vendorId || 0,
         orderDate: po.orderDate ? po.orderDate.split(' ')[0] : '',
         expectedDate: po.expectedDate ? po.expectedDate.split(' ')[0] : '',
-        shipToLocationId: po.shipToLocationId || po.defaultShipToStoreId || 0,
-        billToLocationId: po.billToLocationId || 0,
+        shipToLocationId: shipToId,
+        billToLocationId: billToId, // Set to Administrative Office by default
         lumpSumAllowance: parseFloat(po.lumpSumAllowance || '0'),
         deliveryCharge: parseFloat(po.deliveryCharge || '0'),
         notes: po.notes || '',
