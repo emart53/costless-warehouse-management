@@ -355,18 +355,18 @@ export default function PurchaseOrderViewLegacy() {
             </div>
             {hasCRV && <div className="border-r border-gray-300 px-1 text-right"></div>}
             {hasCRV && <div className="border-r border-gray-300 px-1 text-right">
-              ${purchaseOrder.items?.reduce((sum, item) => {
+              {formatCurrency(purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const productCrv = parseFloat(item.product?.crv?.toString() || '0');
                 return sum + (quantity * productCrv);
-              }, 0).toFixed(2)}
+              }, 0) || 0)}
             </div>}
             <div className="px-1 text-right">
               {formatCurrency(purchaseOrder.items?.reduce((sum, item) => {
                 const quantity = item.quantityOrdered || 0;
                 const listCost = parseFloat(item.listCost?.toString() || '0');
                 return sum + (quantity * listCost);
-              )}, 0).toFixed(2)}
+              }, 0) || 0)}
             </div>
           </div>
         </div>
@@ -402,7 +402,7 @@ export default function PurchaseOrderViewLegacy() {
               {totals.lumpSumAllowance > 0 && (
                 <div className="flex justify-between">
                   <span>Lump Sum Allowance:</span>
-                  <span>-{formatCurrency(totals.lumpSumAllowance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
+                  <span>-{formatCurrency(totals.lumpSumAllowance)}</span>
                 </div>
               )}
               
@@ -417,20 +417,20 @@ export default function PurchaseOrderViewLegacy() {
               {totals.deliveryCharge > 0 && (
                 <div className="flex justify-between">
                   <span>Delivery Charge:</span>
-                  <span>{formatCurrency(totals.deliveryCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 )})}</span>
+                  <span>{formatCurrency(totals.deliveryCharge)}</span>
                 </div>
               )}
               
               {totals.totalCrv > 0 && (
                 <div className="flex justify-between">
                   <span>Net Extended CRV:</span>
-                  <span>${totals.totalCrv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span>{formatCurrency(totals.totalCrv)}</span>
                 </div>
               )}
               
               <div className="flex justify-between font-bold text-base border-t pt-2">
                 <span>Total Invoice Cost:</span>
-                <span>${totals.totalInvoiceCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span>{formatCurrency(totals.totalInvoiceCost)}</span>
               </div>
             </div>
           </div>
