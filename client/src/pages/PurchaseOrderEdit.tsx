@@ -13,6 +13,39 @@ import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
 import { PurchaseOrderDetailTable } from "@/components/PurchaseOrderDetailTable";
 
+// Vendor Info Component
+const VendorInfo = ({ vendorId, vendors }: { vendorId: number; vendors: any[] }) => {
+  const selectedVendor = vendors.find((v: any) => v.id === vendorId);
+  if (!selectedVendor) return <div className="text-gray-500 text-sm">Vendor not found</div>;
+  
+  return (
+    <div className="text-sm">
+      <div className="font-medium text-gray-900 mb-2">{selectedVendor.name}</div>
+      {selectedVendor.address || selectedVendor.city || selectedVendor.state ? (
+        <div className="space-y-1">
+          {selectedVendor.address && <div>{selectedVendor.address}</div>}
+          {(selectedVendor.city || selectedVendor.state) && (
+            <div>
+              {selectedVendor.city}{selectedVendor.city && selectedVendor.state ? ', ' : ''}{selectedVendor.state} {selectedVendor.zipCode}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="text-gray-500 italic">Address not on file</div>
+      )}
+      {selectedVendor.phone && (
+        <div className="mt-2">Phone: {selectedVendor.phone}</div>
+      )}
+      {selectedVendor.contactName && (
+        <div>Contact: {selectedVendor.contactName}</div>
+      )}
+      {selectedVendor.email && (
+        <div>Email: {selectedVendor.email}</div>
+      )}
+    </div>
+  );
+};
+
 interface PurchaseOrderItem {
   id?: number;
   productId: number;
@@ -424,37 +457,7 @@ export default function PurchaseOrderEdit() {
               {/* Vendor Details */}
               {formData.vendorId > 0 && vendors && (
                 <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                  {(() => {
-                    const selectedVendor = (vendors as any[]).find(v => v.id === formData.vendorId);
-                    if (!selectedVendor) return <div className="text-gray-500">Vendor not found</div>;
-                    
-                    return (
-                      <div className="text-sm">
-                        <div className="font-medium text-gray-900 mb-2">{selectedVendor.name}</div>
-                        {selectedVendor.address || selectedVendor.city || selectedVendor.state ? (
-                          <div className="space-y-1">
-                            {selectedVendor.address && <div>{selectedVendor.address}</div>}
-                            {(selectedVendor.city || selectedVendor.state) && (
-                              <div>
-                                {selectedVendor.city}{selectedVendor.city && selectedVendor.state ? ', ' : ''}{selectedVendor.state} {selectedVendor.zipCode}
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="text-gray-500 italic">Address not on file</div>
-                        )}
-                        {selectedVendor.phone && (
-                          <div className="mt-2">Phone: {selectedVendor.phone}</div>
-                        )}
-                        {selectedVendor.contactName && (
-                          <div>Contact: {selectedVendor.contactName}</div>
-                        )}
-                        {selectedVendor.email && (
-                          <div>Email: {selectedVendor.email}</div>
-                        )}
-                      </div>
-                    );
-                  })()}
+                  <VendorInfo vendorId={formData.vendorId} vendors={vendors as any[]} />
                 </div>
               )}
             </div>
@@ -615,7 +618,7 @@ export default function PurchaseOrderEdit() {
                               <div className="flex items-center space-x-2">
                                 <div className="flex-1 text-sm">
                                   <div className="font-medium">
-                                    {(item.product as any)?.productDescription || (item.product as any)?.product_description || item.product?.name || item.product?.description || `Product #${item.productId} (No Description)`}
+                                    {(item.product as any)?.product_description || (item.product as any)?.productDescription || item.product?.name || item.product?.description || `Product #${item.productId} (No Description)`}
                                   </div>
                                   <div className="text-gray-500">
                                     {item.product?.casePack && item.product?.size ? 
