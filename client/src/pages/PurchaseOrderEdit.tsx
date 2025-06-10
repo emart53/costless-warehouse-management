@@ -181,7 +181,7 @@ export default function PurchaseOrderEdit() {
     
     // Apply vendor discount to Extended Net (use actual vendor discount rate)
     const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
-    const vendorDiscountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) / 100 : 0;
+    const vendorDiscountPercent = vendor?.discount_percent ? parseFloat(vendor.discount_percent) / 100 : 0;
     const discountAmount = subtotal * vendorDiscountPercent;
     const netTotal = subtotal - discountAmount;
     const finalTotal = netTotal - totalBillBack + totalCrv + Number(lumpSum || 0) + Number(delivery || 0);
@@ -784,7 +784,11 @@ export default function PurchaseOrderEdit() {
                     
                     {(totals.discountAmount || 0) > 0 && (
                       <div className="flex justify-between text-green-600">
-                        <span>Less: 2% Discount:</span>
+                        <span>Less: Vendor Discount ({(() => {
+                          const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
+                          const discountPercent = vendor?.discount_percent ? parseFloat(vendor.discount_percent) : 0;
+                          return discountPercent;
+                        })()}%):</span>
                         <span>-{formatCurrency(totals.discountAmount || 0).replace('$', '')}</span>
                       </div>
                     )}
