@@ -246,7 +246,7 @@ export default function CreatePurchaseOrder() {
   const { itemCount, totalListCost, totalOffInvoice, totalBillBack, totalCrv, totalWeight, vendorDiscountAmount, netCost, total } = calculateTotals();
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 max-w-full mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center">
           <Button variant="outline" onClick={() => setLocation('/purchase-orders')}>

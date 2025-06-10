@@ -428,7 +428,7 @@ export default function PurchaseOrderEdit() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div className="p-6 space-y-6 max-w-full mx-auto">
       {/* Header */}
       <div className="flex justify-between items-start">
         <Button 
