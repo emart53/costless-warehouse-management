@@ -13,58 +13,6 @@ import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
 import { PurchaseOrderDetailTable } from "@/components/PurchaseOrderDetailTable";
 
-// Vendor Details Display Component
-function VendorDetailsDisplay({ vendorId, vendors }: { vendorId: number; vendors: any[] }) {
-  const vendor = vendors.find((v: any) => v.id === vendorId);
-  
-  if (!vendor) {
-    return (
-      <div className="mt-3 p-3 bg-gray-50 rounded-md">
-        <div className="text-sm text-gray-500">Vendor information not available</div>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="mt-3 p-3 bg-gray-50 rounded-md">
-      <div className="text-sm">
-        <div className="font-medium text-gray-900 mb-2">{vendor.name}</div>
-        <div className="space-y-1">
-          {/* Address Information */}
-          {vendor.address || vendor.city || vendor.state ? (
-            <div>
-              {vendor.address && <div>{vendor.address}</div>}
-              {(vendor.city || vendor.state) && (
-                <div>
-                  {vendor.city}{vendor.city && vendor.state ? ', ' : ''}{vendor.state} {vendor.zipCode}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-gray-500 italic">Address not on file</div>
-          )}
-          
-          {/* Contact Information */}
-          {vendor.phone && (
-            <div className="mt-2">Phone: {vendor.phone}</div>
-          )}
-          {vendor.contactName && (
-            <div>Contact: {vendor.contactName}</div>
-          )}
-          {vendor.email && (
-            <div>Email: {vendor.email}</div>
-          )}
-          
-          {/* Payment Terms */}
-          {vendor.paymentTerms && (
-            <div className="mt-2 text-gray-600">Terms: {vendor.paymentTerms}</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 interface PurchaseOrderItem {
   id?: number;
   productId: number;
@@ -120,6 +68,58 @@ const parseFormattedNumber = (value: string): number => {
 
 export default function PurchaseOrderEdit() {
   const { id } = useParams();
+  
+  // Vendor Details Display Component - moved inside main component
+  const VendorDetailsDisplay = ({ vendorId, vendors }: { vendorId: number; vendors: any[] }) => {
+    const vendor = vendors.find((v: any) => v.id === vendorId);
+    
+    if (!vendor) {
+      return (
+        <div className="mt-3 p-3 bg-gray-50 rounded-md">
+          <div className="text-sm text-gray-500">Vendor information not available</div>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="mt-3 p-3 bg-gray-50 rounded-md">
+        <div className="text-sm">
+          <div className="font-medium text-gray-900 mb-2">{vendor.name}</div>
+          <div className="space-y-1">
+            {/* Address Information */}
+            {vendor.address || vendor.city || vendor.state ? (
+              <div>
+                {vendor.address && <div>{vendor.address}</div>}
+                {(vendor.city || vendor.state) && (
+                  <div>
+                    {vendor.city}{vendor.city && vendor.state ? ', ' : ''}{vendor.state} {vendor.zipCode}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-gray-500 italic">Address not on file</div>
+            )}
+            
+            {/* Contact Information */}
+            {vendor.phone && (
+              <div className="mt-2">Phone: {vendor.phone}</div>
+            )}
+            {vendor.contactName && (
+              <div>Contact: {vendor.contactName}</div>
+            )}
+            {vendor.email && (
+              <div>Email: {vendor.email}</div>
+            )}
+            
+            {/* Payment Terms */}
+            {vendor.paymentTerms && (
+              <div className="mt-2 text-gray-600">Terms: {vendor.paymentTerms}</div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
