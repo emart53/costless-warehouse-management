@@ -779,41 +779,41 @@ export default function PurchaseOrderEdit() {
                     
                     <div className="flex justify-between font-medium">
                       <span>Extended Net:</span>
-                      <span>${formatNumber(totals.subtotal || 0)}</span>
+                      <span>{formatCurrency(totals.subtotal || 0)}</span>
                     </div>
                     
                     {(totals.discountAmount || 0) > 0 && (
                       <div className="flex justify-between text-green-600">
                         <span>Less: 2% Discount:</span>
-                        <span>-${formatNumber(totals.discountAmount || 0)}</span>
+                        <span>-{formatCurrency(totals.discountAmount || 0).replace('$', '')}</span>
                       </div>
                     )}
                     
                     {(totals.totalBillBack || 0) > 0 && (
                       <div className="flex justify-between text-green-600">
                         <span>Less: Bill Back:</span>
-                        <span>-${formatNumber(totals.totalBillBack || 0)}</span>
+                        <span>-{formatCurrency(totals.totalBillBack || 0).replace('$', '')}</span>
                       </div>
                     )}
                     
                     {(totals.totalCrv || 0) > 0 && (
                       <div className="flex justify-between text-blue-600">
                         <span>Plus: CRV:</span>
-                        <span>+${formatNumber(totals.totalCrv || 0)}</span>
+                        <span>+{formatCurrency(totals.totalCrv || 0).replace('$', '')}</span>
                       </div>
                     )}
                     
                     {(formData.lumpSumAllowance || 0) > 0 && (
                       <div className="flex justify-between">
                         <span>Lump Sum:</span>
-                        <span>+${formatNumber(formData.lumpSumAllowance || 0)}</span>
+                        <span>+{formatCurrency(formData.lumpSumAllowance || 0).replace('$', '')}</span>
                       </div>
                     )}
                     
                     {(formData.deliveryCharge || 0) > 0 && (
                       <div className="flex justify-between">
                         <span>Delivery:</span>
-                        <span>+${formatNumber(formData.deliveryCharge || 0)}</span>
+                        <span>+{formatCurrency(formData.deliveryCharge || 0).replace('$', '')}</span>
                       </div>
                     )}
                     
@@ -821,7 +821,7 @@ export default function PurchaseOrderEdit() {
                     
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total:</span>
-                      <span>${formatNumber(Number(totals.finalTotal || 0))}</span>
+                      <span>{formatCurrency(Number(totals.finalTotal || 0))}</span>
                     </div>
                   </div>
                 </div>

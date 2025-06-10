@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Plus, Save, Send } from "lucide-react";
 import { useLocation } from "wouter";
-import { formatCurrency, formatNumber } from "@/lib/formatNumber";
+import { formatCurrency, formatCurrencyInput, parseCurrency, formatNumber } from "@/lib/formatNumber";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 

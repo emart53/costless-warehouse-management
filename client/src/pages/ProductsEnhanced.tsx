@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { ComprehensiveProductEdit } from '@/components/ComprehensiveProductEdit';
-import { formatCurrency } from '@/lib/formatNumber';
+import { formatCurrency, formatCurrencyInput, parseCurrency } from '@/lib/formatNumber';
 
 interface Product {
   id: number;
