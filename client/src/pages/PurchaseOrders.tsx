@@ -64,7 +64,7 @@ const getStatusBadge = (status: string) => {
 
 export default function PurchaseOrders() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("active");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedVendorId, setSelectedVendorId] = useState<number>(0);
   const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
@@ -280,7 +280,18 @@ export default function PurchaseOrders() {
   const filteredPOs = purchaseOrders.filter((po: any) => {
     const matchesSearch = po.poNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          po.vendor?.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || po.status === statusFilter;
+    
+    // Handle different status filters
+    let matchesStatus = false;
+    if (statusFilter === "all") {
+      matchesStatus = true;
+    } else if (statusFilter === "active") {
+      // Show only Scheduled and Pending orders (excluding Received)
+      matchesStatus = po.status?.toLowerCase() === "scheduled" || po.status?.toLowerCase() === "pending";
+    } else {
+      matchesStatus = po.status?.toLowerCase() === statusFilter.toLowerCase();
+    }
+    
     return matchesSearch && matchesStatus;
   });
 
@@ -1313,8 +1324,10 @@ export default function PurchaseOrders() {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="active">Active Orders (Scheduled & Pending)</SelectItem>
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="scheduled">Scheduled</SelectItem>
                 <SelectItem value="sent">Sent</SelectItem>
                 <SelectItem value="partial">Partial</SelectItem>
                 <SelectItem value="received">Received</SelectItem>
