@@ -426,7 +426,7 @@ export default function PurchaseOrderEdit() {
                 <div className="mt-3 p-3 bg-gray-50 rounded-md">
                   {(() => {
                     const selectedVendor = (vendors as any[]).find(v => v.id === formData.vendorId);
-                    if (!selectedVendor) return null;
+                    if (!selectedVendor) return <div className="text-gray-500">Vendor not found</div>;
                     
                     return (
                       <div className="text-sm">
