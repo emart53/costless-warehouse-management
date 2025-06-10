@@ -455,11 +455,18 @@ export default function PurchaseOrderEdit() {
                 </SelectContent>
               </Select>
               {/* Vendor Details */}
-              {formData.vendorId > 0 && vendors && (
-                <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                  <VendorInfo vendorId={formData.vendorId} vendors={vendors as any[]} />
-                </div>
-              )}
+              {formData.vendorId > 0 && vendors && (() => {
+                const selectedVendor = (vendors as any[]).find(v => v.id === formData.vendorId);
+                return selectedVendor ? (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900 mb-2">{selectedVendor.name}</div>
+                      <div className="text-gray-500 italic">Address not on file</div>
+                      <div className="mt-2">Phone: {selectedVendor.phone}</div>
+                    </div>
+                  </div>
+                ) : null;
+              })()}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
