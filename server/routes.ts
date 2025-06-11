@@ -2677,34 +2677,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { pool } = await import("./db.js");
       const {
-        poId,
+        purchaseOrderId,
+        vendorId,
         scheduledDate,
-        deliveryWindow,
-        status = 'scheduled',
-        trackingNumber,
+        scheduledTime,
+        deliveryDay,
         carrierName,
-        notes,
-        actualDeliveryDate
+        carrierPhone,
+        carrierContact,
+        totalCases,
+        totalUnits,
+        specialInstructions,
+        status = 'scheduled',
+        priority = 'normal'
       } = req.body;
+      
+      console.log('Delivery schedule request body:', req.body);
+      console.log('Extracted values:', { purchaseOrderId, vendorId, scheduledDate, scheduledTime, deliveryDay });
       
       const result = await pool.query(`
         INSERT INTO delivery_schedules (
-          po_id, scheduled_date, delivery_window, status,
-          tracking_number, carrier_name, notes, actual_delivery_date,
-          created_at, updated_at
+          po_id, scheduled_date, scheduled_time, delivery_window,
+          carrier_name, driver_phone, vendor_contact_name, estimated_cases,
+          special_instructions, status, priority, created_at, updated_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
         RETURNING 
           id,
-          po_id as "poId",
+          po_id as "purchaseOrderId",
           scheduled_date as "scheduledDate",
-          actual_delivery_date as "actualDeliveryDate",
-          delivery_window as "deliveryWindow",
-          status,
-          tracking_number as "trackingNumber",
+          scheduled_time as "scheduledTime",
+          delivery_window as "deliveryDay",
           carrier_name as "carrierName",
-          notes
-      `, [poId, scheduledDate, deliveryWindow, status, trackingNumber, carrierName, notes, actualDeliveryDate]);
+          driver_phone as "carrierPhone",
+          vendor_contact_name as "carrierContact",
+          estimated_cases as "totalCases",
+          special_instructions as "specialInstructions",
+          status,
+          priority
+      `, [purchaseOrderId, scheduledDate, scheduledTime, deliveryDay, carrierName, carrierPhone, carrierContact, totalCases, specialInstructions, status, priority]);
       
       res.status(201).json(result.rows[0]);
     } catch (error) {
