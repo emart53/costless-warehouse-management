@@ -817,6 +817,39 @@ export default function CreatePurchaseOrder() {
                 />
               </div>
             </div>
+            
+            {/* Action Buttons */}
+            <div className="mt-6 flex justify-between">
+              <Button 
+                variant="outline" 
+                onClick={() => setLocation('/purchase-orders')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Purchase Orders
+              </Button>
+              
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => saveMutation.mutate('draft')}
+                  disabled={saveMutation.isPending || !selectedVendorId || poItems.length === 0}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Save className="h-4 w-4" />
+                  {saveMutation.isPending ? 'Saving...' : 'Save as Draft'}
+                </Button>
+                
+                <Button
+                  onClick={() => saveMutation.mutate('pending')}
+                  disabled={saveMutation.isPending || !selectedVendorId || poItems.length === 0}
+                  className="flex items-center gap-2"
+                >
+                  <Send className="h-4 w-4" />
+                  {saveMutation.isPending ? 'Submitting...' : 'Submit Order'}
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
