@@ -1,7 +1,7 @@
 import { 
   users, vendors, stores, locations, products, inventory, transactions, schedules, notifications,
   purchaseOrders, purchaseOrderItems, transferOrders, transferOrderItems, departments, categories,
-  configurations, standingOrders, standingOrderItems, productPurchases,
+  configurations, standingOrders, standingOrderItems, productPurchases, deliverySchedules,
   type User, type InsertUser,
   type Vendor, type InsertVendor,
   type Store, type InsertStore,

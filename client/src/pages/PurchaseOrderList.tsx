@@ -1,9 +1,11 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Eye, Edit, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight } from "lucide-react";
-import { format } from "date-fns";
+import { Eye, Edit, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { format, addDays } from "date-fns";
 import { formatCurrency, formatNumber , formatCurrencyInput, parseCurrency } from "@/lib/formatNumber";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,11 +13,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PurchaseOrder {
   id: number;
   poNumber: string;
   vendor: {
+    id: number;
     name: string;
     code: string;
   };
@@ -24,6 +30,13 @@ interface PurchaseOrder {
   status: string;
   totalAmount: string;
   itemCount?: number;
+  items?: Array<{
+    id: number;
+    quantityOrdered: number;
+    listCost: number;
+    offInvoice: number;
+    billBack: number;
+  }>;
 }
 
 
@@ -50,7 +63,24 @@ export default function PurchaseOrderList() {
   const [statusFilter, setStatusFilter] = useState<string>("active"); // Default to active orders
   const [vendorFilter, setVendorFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [selectedPO, setSelectedPO] = useState<PurchaseOrder | null>(null);
+  const [scheduleForm, setScheduleForm] = useState({
+    scheduledDate: "",
+    scheduledTime: "",
+    deliveryDay: "",
+    carrierName: "",
+    carrierPhone: "",
+    carrierContact: "",
+    specialInstructions: "",
+    totalCases: 0,
+    totalPallets: 0,
+    totalUnits: 0
+  });
+  
   const ITEMS_PER_PAGE = 20;
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: purchaseOrders = [], isLoading } = useQuery<PurchaseOrder[]>({
     queryKey: ["/api/purchase-orders"],
@@ -90,6 +120,80 @@ export default function PurchaseOrderList() {
   }, [filteredOrders, currentPage]);
 
   const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
+
+  // Generate delivery time slots based on day of week
+  const generateTimeSlots = (dayOfWeek: string) => {
+    const slots = [];
+    const startHour = 5; // 5:00 AM
+    let endHour;
+    
+    if (dayOfWeek === 'Tuesday') {
+      endHour = 13.5; // 1:30 PM
+    } else if (dayOfWeek === 'Wednesday' || dayOfWeek === 'Friday') {
+      endHour = 21; // 9:00 PM
+    } else {
+      // Exception days (Monday/Thursday)
+      endHour = 17; // 5:00 PM
+    }
+    
+    for (let hour = startHour; hour < endHour; hour += 0.5) {
+      const timeStr = `${Math.floor(hour).toString().padStart(2, '0')}:${hour % 1 === 0 ? '00' : '30'}`;
+      slots.push(timeStr);
+    }
+    
+    return slots;
+  };
+
+  // Handle scheduling modal
+  const handleScheduleDelivery = (po: PurchaseOrder) => {
+    setSelectedPO(po);
+    
+    // Pre-populate form with PO data
+    const expectedDate = po.expectedDate ? new Date(po.expectedDate) : addDays(new Date(), 3);
+    const dayOfWeek = format(expectedDate, 'EEEE');
+    
+    setScheduleForm({
+      scheduledDate: format(expectedDate, 'yyyy-MM-dd'),
+      scheduledTime: "09:00",
+      deliveryDay: dayOfWeek,
+      carrierName: "",
+      carrierPhone: "",
+      carrierContact: "",
+      specialInstructions: "",
+      totalCases: po.items?.reduce((sum, item) => sum + item.quantityOrdered, 0) || 0,
+      totalPallets: 0,
+      totalUnits: po.items?.reduce((sum, item) => sum + item.quantityOrdered, 0) || 0
+    });
+    
+    setIsScheduleModalOpen(true);
+  };
+
+  // Schedule delivery mutation
+  const scheduleDeliveryMutation = useMutation({
+    mutationFn: async (scheduleData: any) => {
+      return apiRequest("POST", "/api/delivery-schedules", {
+        purchaseOrderId: selectedPO?.id,
+        vendorId: selectedPO?.vendor.id,
+        ...scheduleData
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Delivery Scheduled",
+        description: `Delivery for ${selectedPO?.poNumber} has been scheduled successfully.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/purchase-orders"] });
+      setIsScheduleModalOpen(false);
+      setSelectedPO(null);
+    },
+    onError: (error) => {
+      toast({
+        title: "Scheduling Failed",
+        description: "Failed to schedule delivery. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
 
   // Reset to first page when filters change
   const handleFilterChange = (filterType: string, value: string) => {
@@ -412,6 +516,155 @@ export default function PurchaseOrderList() {
           )}
         </CardContent>
       </Card>
+
+      {/* Delivery Scheduling Modal */}
+      <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              Schedule Delivery - {selectedPO?.poNumber}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedPO && (
+            <div className="space-y-6">
+              {/* PO Information */}
+              <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                <div>
+                  <Label className="text-sm text-gray-600">Vendor</Label>
+                  <p className="font-medium">{selectedPO.vendor.name}</p>
+                </div>
+                <div>
+                  <Label className="text-sm text-gray-600">Expected Date</Label>
+                  <p className="font-medium">
+                    {selectedPO.expectedDate ? format(new Date(selectedPO.expectedDate), 'MMM dd, yyyy') : 'Not set'}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm text-gray-600">Total Amount</Label>
+                  <p className="font-medium">{formatCurrency(selectedPO.totalAmount)}</p>
+                </div>
+                <div>
+                  <Label className="text-sm text-gray-600">Total Units</Label>
+                  <p className="font-medium">{scheduleForm.totalUnits} units</p>
+                </div>
+              </div>
+
+              {/* Scheduling Form */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="scheduledDate">Delivery Date</Label>
+                  <Input
+                    id="scheduledDate"
+                    type="date"
+                    value={scheduleForm.scheduledDate}
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      const dayOfWeek = format(date, 'EEEE');
+                      setScheduleForm({
+                        ...scheduleForm,
+                        scheduledDate: e.target.value,
+                        deliveryDay: dayOfWeek
+                      });
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="scheduledTime">Time Slot</Label>
+                  <Select value={scheduleForm.scheduledTime} onValueChange={(value) => 
+                    setScheduleForm({...scheduleForm, scheduledTime: value})
+                  }>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {generateTimeSlots(scheduleForm.deliveryDay).map((time) => (
+                        <SelectItem key={time} value={time}>{time}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="carrierName">Carrier Name</Label>
+                  <Input
+                    id="carrierName"
+                    value={scheduleForm.carrierName}
+                    onChange={(e) => setScheduleForm({...scheduleForm, carrierName: e.target.value})}
+                    placeholder="Enter carrier company"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="carrierPhone">Carrier Phone</Label>
+                  <Input
+                    id="carrierPhone"
+                    value={scheduleForm.carrierPhone}
+                    onChange={(e) => setScheduleForm({...scheduleForm, carrierPhone: e.target.value})}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="carrierContact">Carrier Contact</Label>
+                  <Input
+                    id="carrierContact"
+                    value={scheduleForm.carrierContact}
+                    onChange={(e) => setScheduleForm({...scheduleForm, carrierContact: e.target.value})}
+                    placeholder="Driver/Contact name"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="totalCases">Total Cases</Label>
+                  <Input
+                    id="totalCases"
+                    type="number"
+                    value={scheduleForm.totalCases}
+                    onChange={(e) => setScheduleForm({...scheduleForm, totalCases: parseInt(e.target.value) || 0})}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="specialInstructions">Special Instructions</Label>
+                <Textarea
+                  id="specialInstructions"
+                  value={scheduleForm.specialInstructions}
+                  onChange={(e) => setScheduleForm({...scheduleForm, specialInstructions: e.target.value})}
+                  placeholder="Add any special delivery instructions..."
+                  rows={3}
+                />
+              </div>
+
+              {/* Delivery Window Info */}
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">Delivery Windows</h4>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <p><strong>Tuesday:</strong> 5:00 AM - 1:30 PM</p>
+                  <p><strong>Wednesday & Friday:</strong> 5:00 AM - 9:00 PM</p>
+                  <p><strong>Monday & Thursday:</strong> Emergency deliveries only (5:00 AM - 5:00 PM)</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setIsScheduleModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={() => scheduleDeliveryMutation.mutate(scheduleForm)}
+                  disabled={scheduleDeliveryMutation.isPending || !scheduleForm.scheduledDate || !scheduleForm.scheduledTime}
+                >
+                  {scheduleDeliveryMutation.isPending ? "Scheduling..." : "Schedule Delivery"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
