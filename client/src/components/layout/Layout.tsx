@@ -15,6 +15,7 @@ const pageConfig = {
   "/transfer-orders": { title: "Transfer Orders", subtitle: "Manage store transfers and shipments" },
   "/transactions": { title: "Transactions", subtitle: "Track receipts, shipments, and adjustments" },
   "/scheduling": { title: "Scheduling", subtitle: "Manage warehouse tasks and operations" },
+  "/delivery-calendar": { title: "Delivery Calendar", subtitle: "Visual schedule management for deliveries" },
   "/notifications": { title: "Notifications", subtitle: "System alerts and messages" },
   "/reports": { title: "Reports", subtitle: "Generate and view warehouse reports" },
   "/settings": { title: "Settings", subtitle: "Configure system preferences" },
