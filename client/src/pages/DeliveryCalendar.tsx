@@ -705,6 +705,62 @@ export default function DeliveryCalendar() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Postpone Confirmation Modal */}
+      <Dialog open={isPostponeModalOpen} onOpenChange={setIsPostponeModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-orange-600" />
+              Postpone Delivery
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedSchedule && (
+            <div className="space-y-4">
+              <div className="p-3 bg-orange-50 rounded-lg">
+                <div className="text-sm font-medium text-orange-800">
+                  {selectedSchedule.purchaseOrder?.poNumber || `PO-${selectedSchedule.purchaseOrderId}`}
+                </div>
+                <div className="text-sm text-orange-600">
+                  {selectedSchedule.purchaseOrder?.vendor?.name || 'Unknown Vendor'}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="postponeReason">Reason for postponement *</Label>
+                <textarea
+                  id="postponeReason"
+                  className="w-full p-2 border border-gray-300 rounded-md min-h-[80px] mt-1"
+                  value={postponeReason}
+                  onChange={(e) => setPostponeReason(e.target.value)}
+                  placeholder="e.g., Mechanical breakdown, weather delay, vendor issue..."
+                />
+              </div>
+
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                <strong>Note:</strong> This will remove the delivery from the schedule. You'll need to create a new delivery schedule when ready.
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsPostponeModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleConfirmPostpone}
+                  disabled={deleteScheduleMutation.isPending || !postponeReason.trim()}
+                  className="bg-orange-600 hover:bg-orange-700"
+                >
+                  {deleteScheduleMutation.isPending ? "Postponing..." : "Confirm Postpone"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
