@@ -202,12 +202,6 @@ export default function PurchaseOrderEdit() {
     };
   };
 
-  // Update totals when form data changes
-  useEffect(() => {
-    const newTotals = calculateTotals(formData.items, formData.lumpSumAllowance, formData.deliveryCharge);
-    setTotals(newTotals);
-  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge, formData.vendorId, vendors]);
-
   // Load existing PO data if editing
   const { data: existingPO } = useQuery({
     queryKey: [`/api/purchase-orders/${id}`],
@@ -218,6 +212,20 @@ export default function PurchaseOrderEdit() {
   const { data: products } = useQuery({ queryKey: ['/api/products'] });
   const { data: vendors } = useQuery({ queryKey: ['/api/vendors'] });
   const { data: stores } = useQuery({ queryKey: ['/api/stores'] });
+
+  // Update totals when form data changes (basic calculation)
+  useEffect(() => {
+    const newTotals = calculateTotals(formData.items, formData.lumpSumAllowance, formData.deliveryCharge);
+    setTotals(newTotals);
+  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge]);
+
+  // Recalculate totals when vendor data loads or vendor changes (for discount calculation)
+  useEffect(() => {
+    if (vendors && formData.vendorId) {
+      const newTotals = calculateTotals(formData.items, formData.lumpSumAllowance, formData.deliveryCharge);
+      setTotals(newTotals);
+    }
+  }, [formData.vendorId, vendors]);
   
   // Load vendor-specific products when vendor is selected
   const { data: vendorProducts } = useQuery({
