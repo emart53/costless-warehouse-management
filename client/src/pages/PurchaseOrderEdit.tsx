@@ -185,10 +185,17 @@ export default function PurchaseOrderEdit() {
       return sum + (crvPerUnit * qty);
     }, 0);
     
-    // Apply vendor discount to Extended Net (use actual vendor discount rate)
+    // Calculate Extended List Cost (before off-invoice deductions) for vendor discount
+    const extendedListTotal = items.reduce((sum, item) => {
+      const qty = Number(item.quantityOrdered || 0);
+      const listCost = Number(item.listCost || 0);
+      return sum + (qty * listCost);
+    }, 0);
+    
+    // Apply vendor discount to Extended List Cost (legacy system behavior)
     const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
     const vendorDiscountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) : 0;
-    const discountAmount = subtotal * vendorDiscountPercent;
+    const discountAmount = extendedListTotal * vendorDiscountPercent;
     const netTotal = subtotal - discountAmount;
     const finalTotal = netTotal - totalBillBack + totalCrv + Number(lumpSum || 0) + Number(delivery || 0);
 
