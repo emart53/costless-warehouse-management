@@ -174,10 +174,13 @@ export default function PurchaseOrderList() {
   // Schedule delivery mutation
   const scheduleDeliveryMutation = useMutation({
     mutationFn: async (scheduleData: any) => {
-      return apiRequest("POST", "/api/delivery-schedules", {
-        purchaseOrderId: selectedPO?.id,
-        vendorId: selectedPO?.vendor.id,
-        ...scheduleData
+      return apiRequest("/api/delivery-schedules", {
+        method: "POST",
+        body: {
+          purchaseOrderId: selectedPO?.id,
+          vendorId: selectedPO?.vendor.id,
+          ...scheduleData
+        }
       });
     },
     onSuccess: () => {
