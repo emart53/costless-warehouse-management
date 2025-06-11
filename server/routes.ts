@@ -7,6 +7,249 @@ import { insertProductSchema, insertLocationSchema, insertTransactionSchema, ins
 import { z } from "zod";
 import { csvDataService } from "./csvDataService";
 
+// PDF Generation Function for Vendor Communication
+function generatePurchaseOrderPDF(po: any, items: any[]) {
+  const formatCurrency = (amount: number | string) => {
+    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return `$${num.toFixed(2)}`;
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('en-US');
+  };
+
+  // Calculate totals
+  let subtotal = 0;
+  let vendorDiscount = 0;
+  
+  items.forEach(item => {
+    const listCost = parseFloat(item.listCost || '0');
+    const quantity = parseInt(item.quantityOrdered || '0');
+    const extendedListCost = listCost * quantity;
+    
+    subtotal += extendedListCost;
+    
+    // Apply vendor discount to extended list cost
+    if (po.vendor?.discountPercent) {
+      const discountPercent = parseFloat(po.vendor.discountPercent) / 100;
+      vendorDiscount += extendedListCost * discountPercent;
+    }
+  });
+
+  const afterDiscount = subtotal - vendorDiscount;
+  const taxAmount = parseFloat(po.taxAmount || '0');
+  const shippingAmount = parseFloat(po.shippingAmount || '0');
+  const total = afterDiscount + taxAmount + shippingAmount;
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Purchase Order ${po.poNumber}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            font-size: 12px; 
+            margin: 20px;
+            line-height: 1.4;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+        }
+        .company-name { 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 5px;
+        }
+        .po-title { 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin-top: 15px;
+        }
+        .info-section { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 25px;
+        }
+        .info-box { 
+            border: 1px solid #000; 
+            padding: 10px; 
+            width: 45%;
+        }
+        .info-box h3 { 
+            margin: 0 0 10px 0; 
+            font-weight: bold; 
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 20px;
+        }
+        th, td { 
+            border: 1px solid #000; 
+            padding: 8px; 
+            text-align: left;
+        }
+        th { 
+            background-color: #f0f0f0; 
+            font-weight: bold;
+        }
+        .number { 
+            text-align: right;
+        }
+        .totals { 
+            width: 300px; 
+            float: right; 
+            border: 2px solid #000;
+            margin-top: 20px;
+        }
+        .totals td { 
+            padding: 8px;
+        }
+        .total-row { 
+            font-weight: bold; 
+            background-color: #f0f0f0;
+        }
+        .footer { 
+            clear: both; 
+            margin-top: 50px; 
+            padding-top: 20px; 
+            border-top: 1px solid #000;
+        }
+        @media print {
+            body { margin: 0; }
+            .info-section { page-break-inside: avoid; }
+            table { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-name">Cost Less Warehouse</div>
+        <div>Grocery Distribution Center</div>
+        <div class="po-title">PURCHASE ORDER</div>
+        <div style="font-size: 16px; font-weight: bold; margin-top: 10px;">
+            PO Number: ${po.poNumber}
+        </div>
+    </div>
+
+    <div class="info-section">
+        <div class="info-box">
+            <h3>Vendor Information</h3>
+            <strong>${po.vendor?.name || 'N/A'}</strong><br>
+            ${po.vendor?.contactName ? po.vendor.contactName + '<br>' : ''}
+            ${po.vendor?.address || ''}<br>
+            ${po.vendor?.city || ''}, ${po.vendor?.state || ''} ${po.vendor?.zipCode || ''}<br>
+            ${po.vendor?.phone ? 'Phone: ' + po.vendor.phone + '<br>' : ''}
+            ${po.vendor?.email ? 'Email: ' + po.vendor.email : ''}
+        </div>
+        
+        <div class="info-box">
+            <h3>Order Details</h3>
+            <strong>Order Date:</strong> ${formatDate(po.orderDate)}<br>
+            <strong>Expected Date:</strong> ${po.expectedDate ? formatDate(po.expectedDate) : 'TBD'}<br>
+            <strong>Status:</strong> ${po.status}<br>
+            <strong>Payment Terms:</strong> Net 30<br>
+            <strong>Ship To:</strong> Cost Less Warehouse<br>
+            Distribution Center
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">Product ID</th>
+                <th style="width: 300px;">Description</th>
+                <th style="width: 60px;">UPC</th>
+                <th style="width: 60px;">Pack</th>
+                <th style="width: 80px;">Qty Ordered</th>
+                <th style="width: 80px;">List Cost</th>
+                <th style="width: 80px;">Off Invoice</th>
+                <th style="width: 80px;">Bill Back</th>
+                <th style="width: 100px;">Extended Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${items.map(item => {
+              const listCost = parseFloat(item.listCost || '0');
+              const quantity = parseInt(item.quantityOrdered || '0');
+              const offInvoice = parseFloat(item.offInvoice || '0');
+              const billBack = parseFloat(item.billBack || '0');
+              const extendedCost = (listCost * quantity) - offInvoice - billBack;
+              
+              return `
+                <tr>
+                    <td class="number">${item.product?.productId || ''}</td>
+                    <td>${item.product?.name || ''}</td>
+                    <td>${item.product?.caseUpc || ''}</td>
+                    <td class="number">${item.product?.casePack || ''}</td>
+                    <td class="number">${quantity}</td>
+                    <td class="number">${formatCurrency(listCost)}</td>
+                    <td class="number">${offInvoice > 0 ? formatCurrency(offInvoice) : ''}</td>
+                    <td class="number">${billBack > 0 ? formatCurrency(billBack) : ''}</td>
+                    <td class="number">${formatCurrency(extendedCost)}</td>
+                </tr>
+              `;
+            }).join('')}
+        </tbody>
+    </table>
+
+    <table class="totals">
+        <tr>
+            <td><strong>Subtotal:</strong></td>
+            <td class="number"><strong>${formatCurrency(subtotal)}</strong></td>
+        </tr>
+        ${vendorDiscount > 0 ? `
+        <tr>
+            <td>Vendor Discount (${po.vendor?.discountPercent || 0}%):</td>
+            <td class="number">-${formatCurrency(vendorDiscount)}</td>
+        </tr>
+        ` : ''}
+        <tr>
+            <td>After Discount:</td>
+            <td class="number">${formatCurrency(afterDiscount)}</td>
+        </tr>
+        ${taxAmount > 0 ? `
+        <tr>
+            <td>Tax:</td>
+            <td class="number">${formatCurrency(taxAmount)}</td>
+        </tr>
+        ` : ''}
+        ${shippingAmount > 0 ? `
+        <tr>
+            <td>Shipping:</td>
+            <td class="number">${formatCurrency(shippingAmount)}</td>
+        </tr>
+        ` : ''}
+        <tr class="total-row">
+            <td><strong>TOTAL:</strong></td>
+            <td class="number"><strong>${formatCurrency(total)}</strong></td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <p><strong>Special Instructions:</strong></p>
+        <p>${po.notes || 'Please deliver during business hours (8 AM - 5 PM).'}</p>
+        
+        <p style="margin-top: 30px;">
+            <strong>Thank you for your business!</strong><br>
+            For questions regarding this order, please contact our purchasing department.
+        </p>
+        
+        <p style="margin-top: 20px; font-size: 10px; color: #666;">
+            Generated on ${new Date().toLocaleDateString('en-US')} - Purchase Order System
+        </p>
+    </div>
+</body>
+</html>
+  `;
+}
+
 // Helper function for database queries with error handling
 async function executeQuery(query: string, params: any[] = []) {
   return await withRetry(async () => {
@@ -2315,7 +2558,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Status is required" });
       }
       
-      const validStatuses = ['DRAFT', 'SUBMITTED', 'PENDING', 'SCHEDULED', 'RECEIVED', 'CANCELLED'];
+      const validStatuses = ['DRAFT', 'SUBMITTED', 'SCHEDULED', 'RECEIVED', 'CANCELLED'];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({ message: "Invalid status" });
       }
@@ -2329,6 +2572,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating purchase order status:", error);
       res.status(500).json({ message: "Failed to update purchase order status" });
+    }
+  });
+
+  // Purchase Order PDF Generation for Vendor Communication
+  app.get('/api/purchase-orders/:id/pdf', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const po = await storage.getPurchaseOrder(id);
+      
+      if (!po) {
+        return res.status(404).json({ message: "Purchase order not found" });
+      }
+      
+      // Validate status - must be SUBMITTED to generate PDF
+      if (po.status !== 'SUBMITTED') {
+        return res.status(400).json({ 
+          message: "Purchase order must be SUBMITTED before PDF can be generated",
+          currentStatus: po.status,
+          requiredStatus: 'SUBMITTED'
+        });
+      }
+      
+      const items = await storage.getPurchaseOrderItems(id);
+      
+      // Generate PDF content matching legacy Cost Less format
+      const pdfHtml = generatePurchaseOrderPDF(po, items);
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Disposition', `inline; filename="PO-${po.poNumber}.html"`);
+      res.send(pdfHtml);
+      
+    } catch (error) {
+      console.error('Error generating purchase order PDF:', error);
+      res.status(500).json({ message: "Error generating PDF" });
     }
   });
 

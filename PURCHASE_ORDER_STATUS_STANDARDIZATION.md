@@ -4,13 +4,15 @@
 Comprehensive status management system for purchase orders with consistent uppercase formatting and standardized workflow across the entire application.
 
 ## Status Workflow
-The purchase order lifecycle follows this standardized workflow:
+The purchase order lifecycle follows this simplified workflow:
 
 ```
-DRAFT → SUBMITTED → PENDING → SCHEDULED → RECEIVED
-                                ↓
-                           CANCELLED (can occur at any stage)
+DRAFT → SUBMITTED → SCHEDULED → RECEIVED
+                        ↓
+                   CANCELLED (can occur at any stage)
 ```
+
+**Note**: SUBMITTED status is required before PDF generation for vendor communication.
 
 ## Standardized Status Codes
 

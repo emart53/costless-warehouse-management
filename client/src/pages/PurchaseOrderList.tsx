@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Eye, Edit, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { Eye, Edit, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight, Clock, FileText } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { formatCurrency, formatNumber , formatCurrencyInput, parseCurrency } from "@/lib/formatNumber";
 import { apiRequest } from "@/lib/queryClient";
