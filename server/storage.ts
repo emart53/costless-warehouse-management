@@ -1319,9 +1319,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteDeliverySchedule(id: number): Promise<void> {
-    await db
+    const result = await db
       .delete(deliverySchedules)
-      .where(eq(deliverySchedules.id, id));
+      .where(eq(deliverySchedules.id, id))
+      .returning();
+    
+    if (result.length === 0) {
+      throw new Error(`Delivery schedule with ID ${id} not found`);
+    }
   }
 
   async getDeliverySchedulesByPO(purchaseOrderId: number): Promise<any[]> {

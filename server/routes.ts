@@ -3878,7 +3878,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       console.error('Delete delivery schedule error:', error);
-      res.status(500).json({ message: "Failed to delete delivery schedule" });
+      if (error.message && error.message.includes('not found')) {
+        res.status(404).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: "Failed to delete delivery schedule" });
+      }
     }
   });
 

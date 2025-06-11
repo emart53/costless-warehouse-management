@@ -96,12 +96,27 @@ export default function DeliveryCalendar() {
         description: "Delivery schedule has been removed successfully.",
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      let errorMessage = "Failed to remove delivery schedule. Please try again.";
+      
+      if (error?.status === 404) {
+        errorMessage = "This delivery schedule has already been removed or doesn't exist.";
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to remove delivery schedule. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
+      
+      // If it's a 404, refresh the data to sync the UI
+      if (error?.status === 404) {
+        queryClient.invalidateQueries({ queryKey: ["/api/delivery-schedules"] });
+        queryClient.refetchQueries({ queryKey: ["/api/delivery-schedules"] });
+        setIsDetailModalOpen(false);
+        setIsPostponeModalOpen(false);
+        setSelectedSchedule(null);
+      }
     },
   });
 
