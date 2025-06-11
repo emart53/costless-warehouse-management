@@ -2189,7 +2189,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/purchase-orders/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const po = await storage.updatePurchaseOrder(id, req.body);
+      // Normalize status to uppercase if present
+      const updateData = { ...req.body };
+      if (updateData.status) {
+        updateData.status = updateData.status.toUpperCase();
+      }
+      const po = await storage.updatePurchaseOrder(id, updateData);
       if (!po) {
         return res.status(404).json({ message: "Purchase order not found" });
       }
@@ -2218,9 +2223,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }, 0);
       }
       
+      // Normalize status to uppercase if present
+      const normalizedPoData = { ...poData };
+      if (normalizedPoData.status) {
+        normalizedPoData.status = normalizedPoData.status.toUpperCase();
+      }
+      
       // Update the purchase order header with calculated total
       const po = await storage.updatePurchaseOrder(id, {
-        ...poData,
+        ...normalizedPoData,
         totalAmount: totalAmount,
         expectedDate: poData.expectedDate ? new Date(poData.expectedDate) : null,
       });
@@ -2304,12 +2315,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Status is required" });
       }
       
-      const validStatuses = ['PENDING', 'SENT', 'RECEIVED', 'CANCELLED'];
+      const validStatuses = ['DRAFT', 'SUBMITTED', 'PENDING', 'SCHEDULED', 'RECEIVED', 'CANCELLED'];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({ message: "Invalid status" });
       }
       
-      const po = await storage.updatePurchaseOrder(id, { status });
+      const po = await storage.updatePurchaseOrder(id, { status: status.toUpperCase() });
       if (!po) {
         return res.status(404).json({ message: "Purchase order not found" });
       }

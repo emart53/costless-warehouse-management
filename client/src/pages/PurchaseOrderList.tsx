@@ -217,9 +217,9 @@ export default function PurchaseOrderList() {
     return {
       totalOrders: filteredOrders.length,
       totalValue,
-      pendingOrders: statusCounts['Pending'] || 0,
-      scheduledOrders: statusCounts['Scheduled'] || 0,
-      receivedOrders: statusCounts['Received'] || 0,
+      pendingOrders: statusCounts['PENDING'] || 0,
+      scheduledOrders: statusCounts['SCHEDULED'] || 0,
+      receivedOrders: statusCounts['RECEIVED'] || 0,
       averageOrderValue: filteredOrders.length > 0 ? totalValue / filteredOrders.length : 0
     };
   }, [filteredOrders]);
