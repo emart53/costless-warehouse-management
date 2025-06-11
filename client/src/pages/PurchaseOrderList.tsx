@@ -198,6 +198,31 @@ export default function PurchaseOrderList() {
     }
   });
 
+  // PDF Generation function
+  const handleGeneratePDF = async (po: PurchaseOrder) => {
+    try {
+      if (po.status !== 'SUBMITTED') {
+        toast({
+          title: "Invalid Status",
+          description: "Purchase order must be SUBMITTED before PDF can be generated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Open PDF in new tab
+      const pdfUrl = `/api/purchase-orders/${po.id}/pdf`;
+      window.open(pdfUrl, '_blank');
+      
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to generate PDF",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Reset to first page when filters change
   const handleFilterChange = (filterType: string, value: string) => {
     setCurrentPage(1);
@@ -442,15 +467,26 @@ export default function PurchaseOrderList() {
                             </Button>
                           </Link>
                           {po.status.toUpperCase() === "SUBMITTED" && (
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="flex items-center gap-1"
-                              onClick={() => handleScheduleDelivery(po)}
-                            >
-                              <Calendar className="h-3 w-3" />
-                              Schedule
-                            </Button>
+                            <>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="flex items-center gap-1"
+                                onClick={() => handleGeneratePDF(po)}
+                              >
+                                <FileText className="h-3 w-3" />
+                                PDF
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="flex items-center gap-1"
+                                onClick={() => handleScheduleDelivery(po)}
+                              >
+                                <Calendar className="h-3 w-3" />
+                                Schedule
+                              </Button>
+                            </>
                           )}
                         </div>
                       </TableCell>
