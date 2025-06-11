@@ -42,7 +42,12 @@ export default function CreatePurchaseOrder() {
   const [rapidQuantity, setRapidQuantity] = useState('');
 
   // Data queries
-  const { data: vendors = [] } = useQuery({ queryKey: ['/api/vendors'] });
+  const { data: allVendors = [] } = useQuery({ queryKey: ['/api/vendors'] });
+  
+  // Filter to show only active vendors
+  const vendors = allVendors.filter((vendor: any) => 
+    vendor.status === 'Active' || vendor.status === 'active' || !vendor.status
+  );
   const { data: locations = [] } = useQuery({ queryKey: ['/api/locations'] });
   const { data: stores = [] } = useQuery({ queryKey: ['/api/stores'] });
   
