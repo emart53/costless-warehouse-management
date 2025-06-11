@@ -150,9 +150,9 @@ export default function DeliveryCalendar() {
     if (!selectedSchedule) return;
 
     const updates = {
-      scheduledDate: new Date(editFormData.scheduledDate).toISOString(),
+      scheduledDate: editFormData.scheduledDate,
       scheduledTime: editFormData.scheduledTime,
-      deliveryDuration: editFormData.deliveryDuration,
+      timeSlotDuration: editFormData.deliveryDuration === '60 minutes' ? 60 : 30,
       carrierName: editFormData.carrierName,
       carrierPhone: editFormData.carrierPhone,
       specialInstructions: editFormData.specialInstructions,
