@@ -206,7 +206,7 @@ export default function PurchaseOrderEdit() {
   useEffect(() => {
     const newTotals = calculateTotals(formData.items, formData.lumpSumAllowance, formData.deliveryCharge);
     setTotals(newTotals);
-  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge]);
+  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge, formData.vendorId, vendors]);
 
   // Load existing PO data if editing
   const { data: existingPO } = useQuery({
