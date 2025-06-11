@@ -279,18 +279,18 @@ export const purchaseOrderItems = pgTable("purchase_order_items", {
 // Delivery Schedules for Purchase Orders - Complete scheduling system
 export const deliverySchedules = pgTable("delivery_schedules", {
   id: serial("id").primaryKey(),
-  purchaseOrderId: integer("purchase_order_id").notNull().references(() => purchaseOrders.id),
+  purchaseOrderId: integer("po_id").notNull().references(() => purchaseOrders.id),
   vendorId: integer("vendor_id").notNull().references(() => vendors.id),
   scheduledDate: date("scheduled_date").notNull(),
   scheduledTime: text("scheduled_time").notNull(), // e.g., "09:00"
-  timeSlotDuration: integer("time_slot_duration").default(30), // minutes
-  deliveryDay: text("delivery_day").notNull(), // 'Tuesday', 'Wednesday', 'Friday', etc.
+  timeSlotDuration: integer("time_slot").default(30), // minutes
+  deliveryDay: text("delivery_window").notNull(), // 'Tuesday', 'Wednesday', 'Friday', etc.
   carrierName: text("carrier_name"),
-  carrierPhone: text("carrier_phone"),
-  carrierContact: text("carrier_contact"),
-  totalCases: integer("total_cases").default(0),
-  totalPallets: integer("total_pallets").default(0),
-  totalUnits: integer("total_units").default(0),
+  carrierPhone: text("driver_phone"),
+  carrierContact: text("vendor_contact_name"),
+  totalCases: integer("estimated_cases").default(0),
+  totalPallets: integer("estimated_pallets").default(0),
+  totalUnits: integer("estimated_cases").default(0),
   specialInstructions: text("special_instructions"),
   status: text("status").default("scheduled"), // 'scheduled', 'confirmed', 'in_transit', 'delivered', 'cancelled'
   actualDeliveryDate: date("actual_delivery_date"),
