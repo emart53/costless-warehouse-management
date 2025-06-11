@@ -4,7 +4,8 @@
  */
 
 import { readFileSync } from 'fs';
-import { Client } from 'pg';
+import pkg from 'pg';
+const { Client } = pkg;
 
 function parseCSVLine(line) {
   const result = [];
