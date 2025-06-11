@@ -481,7 +481,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           END,
           p.category, 
           COALESCE(p.product_description, p.name)
-        LIMIT 200
+        LIMIT 250
       `, [vendorId]);
       
       res.json(result.rows);
