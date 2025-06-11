@@ -187,7 +187,7 @@ export default function PurchaseOrderEdit() {
     
     // Apply vendor discount to Extended Net (use actual vendor discount rate)
     const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
-    const vendorDiscountPercent = vendor?.discount_percent ? parseFloat(vendor.discount_percent) : 0;
+    const vendorDiscountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) : 0;
     const discountAmount = subtotal * vendorDiscountPercent;
     const netTotal = subtotal - discountAmount;
     const finalTotal = netTotal - totalBillBack + totalCrv + Number(lumpSum || 0) + Number(delivery || 0);
@@ -217,7 +217,7 @@ export default function PurchaseOrderEdit() {
   useEffect(() => {
     const newTotals = calculateTotals(formData.items, formData.lumpSumAllowance, formData.deliveryCharge);
     setTotals(newTotals);
-  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge]);
+  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge, calculateTotals]);
 
   // Recalculate totals when vendor data loads or vendor changes (for discount calculation)
   useEffect(() => {
@@ -756,7 +756,7 @@ export default function PurchaseOrderEdit() {
                       <div className="flex justify-between text-green-600">
                         <span>Less: Vendor Discount ({(() => {
                           const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
-                          const discountPercent = vendor?.discount_percent ? parseFloat(vendor.discount_percent) * 100 : 0;
+                          const discountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) * 100 : 0;
                           return discountPercent.toFixed(1);
                         })()}%):</span>
                         <span>-{formatCurrency(totals.discountAmount || 0).replace('$', '')}</span>
