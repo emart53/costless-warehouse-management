@@ -47,7 +47,7 @@ const getStatusBadge = (status: string) => {
 
 export default function PurchaseOrderList() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("active"); // Default to active orders
   const [vendorFilter, setVendorFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
@@ -69,7 +69,14 @@ export default function PurchaseOrderList() {
         po.poNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         po.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesStatus = statusFilter === "all" || po.status === statusFilter;
+      // Handle status filtering with "active" option
+      let matchesStatus = true;
+      if (statusFilter === "active") {
+        matchesStatus = po.status !== "Received" && po.status !== "Cancelled";
+      } else if (statusFilter !== "all") {
+        matchesStatus = po.status === statusFilter;
+      }
+      
       const matchesVendor = vendorFilter === "all" || po.vendor.code === vendorFilter;
       
       return matchesSearch && matchesStatus && matchesVendor;
@@ -221,10 +228,11 @@ export default function PurchaseOrderList() {
             </div>
             
             <Select value={statusFilter} onValueChange={(value) => handleFilterChange('status', value)}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="active">Active Orders</SelectItem>
                 <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="Scheduled">Scheduled</SelectItem>
@@ -247,13 +255,14 @@ export default function PurchaseOrderList() {
               </SelectContent>
             </Select>
 
-            {(searchTerm || statusFilter !== "all" || vendorFilter !== "all") && (
+            {(searchTerm || statusFilter !== "active" || vendorFilter !== "all") && (
               <Button 
                 variant="outline" 
                 onClick={() => {
                   setSearchTerm("");
-                  setStatusFilter("all");
+                  setStatusFilter("active");
                   setVendorFilter("all");
+                  setCurrentPage(1);
                 }}
               >
                 Clear Filters
