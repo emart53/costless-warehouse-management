@@ -332,6 +332,17 @@ export default function PurchaseOrderList() {
                               Edit
                             </Button>
                           </Link>
+                          {po.status === "Submitted" && (
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex items-center gap-1"
+                              onClick={() => handleScheduleDelivery(po)}
+                            >
+                              <Calendar className="h-3 w-3" />
+                              Schedule
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

@@ -276,38 +276,37 @@ export const purchaseOrderItems = pgTable("purchase_order_items", {
   notes: text("notes"),
 });
 
-// Delivery Schedules for Purchase Orders
+// Delivery Schedules for Purchase Orders - Complete scheduling system
 export const deliverySchedules = pgTable("delivery_schedules", {
   id: serial("id").primaryKey(),
-  poId: integer("po_id").notNull().references(() => purchaseOrders.id),
+  purchaseOrderId: integer("purchase_order_id").notNull().references(() => purchaseOrders.id),
+  vendorId: integer("vendor_id").notNull().references(() => vendors.id),
   scheduledDate: date("scheduled_date").notNull(),
-  scheduledTime: text("scheduled_time"), // '08:00', '13:30', etc.
+  scheduledTime: text("scheduled_time").notNull(), // e.g., "09:00"
+  timeSlotDuration: integer("time_slot_duration").default(30), // minutes
+  deliveryDay: text("delivery_day").notNull(), // 'Tuesday', 'Wednesday', 'Friday', etc.
+  carrierName: text("carrier_name"),
+  carrierPhone: text("carrier_phone"),
+  carrierContact: text("carrier_contact"),
+  totalCases: integer("total_cases").default(0),
+  totalPallets: integer("total_pallets").default(0),
+  totalUnits: integer("total_units").default(0),
+  specialInstructions: text("special_instructions"),
+  status: text("status").default("scheduled"), // 'scheduled', 'confirmed', 'in_transit', 'delivered', 'cancelled'
   actualDeliveryDate: date("actual_delivery_date"),
   actualDeliveryTime: text("actual_delivery_time"),
-  deliveryWindow: text("delivery_window"), // 'morning' (6-12), 'afternoon' (12-18), 'evening' (18-22), 'all_day'
-  timeSlot: text("time_slot"), // '08:00-10:00', '10:00-12:00', '13:00-15:00', '15:00-17:00'
-  status: text("status").notNull().default("scheduled"), // 'scheduled', 'confirmed', 'in_transit', 'delivered', 'delayed', 'cancelled', 'rescheduled'
   priority: text("priority").default("normal"), // 'urgent', 'high', 'normal', 'low'
-  
-  // Logistics coordination
   trackingNumber: text("tracking_number"),
-  carrierName: text("carrier_name"),
   driverName: text("driver_name"),
   driverPhone: text("driver_phone"),
-  vehicleInfo: text("vehicle_info"), // truck type, license plate
-  
-  // Warehouse coordination
+  vehicleInfo: text("vehicle_info"),
   warehouseContactId: integer("warehouse_contact_id").references(() => users.id),
   vendorContactName: text("vendor_contact_name"),
   vendorContactPhone: text("vendor_contact_phone"),
-  specialInstructions: text("special_instructions"),
-  
-  // Schedule management
   scheduledBy: integer("scheduled_by").references(() => users.id),
   confirmedAt: timestamp("confirmed_at"),
   lastModifiedBy: integer("last_modified_by").references(() => users.id),
   rescheduleReason: text("reschedule_reason"),
-  
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -444,6 +443,8 @@ export const schedules = pgTable("schedules", {
   completedAt: timestamp("completed_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+
 
 export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey(),
