@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { 
   Warehouse, 
   BarChart3, 
@@ -12,7 +13,10 @@ import {
   Bell, 
   FileText, 
   Settings,
-  ClipboardList
+  ClipboardList,
+  ChevronDown,
+  ChevronRight,
+  CalendarDays
 } from "lucide-react";
 
 const navigation = [
@@ -22,7 +26,15 @@ const navigation = [
   { name: "Purchase Orders", href: "/purchase-orders", icon: ClipboardList },
   { name: "Transfer Orders", href: "/transfer-orders", icon: Truck },
   { name: "Transactions", href: "/transactions", icon: Truck },
-  { name: "Scheduling", href: "/scheduling", icon: Calendar },
+  { 
+    name: "Scheduling", 
+    href: "/scheduling", 
+    icon: Calendar,
+    submenu: [
+      { name: "Task Scheduling", href: "/scheduling", icon: Calendar },
+      { name: "Delivery Calendar", href: "/delivery-calendar", icon: CalendarDays }
+    ]
+  },
   { name: "Notifications", href: "/notifications", icon: Bell, hasNotifications: true },
   { name: "Reports", href: "/reports", icon: FileText },
   { name: "Maintenance", href: "/maintenance", icon: Settings },
@@ -31,10 +43,21 @@ const navigation = [
 
 export default function Sidebar() {
   const [location] = useLocation();
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
 
   const { data: unreadNotifications = [] } = useQuery({
     queryKey: ["/api/notifications?unread=true"],
   });
+
+  const toggleSection = (sectionName: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionName) 
+        ? prev.filter(name => name !== sectionName)
+        : [...prev, sectionName]
+    );
+  };
+
+  const isSchedulingActive = location === "/scheduling" || location === "/delivery-calendar";
 
   return (
     <aside className="w-60 bg-white shadow-lg border-r border-neutral-200 flex-shrink-0">
@@ -51,6 +74,55 @@ export default function Sidebar() {
           const isActive = location === item.href;
           const Icon = item.icon;
           const notificationCount = item.hasNotifications ? unreadNotifications.length : 0;
+          const hasSubmenu = item.submenu && item.submenu.length > 0;
+          const isExpanded = expandedSections.includes(item.name) || (item.name === "Scheduling" && isSchedulingActive);
+
+          if (hasSubmenu) {
+            return (
+              <div key={item.name}>
+                <button
+                  onClick={() => toggleSection(item.name)}
+                  className={cn(
+                    "sidebar-link w-full justify-between",
+                    isSchedulingActive && "active"
+                  )}
+                >
+                  <div className="flex items-center">
+                    <Icon className="w-5 h-5 mr-3" />
+                    {item.name}
+                  </div>
+                  {isExpanded ? (
+                    <ChevronDown className="w-4 h-4" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4" />
+                  )}
+                </button>
+                
+                {isExpanded && (
+                  <div className="ml-6 mt-2 space-y-1">
+                    {item.submenu.map((subitem) => {
+                      const isSubActive = location === subitem.href;
+                      const SubIcon = subitem.icon;
+                      
+                      return (
+                        <Link
+                          key={subitem.name}
+                          href={subitem.href}
+                          className={cn(
+                            "sidebar-link text-sm",
+                            isSubActive && "active"
+                          )}
+                        >
+                          <SubIcon className="w-4 h-4 mr-3" />
+                          {subitem.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
 
           return (
             <Link

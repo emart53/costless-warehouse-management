@@ -28,6 +28,7 @@ import TransferOrderView from "@/pages/TransferOrderView";
 import Scheduling from "@/pages/Scheduling";
 import DeliveryScheduling from "@/pages/DeliveryScheduling";
 import DeliverySchedulingCalendar from "@/pages/DeliverySchedulingCalendar";
+import DeliveryCalendar from "@/pages/DeliveryCalendar";
 import Notifications from "@/pages/Notifications";
 import Reports from "@/pages/Reports";
 import Settings from "@/pages/Settings";
@@ -66,7 +67,7 @@ function Router() {
         <Route path="/transfer-orders/:id" component={TransferOrderView} />
         <Route path="/scheduling" component={Scheduling} />
         <Route path="/delivery-scheduling" component={DeliveryScheduling} />
-        <Route path="/delivery-calendar" component={DeliverySchedulingCalendar} />
+        <Route path="/delivery-calendar" component={DeliveryCalendar} />
         <Route path="/notifications" component={Notifications} />
         <Route path="/reports" component={Reports} />
         <Route path="/settings" component={Settings} />

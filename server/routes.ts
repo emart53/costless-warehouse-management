@@ -2609,6 +2609,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delivery Schedules API
+  app.get("/api/delivery-schedules", async (req, res) => {
+    try {
+      const { pool } = await import("./db.js");
+      const result = await pool.query(`
+        SELECT 
+          ds.id,
+          ds.purchase_order_id as "purchaseOrderId",
+          ds.vendor_id as "vendorId",
+          ds.scheduled_date as "scheduledDate",
+          ds.scheduled_time as "scheduledTime",
+          ds.delivery_day as "deliveryDay",
+          ds.delivery_duration as "deliveryDuration",
+          ds.carrier_name as "carrierName",
+          ds.carrier_phone as "carrierPhone",
+          ds.carrier_contact as "carrierContact",
+          ds.special_instructions as "specialInstructions",
+          ds.total_cases as "totalCases",
+          ds.total_pallets as "totalPallets",
+          ds.total_units as "totalUnits",
+          ds.created_at as "createdAt"
+        FROM delivery_schedules ds
+        ORDER BY ds.scheduled_date, ds.scheduled_time
+      `);
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Delivery schedules API error:', error);
+      res.status(500).json({ message: "Failed to fetch delivery schedules" });
+    }
+  });
+
   // Notifications
   app.get("/api/notifications", async (req, res) => {
     try {
