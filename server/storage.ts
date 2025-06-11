@@ -1266,7 +1266,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(deliverySchedules)
       .leftJoin(purchaseOrders, eq(deliverySchedules.purchaseOrderId, purchaseOrders.id))
-      .leftJoin(vendors, eq(deliverySchedules.vendorId, vendors.id))
+      .leftJoin(vendors, eq(purchaseOrders.vendorId, vendors.id))
       .orderBy(desc(deliverySchedules.scheduledDate));
     
     return schedules.map(row => ({
@@ -1284,7 +1284,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(deliverySchedules)
       .leftJoin(purchaseOrders, eq(deliverySchedules.purchaseOrderId, purchaseOrders.id))
-      .leftJoin(vendors, eq(deliverySchedules.vendorId, vendors.id))
+      .leftJoin(vendors, eq(purchaseOrders.vendorId, vendors.id))
       .where(eq(deliverySchedules.id, id));
     
     if (!schedule) return undefined;

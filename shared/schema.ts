@@ -280,7 +280,6 @@ export const purchaseOrderItems = pgTable("purchase_order_items", {
 export const deliverySchedules = pgTable("delivery_schedules", {
   id: serial("id").primaryKey(),
   purchaseOrderId: integer("po_id").notNull().references(() => purchaseOrders.id),
-  vendorId: integer("vendor_id").notNull().references(() => vendors.id),
   scheduledDate: date("scheduled_date").notNull(),
   scheduledTime: text("scheduled_time").notNull(), // e.g., "09:00"
   timeSlotDuration: integer("time_slot").default(30), // minutes
