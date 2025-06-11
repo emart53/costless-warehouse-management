@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Plus, Save, Send } from "lucide-react";
 import { useLocation } from "wouter";
@@ -40,6 +43,9 @@ export default function CreatePurchaseOrder() {
   const [poItems, setPOItems] = useState<POItem[]>([]);
   const [rapidProductId, setRapidProductId] = useState('');
   const [rapidQuantity, setRapidQuantity] = useState('');
+  
+  // Vendor combobox state
+  const [vendorComboOpen, setVendorComboOpen] = useState(false);
 
   // Data queries
   const { data: allVendors = [] } = useQuery({ queryKey: ['/api/vendors'] });
@@ -289,18 +295,48 @@ export default function CreatePurchaseOrder() {
           <div className="grid grid-cols-4 gap-4 mb-4">
             <div className="col-span-2">
               <Label htmlFor="vendor">Vendor *</Label>
-              <Select value={selectedVendorId?.toString() || ''} onValueChange={handleVendorChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select vendor..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {(vendors as any[]).map((vendor: any) => (
-                    <SelectItem key={vendor.id} value={vendor.id.toString()}>
-                      {vendor.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={vendorComboOpen} onOpenChange={setVendorComboOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={vendorComboOpen}
+                    className="w-full justify-between"
+                  >
+                    {selectedVendorId
+                      ? (vendors as any[]).find((vendor: any) => vendor.id === selectedVendorId)?.name || "Select vendor..."
+                      : "Select vendor..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="Search vendors..." />
+                    <CommandList>
+                      <CommandEmpty>No vendor found.</CommandEmpty>
+                      <CommandGroup>
+                        {(vendors as any[]).map((vendor: any) => (
+                          <CommandItem
+                            key={vendor.id}
+                            value={`${vendor.name} ${vendor.code}`}
+                            onSelect={() => {
+                              handleVendorChange(vendor.id.toString());
+                              setVendorComboOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={`mr-2 h-4 w-4 ${
+                                selectedVendorId === vendor.id ? "opacity-100" : "opacity-0"
+                              }`}
+                            />
+                            {vendor.name} ({vendor.code})
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             <div>
               <Label htmlFor="orderDate">Order Date</Label>
@@ -529,7 +565,7 @@ export default function CreatePurchaseOrder() {
                   </thead>
                   <tbody>
                     {poItems.map((item) => {
-                      const netCost = item.listCost - item.offInvoice - item.billBack;
+                      const netCost = item.listCost - item.offInvoice;
                       const extendedList = item.quantityOrdered * item.listCost;
                       const extendedNet = item.quantityOrdered * netCost;
                       const crvPerUnit = parseFloat(item.product?.crvPerUnit || '0');
@@ -646,7 +682,7 @@ export default function CreatePurchaseOrder() {
                       </thead>
                       <tbody>
                         {poItems.map((item) => {
-                          const netCost = item.listCost - item.offInvoice - item.billBack;
+                          const netCost = item.listCost - item.offInvoice;
                           const extended = item.quantityOrdered * netCost;
                           
                           return (
