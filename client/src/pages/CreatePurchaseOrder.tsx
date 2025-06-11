@@ -189,8 +189,8 @@ export default function CreatePurchaseOrder() {
     });
 
     // Calculate vendor discount on list cost (standard industry practice)
-    const vendorDiscountPercent = parseFloat((selectedVendor as any)?.discount_percent || '0');
-    const vendorDiscountAmount = (totalListCost * vendorDiscountPercent) / 100;
+    const vendorDiscountPercent = parseFloat((selectedVendor as any)?.discountPercent || '0');
+    const vendorDiscountAmount = totalListCost > 0 ? (totalListCost * vendorDiscountPercent) / 100 : 0;
 
     // Net cost should only deduct Off Invoice, not Bill Back (Bill Back shows in totals section)
     const netCost = totalListCost - totalOffInvoice - vendorDiscountAmount;
@@ -377,9 +377,9 @@ export default function CreatePurchaseOrder() {
               <div>
                 <h3 className="font-semibold mb-2">Terms & Conditions</h3>
                 <div className="text-sm space-y-1">
-                  {(selectedVendor as any).discount_percent && parseFloat((selectedVendor as any).discount_percent) > 0 ? (
+                  {(selectedVendor as any).discountPercent && parseFloat((selectedVendor as any).discountPercent) > 0 ? (
                     <p className="font-medium">
-                      {parseFloat((selectedVendor as any).discount_percent).toFixed(1)}% Early Pay Discount
+                      {parseFloat((selectedVendor as any).discountPercent).toFixed(1)}% Early Pay Discount
                     </p>
                   ) : (selectedVendor as any).paymentTerms ? (
                     <p>{(selectedVendor as any).paymentTerms}</p>
@@ -756,9 +756,9 @@ export default function CreatePurchaseOrder() {
                     <span>Less: Bill Back Allowances:</span>
                     <span className="font-medium">-{formatCurrency(totalBillBack)}</span>
                   </div>
-                  {(selectedVendor as any)?.discount_percent && parseFloat((selectedVendor as any).discount_percent) > 0 && (
+                  {(selectedVendor as any)?.discountPercent && parseFloat((selectedVendor as any).discountPercent) > 0 && (
                     <div className="flex justify-between text-green-700">
-                      <span>Less: Vendor Discount ({parseFloat((selectedVendor as any).discount_percent).toFixed(1)}%):</span>
+                      <span>Less: Vendor Discount ({parseFloat((selectedVendor as any).discountPercent).toFixed(1)}%):</span>
                       <span className="font-medium">-{formatCurrency(vendorDiscountAmount)}</span>
                     </div>
                   )}
