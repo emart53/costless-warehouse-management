@@ -1,0 +1,48 @@
+BACKUP: PurchaseOrderEdit.tsx Changes - Vendor Discount Fix
+==========================================================
+
+DATE: June 11, 2025
+FILE: client/src/pages/PurchaseOrderEdit.tsx
+
+CHANGE 1: Fixed discount calculation logic (lines 188-198)
+---------------------------------------------------------
+BEFORE:
+    // Apply vendor discount to Extended Net (use actual vendor discount rate)
+    const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
+    const vendorDiscountPercent = vendor?.discount_percent ? parseFloat(vendor.discount_percent) : 0;
+    const discountAmount = subtotal * vendorDiscountPercent;
+
+AFTER:
+    // Calculate Extended List Cost (before off-invoice deductions) for vendor discount
+    const extendedListTotal = items.reduce((sum, item) => {
+      const qty = Number(item.quantityOrdered || 0);
+      const listCost = Number(item.listCost || 0);
+      return sum + (qty * listCost);
+    }, 0);
+    
+    // Apply vendor discount to Extended List Cost (legacy system behavior)
+    const vendor = vendors && formData.vendorId ? (vendors as any[]).find(v => v.id === formData.vendorId) : null;
+    const vendorDiscountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) : 0;
+    const discountAmount = extendedListTotal * vendorDiscountPercent;
+
+CHANGE 2: Fixed field name in UI display (line 771)
+---------------------------------------------------
+BEFORE:
+    const discountPercent = vendor?.discount_percent ? parseFloat(vendor.discount_percent) * 100 : 0;
+
+AFTER:
+    const discountPercent = vendor?.discountPercent ? parseFloat(vendor.discountPercent) * 100 : 0;
+
+CHANGE 3: Added calculateTotals to useEffect dependencies (line 232)
+--------------------------------------------------------------------
+BEFORE:
+  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge]);
+
+AFTER:
+  }, [formData.items, formData.lumpSumAllowance, formData.deliveryCharge, calculateTotals]);
+
+IMPACT:
+- Vendor discount now calculated on Extended List Cost ($131,414.40)
+- Discount amount: $2,628.29 (2% of Extended List Cost)
+- Edit and view pages now show matching totals
+- Maintains consistency with legacy Cost Less system
