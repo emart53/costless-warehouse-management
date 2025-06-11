@@ -453,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const result = await pool.query(`
         SELECT 
-          p.id,
+          p.product_id as id,
           p.product_id as "productId",
           COALESCE(p.product_description, p.description, p.name, 'Product ' || p.product_id) as description,
           COALESCE(p.product_name, p.name) as name,
