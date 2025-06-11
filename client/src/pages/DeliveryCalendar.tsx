@@ -56,11 +56,7 @@ export default function DeliveryCalendar() {
   // Mutation for updating delivery schedules
   const updateScheduleMutation = useMutation({
     mutationFn: async (data: { id: number; updates: any }) => {
-      return apiRequest(`/api/delivery-schedules/${data.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data.updates),
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return apiRequest(`/api/delivery-schedules/${data.id}`, 'PATCH', data.updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/delivery-schedules"] });
