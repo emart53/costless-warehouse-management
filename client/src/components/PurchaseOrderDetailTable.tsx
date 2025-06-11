@@ -19,7 +19,12 @@ interface PurchaseOrderItem {
     productDescription: string;
     casePack: number;
     size: string;
+    name?: string;
+    description?: string;
+    offInvoice?: string;
     crv?: string;
+    caseUpc?: string;
+    weight?: number;
   };
   configuration?: {
     configurationName: string;
@@ -225,10 +230,11 @@ export function PurchaseOrderDetailTable({
                       <Input
                         type="number"
                         step="0.0001"
-                        value={item.purchaseCrv || ''}
+                        value={extValues.crvPerUnit || ''}
                         onChange={(e) => handleFieldUpdate(index, 'purchaseCrv', parseFloat(e.target.value) || 0)}
                         className="w-full h-8 text-xs"
                         min="0"
+                        placeholder={item.product?.crv || '0'}
                       />
                     </td>
                   )}
