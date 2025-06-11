@@ -200,6 +200,31 @@ export default function PurchaseOrderList() {
     }
   });
 
+  // Receive purchase order mutation
+  const receivePOMutation = useMutation({
+    mutationFn: async (poId: number) => {
+      return apiRequest(`/api/purchase-orders/${poId}`, "PATCH", {
+        status: "RECEIVED",
+        receivedDate: new Date().toISOString().split('T')[0]
+      });
+    },
+    onSuccess: (data, poId) => {
+      const po = purchaseOrders.find(p => p.id === poId);
+      toast({
+        title: "Purchase Order Received",
+        description: `${po?.poNumber} has been marked as received. Products are now available in inventory.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/purchase-orders"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Receive Failed",
+        description: "Failed to mark purchase order as received. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   // PDF Generation function
   const handleGeneratePDF = async (po: PurchaseOrder) => {
     try {
@@ -489,6 +514,18 @@ export default function PurchaseOrderList() {
                                 Schedule
                               </Button>
                             </>
+                          )}
+                          {po.status.toUpperCase() === "SCHEDULED" && (
+                            <Button 
+                              variant="default" 
+                              size="sm" 
+                              className="flex items-center gap-1 bg-green-600 hover:bg-green-700"
+                              onClick={() => receivePOMutation.mutate(po.id)}
+                              disabled={receivePOMutation.isPending}
+                            >
+                              <Package className="h-3 w-3" />
+                              {receivePOMutation.isPending ? "Receiving..." : "Receive"}
+                            </Button>
                           )}
                         </div>
                       </TableCell>

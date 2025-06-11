@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, Save, ArrowLeft, Calculator } from "lucide-react";
+import { Trash2, Plus, Save, ArrowLeft, Calculator, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
@@ -424,6 +424,33 @@ export default function PurchaseOrderEdit() {
     },
   });
 
+  // Receive purchase order mutation
+  const receivePOMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest(`/api/purchase-orders/${id}`, "PATCH", {
+        status: "RECEIVED",
+        receivedDate: new Date().toISOString().split('T')[0]
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Purchase Order Received",
+        description: `${formData.poNumber} has been marked as received. Products are now available in inventory.`,
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/purchase-orders/${id}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/purchase-orders"] });
+      // Update local form data
+      setFormData({ ...formData, status: "RECEIVED", receivedDate: new Date().toISOString().split('T')[0] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Receive Failed",
+        description: "Failed to mark purchase order as received. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleSave = () => {
     if (!formData.vendorId || formData.items.length === 0) {
       toast({
@@ -471,10 +498,23 @@ export default function PurchaseOrderEdit() {
             </p>
           )}
         </div>
-        <Button onClick={handleSave} disabled={saveMutation.isPending}>
-          <Save className="h-4 w-4 mr-2" />
-          {saveMutation.isPending ? 'Saving...' : 'Save'}
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleSave} disabled={saveMutation.isPending}>
+            <Save className="h-4 w-4 mr-2" />
+            {saveMutation.isPending ? 'Saving...' : 'Save'}
+          </Button>
+          {id && formData.status?.toUpperCase() === "SCHEDULED" && (
+            <Button 
+              onClick={() => receivePOMutation.mutate()}
+              disabled={receivePOMutation.isPending}
+              variant="default"
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <Package className="h-4 w-4 mr-2" />
+              {receivePOMutation.isPending ? 'Receiving...' : 'Receive'}
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Header Information */}
