@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
-import { Calendar, ChevronLeft, ChevronRight, Clock, Truck, Package } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Clock, Truck, Package, Edit } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface DeliverySchedule {
   id: number;
@@ -36,6 +40,44 @@ export default function DeliveryCalendar() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<DeliverySchedule | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    scheduledDate: '',
+    scheduledTime: '',
+    deliveryDuration: '30 minutes',
+    carrierName: '',
+    carrierPhone: '',
+    specialInstructions: ''
+  });
+
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  // Mutation for updating delivery schedules
+  const updateScheduleMutation = useMutation({
+    mutationFn: async (data: { id: number; updates: any }) => {
+      return apiRequest(`/api/delivery-schedules/${data.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data.updates),
+        headers: { 'Content-Type': 'application/json' }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/delivery-schedules"] });
+      setIsEditModalOpen(false);
+      toast({
+        title: "Schedule Updated",
+        description: "Delivery schedule has been successfully updated.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update delivery schedule. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   // Fetch delivery schedules
   const { data: deliverySchedules = [], isLoading } = useQuery<DeliverySchedule[]>({
@@ -72,10 +114,7 @@ export default function DeliveryCalendar() {
     return acc;
   }, {} as Record<string, DeliverySchedule[]>);
 
-  // Debug logging
-  console.log('Delivery Schedules:', deliverySchedules);
-  console.log('Schedules by Date:', schedulesByDate);
-  console.log('Current Date:', format(currentDate, 'yyyy-MM-dd'));
+
 
   // Get schedules for a specific date
   const getSchedulesForDate = (date: Date) => {
@@ -95,6 +134,39 @@ export default function DeliveryCalendar() {
   const handleScheduleClick = (schedule: DeliverySchedule) => {
     setSelectedSchedule(schedule);
     setIsDetailModalOpen(true);
+  };
+
+  const handleEditSchedule = (schedule: DeliverySchedule) => {
+    setSelectedSchedule(schedule);
+    setEditFormData({
+      scheduledDate: format(new Date(schedule.scheduledDate), 'yyyy-MM-dd'),
+      scheduledTime: schedule.scheduledTime,
+      deliveryDuration: schedule.deliveryDuration,
+      carrierName: schedule.carrierName || '',
+      carrierPhone: schedule.carrierPhone || '',
+      specialInstructions: schedule.specialInstructions || ''
+    });
+    setIsDetailModalOpen(false);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveSchedule = () => {
+    if (!selectedSchedule) return;
+
+    const updates = {
+      scheduledDate: new Date(editFormData.scheduledDate).toISOString(),
+      scheduledTime: editFormData.scheduledTime,
+      deliveryDuration: editFormData.deliveryDuration,
+      carrierName: editFormData.carrierName,
+      carrierPhone: editFormData.carrierPhone,
+      specialInstructions: editFormData.specialInstructions,
+      deliveryDay: format(new Date(editFormData.scheduledDate), 'EEEE')
+    };
+
+    updateScheduleMutation.mutate({
+      id: selectedSchedule.id,
+      updates
+    });
   };
 
   const formatCurrency = (amount: string | number) => {
@@ -206,9 +278,22 @@ export default function DeliveryCalendar() {
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Truck className="h-5 w-5" />
-              Delivery Schedule Details
+            <DialogTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Truck className="h-5 w-5" />
+                Delivery Schedule Details
+              </div>
+              {selectedSchedule && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleEditSchedule(selectedSchedule)}
+                  className="flex items-center gap-2"
+                >
+                  <Edit className="h-4 w-4" />
+                  Edit
+                </Button>
+              )}
             </DialogTitle>
           </DialogHeader>
           
@@ -294,6 +379,118 @@ export default function DeliveryCalendar() {
               )}
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Schedule Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5" />
+              Reschedule Delivery
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Purchase Order Info */}
+            {selectedSchedule && (
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <div className="text-sm font-medium text-blue-800">
+                  {selectedSchedule.purchaseOrder?.poNumber || `PO-${selectedSchedule.purchaseOrderId}`}
+                </div>
+                <div className="text-sm text-blue-600">
+                  {selectedSchedule.purchaseOrder?.vendor?.name || 'Unknown Vendor'}
+                </div>
+              </div>
+            )}
+
+            {/* Date and Time */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="scheduledDate">Delivery Date</Label>
+                <Input
+                  id="scheduledDate"
+                  type="date"
+                  value={editFormData.scheduledDate}
+                  onChange={(e) => setEditFormData(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="scheduledTime">Delivery Time</Label>
+                <Input
+                  id="scheduledTime"
+                  type="time"
+                  value={editFormData.scheduledTime}
+                  onChange={(e) => setEditFormData(prev => ({ ...prev, scheduledTime: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            {/* Duration */}
+            <div>
+              <Label htmlFor="deliveryDuration">Duration</Label>
+              <select
+                id="deliveryDuration"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={editFormData.deliveryDuration}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, deliveryDuration: e.target.value }))}
+              >
+                <option value="30 minutes">30 minutes</option>
+                <option value="60 minutes">1 hour</option>
+              </select>
+            </div>
+
+            {/* Carrier Information */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="carrierName">Carrier Name</Label>
+                <Input
+                  id="carrierName"
+                  value={editFormData.carrierName}
+                  onChange={(e) => setEditFormData(prev => ({ ...prev, carrierName: e.target.value }))}
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <Label htmlFor="carrierPhone">Carrier Phone</Label>
+                <Input
+                  id="carrierPhone"
+                  value={editFormData.carrierPhone}
+                  onChange={(e) => setEditFormData(prev => ({ ...prev, carrierPhone: e.target.value }))}
+                  placeholder="Optional"
+                />
+              </div>
+            </div>
+
+            {/* Special Instructions */}
+            <div>
+              <Label htmlFor="specialInstructions">Special Instructions</Label>
+              <textarea
+                id="specialInstructions"
+                className="w-full p-2 border border-gray-300 rounded-md min-h-[80px]"
+                value={editFormData.specialInstructions}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, specialInstructions: e.target.value }))}
+                placeholder="Optional delivery instructions..."
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveSchedule}
+                disabled={updateScheduleMutation.isPending}
+              >
+                {updateScheduleMutation.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
