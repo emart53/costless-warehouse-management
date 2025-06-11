@@ -104,9 +104,12 @@ export default function DeliveryCalendar() {
   const monthEnd = endOfMonth(currentDate);
   const calendarDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-  // Group schedules by date
+  // Group schedules by date (handle timezone properly)
   const schedulesByDate = enrichedSchedules.reduce((acc, schedule) => {
-    const dateKey = format(new Date(schedule.scheduledDate), 'yyyy-MM-dd');
+    // Parse as local date to avoid timezone issues
+    const dateParts = schedule.scheduledDate.split('T')[0].split('-');
+    const localDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+    const dateKey = format(localDate, 'yyyy-MM-dd');
     if (!acc[dateKey]) {
       acc[dateKey] = [];
     }
@@ -138,8 +141,12 @@ export default function DeliveryCalendar() {
 
   const handleEditSchedule = (schedule: DeliverySchedule) => {
     setSelectedSchedule(schedule);
+    // Parse date properly to avoid timezone issues
+    const dateParts = schedule.scheduledDate.split('T')[0].split('-');
+    const localDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+    
     setEditFormData({
-      scheduledDate: format(new Date(schedule.scheduledDate), 'yyyy-MM-dd'),
+      scheduledDate: format(localDate, 'yyyy-MM-dd'),
       scheduledTime: schedule.scheduledTime,
       deliveryDuration: schedule.deliveryDuration,
       carrierName: schedule.carrierName || '',
@@ -328,7 +335,11 @@ export default function DeliveryCalendar() {
                                 <div className="flex items-center gap-4 text-sm text-gray-600">
                                   <div className="flex items-center gap-1">
                                     <Calendar className="h-4 w-4" />
-                                    {format(new Date(schedule.scheduledDate), 'EEEE, MMMM d, yyyy')}
+                                    {(() => {
+                                      const dateParts = schedule.scheduledDate.split('T')[0].split('-');
+                                      const localDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+                                      return format(localDate, 'EEEE, MMMM d, yyyy');
+                                    })()}
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <Clock className="h-4 w-4" />
