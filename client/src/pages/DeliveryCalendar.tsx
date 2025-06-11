@@ -152,9 +152,9 @@ export default function DeliveryCalendar() {
     const updates = {
       scheduledDate: editFormData.scheduledDate,
       scheduledTime: editFormData.scheduledTime,
-      timeSlotDuration: editFormData.deliveryDuration === '60 minutes' ? 60 : 30,
+      timeSlotDuration: editFormData.deliveryDuration === '60 minutes' ? '60' : '30',
       carrierName: editFormData.carrierName,
-      carrierPhone: editFormData.carrierPhone,
+      driverPhone: editFormData.carrierPhone,
       specialInstructions: editFormData.specialInstructions,
       deliveryDay: format(new Date(editFormData.scheduledDate), 'EEEE')
     };
