@@ -667,31 +667,61 @@ export default function PurchaseOrderEdit() {
                                 </div>
                               </div>
                             ) : (
-                              <Select 
-                                value={item.productId.toString()} 
-                                onValueChange={(value) => selectProduct(index, parseInt(value))}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select product" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {(vendorProducts && Array.isArray(vendorProducts) ? vendorProducts : [])?.map((product: any) => {
-
-                                    const description = product.description || product.product_description || product.productDescription || product.name;
-                                    const casePack = product.casePack || product.case_pack || '';
-                                    const size = product.unitSize || product.size || '';
-                                    const productId = product.productId || product.id;
-                                    const status = product.status || 'Active';
-                                    const statusBadge = status !== 'Active' ? ` [${status}]` : '';
-                                    const displayName = casePack && size ? `#${productId} - ${description} ${casePack}/${size}${statusBadge}` : `#${productId} - ${description}${statusBadge}`;
-                                    return (
-                                      <SelectItem key={product.id || product.productId} value={(product.id || product.productId).toString()}>
-                                        {displayName}
-                                      </SelectItem>
-                                    );
-                                  })}
-                                </SelectContent>
-                              </Select>
+                              <div className="relative">
+                                <Input
+                                  type="text"
+                                  placeholder="Type product name, ID, or brand to search..."
+                                  className="w-full"
+                                  onChange={(e) => {
+                                    const searchTerm = e.target.value.toLowerCase();
+                                    if (searchTerm.length >= 2) {
+                                      const filteredProducts = (vendorProducts && Array.isArray(vendorProducts) ? vendorProducts : []).filter((product: any) => {
+                                        const description = product.description || product.product_description || product.productDescription || product.name || '';
+                                        const productId = (product.productId || product.id || '').toString();
+                                        const brand = product.brand || '';
+                                        return description.toLowerCase().includes(searchTerm) || 
+                                               productId.includes(searchTerm) || 
+                                               brand.toLowerCase().includes(searchTerm);
+                                      });
+                                      
+                                      if (filteredProducts.length === 1) {
+                                        selectProduct(index, filteredProducts[0].id || filteredProducts[0].productId);
+                                      }
+                                    }
+                                  }}
+                                />
+                                {vendorProducts && vendorProducts.length > 0 && (
+                                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto z-50 mt-1">
+                                    {vendorProducts.slice(0, 20).map((product: any) => {
+                                      const description = product.description || product.product_description || product.productDescription || product.name;
+                                      const casePack = product.casePack || product.case_pack || '';
+                                      const size = product.unitSize || product.size || '';
+                                      const productId = product.productId || product.id;
+                                      const status = product.status || 'Active';
+                                      const statusBadge = status !== 'Active' ? ` [${status}]` : '';
+                                      const displayName = casePack && size ? `#${productId} - ${description} ${casePack}/${size}${statusBadge}` : `#${productId} - ${description}${statusBadge}`;
+                                      
+                                      return (
+                                        <div
+                                          key={product.id || product.productId}
+                                          className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100"
+                                          onClick={() => selectProduct(index, product.id || product.productId)}
+                                        >
+                                          <div className="font-medium truncate">{displayName}</div>
+                                          <div className="text-xs text-gray-500">
+                                            Cost: {formatCurrency(product.listCost || 0)} | Brand: {product.brand || 'N/A'}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                    {vendorProducts.length > 20 && (
+                                      <div className="p-2 text-center text-xs text-gray-500">
+                                        {vendorProducts.length - 20} more products available. Type to search.
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
                             )}
                           </td>
                           <td className="border border-gray-300 py-2 px-2" style={{width: '80px'}}>
