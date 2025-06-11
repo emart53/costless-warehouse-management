@@ -1259,6 +1259,79 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(standingOrders.id, id));
   }
+
+  // Delivery Schedule methods
+  async getDeliverySchedules(): Promise<any[]> {
+    const schedules = await db
+      .select()
+      .from(deliverySchedules)
+      .leftJoin(purchaseOrders, eq(deliverySchedules.purchaseOrderId, purchaseOrders.id))
+      .leftJoin(vendors, eq(deliverySchedules.vendorId, vendors.id))
+      .orderBy(desc(deliverySchedules.scheduledDate));
+    
+    return schedules.map(row => ({
+      ...row.delivery_schedules,
+      purchaseOrder: row.purchase_orders ? {
+        poNumber: row.purchase_orders.poNumber,
+        vendor: row.vendors ? { name: row.vendors.name } : null,
+        totalAmount: row.purchase_orders.totalAmount
+      } : null
+    }));
+  }
+
+  async getDeliverySchedule(id: number): Promise<any | undefined> {
+    const [schedule] = await db
+      .select()
+      .from(deliverySchedules)
+      .leftJoin(purchaseOrders, eq(deliverySchedules.purchaseOrderId, purchaseOrders.id))
+      .leftJoin(vendors, eq(deliverySchedules.vendorId, vendors.id))
+      .where(eq(deliverySchedules.id, id));
+    
+    if (!schedule) return undefined;
+    
+    return {
+      ...schedule.delivery_schedules,
+      purchaseOrder: schedule.purchase_orders ? {
+        poNumber: schedule.purchase_orders.poNumber,
+        vendor: schedule.vendors ? { name: schedule.vendors.name } : null,
+        totalAmount: schedule.purchase_orders.totalAmount
+      } : null
+    };
+  }
+
+  async createDeliverySchedule(schedule: InsertDeliverySchedule): Promise<any> {
+    const [created] = await db
+      .insert(deliverySchedules)
+      .values(schedule)
+      .returning();
+    
+    return created;
+  }
+
+  async updateDeliverySchedule(id: number, schedule: Partial<InsertDeliverySchedule>): Promise<any | undefined> {
+    const [updated] = await db
+      .update(deliverySchedules)
+      .set(schedule)
+      .where(eq(deliverySchedules.id, id))
+      .returning();
+    
+    return updated;
+  }
+
+  async deleteDeliverySchedule(id: number): Promise<void> {
+    await db
+      .delete(deliverySchedules)
+      .where(eq(deliverySchedules.id, id));
+  }
+
+  async getDeliverySchedulesByPO(purchaseOrderId: number): Promise<any[]> {
+    const schedules = await db
+      .select()
+      .from(deliverySchedules)
+      .where(eq(deliverySchedules.purchaseOrderId, purchaseOrderId));
+    
+    return schedules;
+  }
 }
 
 export class MemStorage implements IStorage {
