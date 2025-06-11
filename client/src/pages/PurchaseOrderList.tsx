@@ -72,6 +72,7 @@ export default function PurchaseOrderList() {
     scheduledDate: "",
     scheduledTime: "",
     deliveryDay: "",
+    deliveryDuration: "30", // Default 30 minutes
     carrierName: "",
     carrierPhone: "",
     carrierContact: "",
@@ -159,6 +160,7 @@ export default function PurchaseOrderList() {
       scheduledDate: format(expectedDate, 'yyyy-MM-dd'),
       scheduledTime: "09:00",
       deliveryDay: dayOfWeek,
+      deliveryDuration: "30", // Default 30 minutes
       carrierName: "",
       carrierPhone: "",
       carrierContact: "",
@@ -174,13 +176,10 @@ export default function PurchaseOrderList() {
   // Schedule delivery mutation
   const scheduleDeliveryMutation = useMutation({
     mutationFn: async (scheduleData: any) => {
-      return apiRequest("/api/delivery-schedules", {
-        method: "POST",
-        body: {
-          purchaseOrderId: selectedPO?.id,
-          vendorId: selectedPO?.vendor.id,
-          ...scheduleData
-        }
+      return apiRequest("/api/delivery-schedules", "POST", {
+        purchaseOrderId: selectedPO?.id,
+        vendorId: selectedPO?.vendor.id,
+        ...scheduleData
       });
     },
     onSuccess: () => {
@@ -627,6 +626,21 @@ export default function PurchaseOrderList() {
                       {generateTimeSlots(scheduleForm.deliveryDay).map((time) => (
                         <SelectItem key={time} value={time}>{time}</SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="deliveryDuration">Delivery Duration</Label>
+                  <Select value={scheduleForm.deliveryDuration} onValueChange={(value) => 
+                    setScheduleForm({...scheduleForm, deliveryDuration: value})
+                  }>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="30">30 minutes (standard)</SelectItem>
+                      <SelectItem value="60">1 hour (extended)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
