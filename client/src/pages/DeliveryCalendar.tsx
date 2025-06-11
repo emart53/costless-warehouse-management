@@ -12,6 +12,44 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
+interface ConfigurationCount {
+  configuration_name: string;
+  item_count: number;
+  total_quantity: number;
+}
+
+// Component to display configuration breakdown using authentic product_purchases data
+function ConfigurationBreakdown({ poId }: { poId: number }) {
+  const { data: configurations, isLoading } = useQuery<ConfigurationCount[]>({
+    queryKey: ['/api/purchase-orders', poId, 'configurations'],
+    queryFn: async () => {
+      const response = await fetch(`/api/purchase-orders/${poId}/configurations`);
+      if (!response.ok) throw new Error('Failed to fetch configurations');
+      return response.json();
+    }
+  });
+
+  if (isLoading) {
+    return <div className="text-sm text-gray-500">Loading configuration data...</div>;
+  }
+
+  if (!configurations || configurations.length === 0) {
+    return <div className="text-sm text-gray-500">No configuration data available</div>;
+  }
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      {configurations.map((config: ConfigurationCount) => (
+        <div key={config.configuration_name} className="text-center">
+          <div className="text-lg font-bold text-blue-900">{config.total_quantity}</div>
+          <div className="text-sm text-blue-700">{config.configuration_name}</div>
+          <div className="text-xs text-blue-600">{config.item_count} items</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 interface DeliverySchedule {
   id: number;
   purchaseOrderId: number;
@@ -525,8 +563,8 @@ export default function DeliveryCalendar() {
               {/* Order Information */}
               {selectedSchedule.purchaseOrder && (
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <div className="text-sm font-medium text-blue-800 mb-2">Order Information</div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="text-sm font-medium text-blue-800 mb-3">Order Information</div>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <div className="text-sm text-blue-600">Total Amount</div>
                       <div className="font-medium text-blue-900">
@@ -540,6 +578,12 @@ export default function DeliveryCalendar() {
                         {selectedSchedule.totalCases} cases
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Configuration Breakdown using authentic product_purchases data */}
+                  <div className="border-t border-blue-200 pt-3">
+                    <div className="text-sm font-medium text-blue-800 mb-2">Shipping Configuration Breakdown</div>
+                    <ConfigurationBreakdown poId={selectedSchedule.purchaseOrderId} />
                   </div>
                 </div>
               )}
