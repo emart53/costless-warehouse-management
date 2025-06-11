@@ -2616,8 +2616,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await pool.query(`
         SELECT 
           ds.id,
-          ds.purchase_order_id as "purchaseOrderId",
-          ds.vendor_id as "vendorId",
+          ds.po_id as "purchaseOrderId",
           ds.scheduled_date as "scheduledDate",
           ds.scheduled_time as "scheduledTime",
           ds.delivery_day as "deliveryDay",
@@ -2629,11 +2628,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ds.total_cases as "totalCases",
           ds.total_pallets as "totalPallets",
           ds.total_units as "totalUnits",
-          ds.created_at as "createdAt"
+          ds.created_at as "createdAt",
+          po.po_number as "poNumber",
+          v.name as "vendorName",
+          po.total_amount as "totalAmount"
         FROM delivery_schedules ds
+        LEFT JOIN purchase_orders po ON ds.po_id = po.id
+        LEFT JOIN vendors v ON po.vendor_id = v.id
         ORDER BY ds.scheduled_date, ds.scheduled_time
       `);
-      res.json(result.rows);
+      
+      const schedules = result.rows.map(row => ({
+        ...row,
+        purchaseOrder: {
+          poNumber: row.poNumber,
+          vendor: {
+            name: row.vendorName
+          },
+          totalAmount: row.totalAmount
+        }
+      }));
+      
+      res.json(schedules);
     } catch (error) {
       console.error('Delivery schedules API error:', error);
       res.status(500).json({ message: "Failed to fetch delivery schedules" });
