@@ -89,29 +89,29 @@ export function PurchaseOrderDetailTable({
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full border-collapse border border-gray-300 table-fixed">
           <thead>
             <tr className="bg-gray-50">
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Qty</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Config</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium min-w-[200px]">Product Description</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">List Cost</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Off Invoice</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-16">Qty</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-20">Config</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Product Description</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">List Cost</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Off Invoice</th>
               {hasBillBackValues && (
-                <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Bill Back</th>
+                <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Bill Back</th>
               )}
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Net Cost</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Weight</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Net Cost</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-20">Weight</th>
               {hasCrvValues && (
-                <th className="border border-gray-300 px-2 py-1 text-xs font-medium">CRV</th>
+                <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-20">CRV</th>
               )}
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Ext. Net</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Ext. Weight</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. Net</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. Weight</th>
               {hasCrvValues && (
-                <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Ext. CRV</th>
+                <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. CRV</th>
               )}
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Ext. List</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Actions</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. List</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-16">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -126,7 +126,7 @@ export function PurchaseOrderDetailTable({
                       type="number"
                       value={item.quantityOrdered || ''}
                       onChange={(e) => handleFieldUpdate(index, 'quantityOrdered', parseInt(e.target.value) || 0)}
-                      className="w-16 h-8 text-xs"
+                      className="w-full h-8 text-xs"
                       min="0"
                     />
                   </td>
@@ -136,7 +136,7 @@ export function PurchaseOrderDetailTable({
                     <select
                       value={item.purchaseCfg || ''}
                       onChange={(e) => handleFieldUpdate(index, 'purchaseCfg', parseInt(e.target.value) || undefined)}
-                      className="w-20 h-8 text-xs border rounded px-1"
+                      className="w-full h-8 text-xs border rounded px-1"
                     >
                       <option value="">Select</option>
                       {configurations.map(config => (
@@ -149,7 +149,9 @@ export function PurchaseOrderDetailTable({
                   
                   {/* Product Description → concatenated product_description, case_pack, /, size */}
                   <td className="border border-gray-300 px-2 py-1 text-xs">
-                    {getProductDescription(item)}
+                    <div className="truncate" title={getProductDescription(item)}>
+                      {getProductDescription(item)}
+                    </div>
                   </td>
                   
                   {/* List Cost → list_cost */}
@@ -159,7 +161,7 @@ export function PurchaseOrderDetailTable({
                       step="0.0001"
                       value={item.listCost || ''}
                       onChange={(e) => handleFieldUpdate(index, 'listCost', parseFloat(e.target.value) || 0)}
-                      className="w-20 h-8 text-xs"
+                      className="w-full h-8 text-xs"
                       min="0"
                     />
                   </td>
@@ -171,7 +173,7 @@ export function PurchaseOrderDetailTable({
                       step="0.0001"
                       value={item.offInvoice || ''}
                       onChange={(e) => handleFieldUpdate(index, 'offInvoice', parseFloat(e.target.value) || 0)}
-                      className="w-20 h-8 text-xs"
+                      className="w-full h-8 text-xs"
                       min="0"
                     />
                   </td>
@@ -184,7 +186,7 @@ export function PurchaseOrderDetailTable({
                         step="0.0001"
                         value={item.billBack || ''}
                         onChange={(e) => handleFieldUpdate(index, 'billBack', parseFloat(e.target.value) || 0)}
-                        className="w-20 h-8 text-xs"
+                        className="w-full h-8 text-xs"
                         min="0"
                       />
                     </td>
@@ -202,7 +204,7 @@ export function PurchaseOrderDetailTable({
                       step="0.0001"
                       value={item.purchaseWeight || ''}
                       onChange={(e) => handleFieldUpdate(index, 'purchaseWeight', parseFloat(e.target.value) || 0)}
-                      className="w-20 h-8 text-xs"
+                      className="w-full h-8 text-xs"
                       min="0"
                     />
                   </td>
@@ -215,7 +217,7 @@ export function PurchaseOrderDetailTable({
                         step="0.0001"
                         value={item.purchaseCrv || ''}
                         onChange={(e) => handleFieldUpdate(index, 'purchaseCrv', parseFloat(e.target.value) || 0)}
-                        className="w-20 h-8 text-xs"
+                        className="w-full h-8 text-xs"
                         min="0"
                       />
                     </td>
