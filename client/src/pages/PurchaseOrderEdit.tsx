@@ -653,42 +653,18 @@ export default function PurchaseOrderEdit() {
                           <td className="py-2 px-2">
                             {/* Show existing product info immediately, Select for changing */}
                             {item.product ? (
-                              <div className="flex items-center space-x-2">
-                                <div className="flex-1 text-sm">
-                                  <div className="font-medium">
-                                    {(item.product as any)?.product_description || (item.product as any)?.productDescription || item.product?.name || item.product?.description || `Product #${item.productId} (No Description)`}
-                                  </div>
-                                  <div className="text-gray-500">
-                                    {item.product?.casePack && item.product?.size ? 
-                                      `${item.product.casePack}/${item.product.size}` :
-                                      (item.product as any)?.case_pack && (item.product as any)?.unit_size ?
-                                      `${(item.product as any).case_pack}/${(item.product as any).unit_size}` : 
-                                      'Case Pack/Size not available'
-                                    }
-                                  </div>
+                              <div className="text-sm">
+                                <div className="font-medium">
+                                  {(item.product as any)?.product_description || (item.product as any)?.productDescription || item.product?.name || item.product?.description || `Product #${item.productId} (No Description)`}
                                 </div>
-                                <Select 
-                                  value={item.productId.toString()} 
-                                  onValueChange={(value) => selectProduct(index, parseInt(value))}
-                                >
-                                  <SelectTrigger className="w-8 h-8">
-                                    <SelectValue>⋯</SelectValue>
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {(vendorProducts && Array.isArray(vendorProducts) ? vendorProducts : [])?.map((product: any) => {
-                                      const description = product.description || product.product_description || product.productDescription || product.name;
-                                      const casePack = product.casePack || product.case_pack || '';
-                                      const size = product.unitSize || product.size || '';
-                                      const productId = product.productId || product.id;
-                                      const displayName = casePack && size ? `#${productId} - ${description} ${casePack}/${size}` : `#${productId} - ${description}`;
-                                      return (
-                                        <SelectItem key={product.id || product.productId} value={(product.id || product.productId).toString()}>
-                                          {displayName}
-                                        </SelectItem>
-                                      );
-                                    })}
-                                  </SelectContent>
-                                </Select>
+                                <div className="text-gray-500">
+                                  {item.product?.casePack && item.product?.size ? 
+                                    `${item.product.casePack}/${item.product.size}` :
+                                    (item.product as any)?.case_pack && (item.product as any)?.unit_size ?
+                                    `${(item.product as any).case_pack}/${(item.product as any).unit_size}` : 
+                                    'Case Pack/Size not available'
+                                  }
+                                </div>
                               </div>
                             ) : (
                               <Select 
