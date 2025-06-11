@@ -603,6 +603,9 @@ export type InsertStandingOrder = z.infer<typeof insertStandingOrderSchema>;
 export type StandingOrderItem = typeof standingOrderItems.$inferSelect;
 export type InsertStandingOrderItem = z.infer<typeof insertStandingOrderItemSchema>;
 
+export type DeliverySchedule = typeof deliverySchedules.$inferSelect;
+export type InsertDeliverySchedule = z.infer<typeof insertDeliveryScheduleSchema>;
+
 // Product Prices table - cost and retail price information by date
 export const productPrices = pgTable("product_prices", {
   productPriceId: serial("product_price_id").primaryKey(),

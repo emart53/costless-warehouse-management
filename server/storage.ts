@@ -21,6 +21,7 @@ import {
   type StandingOrder, type InsertStandingOrder,
   type StandingOrderItem, type InsertStandingOrderItem,
   insertDeliveryScheduleSchema,
+  type DeliverySchedule,
   type InsertDeliverySchedule
 } from "@shared/schema";
 import { db, pool } from "./db";
