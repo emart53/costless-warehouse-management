@@ -464,15 +464,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
           p.sku,
           p.category,
           p.subcategory,
+          p.status,
           COALESCE(p.purchase_cost, p.last_cost, 0) as "listCost",
           COALESCE(p.off_invoice, 0) as "offInvoice",
           COALESCE(p.bill_back, 0) as "billBack",
           COALESCE(p.crv, 0) as "crvPerUnit",
           COALESCE(p.purchase_weight, 0) as "caseWeight"
         FROM products p
-        WHERE p.vendor_id = $1 AND p.status = 'Active'
-        ORDER BY p.category, COALESCE(p.product_description, p.name)
-        LIMIT 50
+        WHERE p.vendor_id = $1 AND p.status IN ('Active', 'Discontinued', 'Inactive')
+        ORDER BY 
+          CASE p.status 
+            WHEN 'Active' THEN 1 
+            WHEN 'Discontinued' THEN 2 
+            WHEN 'Inactive' THEN 3 
+            ELSE 4 
+          END,
+          p.category, 
+          COALESCE(p.product_description, p.name)
+        LIMIT 200
       `, [vendorId]);
       
       res.json(result.rows);

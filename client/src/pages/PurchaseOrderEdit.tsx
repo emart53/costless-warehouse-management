@@ -681,7 +681,9 @@ export default function PurchaseOrderEdit() {
                                     const casePack = product.casePack || product.case_pack || '';
                                     const size = product.unitSize || product.size || '';
                                     const productId = product.productId || product.id;
-                                    const displayName = casePack && size ? `#${productId} - ${description} ${casePack}/${size}` : `#${productId} - ${description}`;
+                                    const status = product.status || 'Active';
+                                    const statusBadge = status !== 'Active' ? ` [${status}]` : '';
+                                    const displayName = casePack && size ? `#${productId} - ${description} ${casePack}/${size}${statusBadge}` : `#${productId} - ${description}${statusBadge}`;
                                     return (
                                       <SelectItem key={product.id || product.productId} value={(product.id || product.productId).toString()}>
                                         {displayName}
