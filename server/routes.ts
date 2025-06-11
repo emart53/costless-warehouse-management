@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { db, pool, withRetry } from "./db";
 import { sql } from "drizzle-orm";
-import { insertProductSchema, insertLocationSchema, insertTransactionSchema, insertScheduleSchema, insertNotificationSchema, insertDepartmentSchema, insertCategorySchema, insertStandingOrderSchema, insertStandingOrderItemSchema } from "@shared/schema";
+import { insertProductSchema, insertLocationSchema, insertTransactionSchema, insertScheduleSchema, insertNotificationSchema, insertDepartmentSchema, insertCategorySchema, insertStandingOrderSchema, insertStandingOrderItemSchema, insertDeliveryScheduleSchema } from "@shared/schema";
 import { z } from "zod";
 import { csvDataService } from "./csvDataService";
 

@@ -19,7 +19,9 @@ import {
   type Category, type InsertCategory,
   type Configuration,
   type StandingOrder, type InsertStandingOrder,
-  type StandingOrderItem, type InsertStandingOrderItem
+  type StandingOrderItem, type InsertStandingOrderItem,
+  insertDeliveryScheduleSchema,
+  type InsertDeliverySchedule
 } from "@shared/schema";
 import { db, pool } from "./db";
 import { eq, and, desc, sql } from "drizzle-orm";
@@ -142,6 +144,14 @@ export interface IStorage {
   
   // Update standing order usage
   updateStandingOrderUsage(id: number): Promise<void>;
+
+  // Delivery Schedules
+  getDeliverySchedules(): Promise<any[]>;
+  getDeliverySchedule(id: number): Promise<any | undefined>;
+  createDeliverySchedule(schedule: InsertDeliverySchedule): Promise<any>;
+  updateDeliverySchedule(id: number, schedule: Partial<InsertDeliverySchedule>): Promise<any | undefined>;
+  deleteDeliverySchedule(id: number): Promise<void>;
+  getDeliverySchedulesByPO(purchaseOrderId: number): Promise<any[]>;
 }
 
 // Database Storage Implementation
@@ -1595,6 +1605,76 @@ export class MemStorage implements IStorage {
       notification.isRead = true;
       this.notifications.set(id, notification);
     }
+  }
+
+  // Delivery Schedule methods
+  async getDeliverySchedules(): Promise<any[]> {
+    const schedules = await db
+      .select()
+      .from(deliverySchedules)
+      .leftJoin(purchaseOrders, eq(deliverySchedules.purchaseOrderId, purchaseOrders.id))
+      .leftJoin(vendors, eq(deliverySchedules.vendorId, vendors.id))
+      .orderBy(desc(deliverySchedules.scheduledDate));
+    
+    return schedules.map(row => ({
+      ...row.delivery_schedules,
+      purchaseOrder: row.purchase_orders,
+      vendor: row.vendors
+    }));
+  }
+
+  async getDeliverySchedule(id: number): Promise<any | undefined> {
+    const result = await db
+      .select()
+      .from(deliverySchedules)
+      .leftJoin(purchaseOrders, eq(deliverySchedules.purchaseOrderId, purchaseOrders.id))
+      .leftJoin(vendors, eq(deliverySchedules.vendorId, vendors.id))
+      .where(eq(deliverySchedules.id, id))
+      .limit(1);
+    
+    if (result.length === 0) return undefined;
+    
+    const row = result[0];
+    return {
+      ...row.delivery_schedules,
+      purchaseOrder: row.purchase_orders,
+      vendor: row.vendors
+    };
+  }
+
+  async createDeliverySchedule(schedule: InsertDeliverySchedule): Promise<any> {
+    const [created] = await db
+      .insert(deliverySchedules)
+      .values(schedule)
+      .returning();
+    
+    return created;
+  }
+
+  async updateDeliverySchedule(id: number, schedule: Partial<InsertDeliverySchedule>): Promise<any | undefined> {
+    const [updated] = await db
+      .update(deliverySchedules)
+      .set(schedule)
+      .where(eq(deliverySchedules.id, id))
+      .returning();
+    
+    return updated;
+  }
+
+  async deleteDeliverySchedule(id: number): Promise<void> {
+    await db
+      .delete(deliverySchedules)
+      .where(eq(deliverySchedules.id, id));
+  }
+
+  async getDeliverySchedulesByPO(purchaseOrderId: number): Promise<any[]> {
+    const schedules = await db
+      .select()
+      .from(deliverySchedules)
+      .where(eq(deliverySchedules.purchaseOrderId, purchaseOrderId))
+      .orderBy(desc(deliverySchedules.scheduledDate));
+    
+    return schedules;
   }
 }
 
