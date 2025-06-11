@@ -43,17 +43,20 @@ interface PurchaseOrder {
 
 const getStatusBadge = (status: string) => {
   const statusConfig = {
-    'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Calendar },
-    'Scheduled': { color: 'bg-blue-100 text-blue-800', icon: Calendar },
-    'Received': { color: 'bg-green-100 text-green-800', icon: Package },
-    'Cancelled': { color: 'bg-red-100 text-red-800', icon: Package },
+    'DRAFT': { color: 'bg-gray-100 text-gray-800', icon: Clock },
+    'SUBMITTED': { color: 'bg-orange-100 text-orange-800', icon: Calendar },
+    'PENDING': { color: 'bg-yellow-100 text-yellow-800', icon: Calendar },
+    'SCHEDULED': { color: 'bg-blue-100 text-blue-800', icon: Calendar },
+    'RECEIVED': { color: 'bg-green-100 text-green-800', icon: Package },
+    'CANCELLED': { color: 'bg-red-100 text-red-800', icon: Package },
   };
   
-  const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.Pending;
+  const normalizedStatus = status.toUpperCase();
+  const config = statusConfig[normalizedStatus as keyof typeof statusConfig] || statusConfig.PENDING;
   
   return (
     <Badge className={`${config.color} border-0`}>
-      {status}
+      {normalizedStatus}
     </Badge>
   );
 };
@@ -338,10 +341,12 @@ export default function PurchaseOrderList() {
               <SelectContent>
                 <SelectItem value="active">Active Orders</SelectItem>
                 <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Scheduled">Scheduled</SelectItem>
-                <SelectItem value="Received">Received</SelectItem>
-                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                <SelectItem value="DRAFT">Draft</SelectItem>
+                <SelectItem value="SUBMITTED">Submitted</SelectItem>
+                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="SCHEDULED">Scheduled</SelectItem>
+                <SelectItem value="RECEIVED">Received</SelectItem>
+                <SelectItem value="CANCELLED">Cancelled</SelectItem>
               </SelectContent>
             </Select>
 
@@ -436,7 +441,7 @@ export default function PurchaseOrderList() {
                               Edit
                             </Button>
                           </Link>
-                          {po.status === "Submitted" && (
+                          {po.status.toUpperCase() === "SUBMITTED" && (
                             <Button 
                               variant="outline" 
                               size="sm" 
