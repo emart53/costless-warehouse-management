@@ -514,6 +514,23 @@ export default function PurchaseOrderEdit() {
                 <VendorDetailsDisplay vendorId={formData.vendorId} vendors={vendors as any[]} />
               )}
             </div>
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <Select 
+                value={formData.status} 
+                onValueChange={(value) => setFormData({ ...formData, status: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DRAFT">DRAFT</SelectItem>
+                  <SelectItem value="SUBMITTED">SUBMITTED</SelectItem>
+                  <SelectItem value="SCHEDULED">SCHEDULED</SelectItem>
+                  <SelectItem value="RECEIVED">RECEIVED</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="orderDate">Order Date</Label>
