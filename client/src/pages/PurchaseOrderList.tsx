@@ -45,6 +45,34 @@ interface ConfigurationCount {
   total_quantity: number;
 }
 
+// Component to display configuration breakdown using authentic product_purchases data
+function ConfigurationBreakdown({ poId }: { poId: number }) {
+  const { data: configurations, isLoading } = useQuery<ConfigurationCount[]>({
+    queryKey: ['/api/purchase-orders', poId, 'configurations'],
+    queryFn: () => apiRequest(`/api/purchase-orders/${poId}/configurations`)
+  });
+
+  if (isLoading) {
+    return <div className="text-sm text-gray-500">Loading configuration data...</div>;
+  }
+
+  if (!configurations || configurations.length === 0) {
+    return <div className="text-sm text-gray-500">No configuration data available</div>;
+  }
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      {configurations.map(config => (
+        <div key={config.configuration_name} className="text-center">
+          <div className="text-lg font-bold text-blue-900">{config.total_quantity}</div>
+          <div className="text-sm text-blue-700">{config.configuration_name}</div>
+          <div className="text-xs text-blue-600">{config.item_count} items</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 
 
 const getStatusBadge = (status: string) => {
@@ -637,29 +665,11 @@ export default function PurchaseOrderList() {
                 </div>
               </div>
 
-              {/* Configuration Breakdown */}
-              {selectedPO.items && selectedPO.items.length > 0 && (
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <Label className="text-sm font-medium text-blue-800 mb-2 block">Order Size Breakdown</Label>
-                  <div className="grid grid-cols-3 gap-4">
-                    {(() => {
-                      // Group items by configuration type
-                      const configTotals = selectedPO.items.reduce((acc, item) => {
-                        const configName = item.configuration?.configurationName || 'Cases';
-                        acc[configName] = (acc[configName] || 0) + item.quantityOrdered;
-                        return acc;
-                      }, {} as Record<string, number>);
-
-                      return Object.entries(configTotals).map(([configType, total]) => (
-                        <div key={configType} className="text-center">
-                          <div className="text-lg font-bold text-blue-900">{total}</div>
-                          <div className="text-sm text-blue-700">{configType}</div>
-                        </div>
-                      ));
-                    })()}
-                  </div>
-                </div>
-              )}
+              {/* Configuration Breakdown using authentic product_purchases data */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <Label className="text-sm font-medium text-blue-800 mb-2 block">Order Size Breakdown</Label>
+                <ConfigurationBreakdown poId={selectedPO.id} />
+              </div>
 
               {/* Scheduling Form */}
               <div className="grid grid-cols-2 gap-4">
