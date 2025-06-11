@@ -624,17 +624,17 @@ export default function PurchaseOrderEdit() {
           {formData.items.length > 0 ? (
             <div className="space-y-4">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full border-collapse border border-gray-300 text-sm">
                   <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2 px-2 w-80">Product</th>
-                      <th className="text-right py-2 px-2 w-20">Qty</th>
-                      <th className="text-right py-2 px-2 w-24">Unit Cost</th>
-                      <th className="text-right py-2 px-2 w-24">Extended</th>
-                      <th className="text-right py-2 px-2 w-24">Off Invoice</th>
-                      <th className="text-right py-2 px-2 w-24">Bill Back</th>
-                      <th className="text-right py-2 px-2 w-24">Net Cost</th>
-                      <th className="text-center py-2 px-2 w-16">Actions</th>
+                    <tr className="bg-gray-50">
+                      <th className="border border-gray-300 text-left py-2 px-2 font-medium" style={{width: '320px'}}>Product</th>
+                      <th className="border border-gray-300 text-right py-2 px-2 font-medium" style={{width: '80px'}}>Qty</th>
+                      <th className="border border-gray-300 text-right py-2 px-2 font-medium" style={{width: '100px'}}>Unit Cost</th>
+                      <th className="border border-gray-300 text-right py-2 px-2 font-medium" style={{width: '100px'}}>Extended</th>
+                      <th className="border border-gray-300 text-right py-2 px-2 font-medium" style={{width: '100px'}}>Off Invoice</th>
+                      <th className="border border-gray-300 text-right py-2 px-2 font-medium" style={{width: '100px'}}>Bill Back</th>
+                      <th className="border border-gray-300 text-right py-2 px-2 font-medium" style={{width: '100px'}}>Net Cost</th>
+                      <th className="border border-gray-300 text-center py-2 px-2 font-medium" style={{width: '80px'}}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -649,8 +649,8 @@ export default function PurchaseOrderEdit() {
                       const netCost = extended - extendedOffInvoice - billBackAmount;
                       
                       return (
-                        <tr key={index} className="border-b">
-                          <td className="py-2 px-2">
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 py-2 px-2" style={{width: '320px'}}>
                             {/* Show existing product info immediately, Select for changing */}
                             {item.product ? (
                               <div className="text-sm">
@@ -692,48 +692,48 @@ export default function PurchaseOrderEdit() {
                               </Select>
                             )}
                           </td>
-                          <td className="py-2 px-2">
+                          <td className="border border-gray-300 py-2 px-2" style={{width: '80px'}}>
                             <Input
                               type="number"
                               value={item.quantityOrdered}
                               onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 0)}
-                              className="w-20 text-right"
+                              className="w-full text-right"
                             />
                           </td>
-                          <td className="py-2 px-2">
+                          <td className="border border-gray-300 py-2 px-2" style={{width: '100px'}}>
                             <Input
                               type="text"
                               value={formatCurrencyInput(item.listCost)}
                               onChange={(e) => updateItemCost(index, parseCurrency(e.target.value))}
-                              className="w-24 text-right"
+                              className="w-full text-right"
                               placeholder="0.00"
                             />
                           </td>
-                          <td className="py-2 px-2 text-right font-medium">
+                          <td className="border border-gray-300 py-2 px-2 text-right font-medium bg-blue-50" style={{width: '100px'}}>
                             {formatCurrency(extended)}
                           </td>
-                          <td className="py-2 px-2">
+                          <td className="border border-gray-300 py-2 px-2" style={{width: '100px'}}>
                             <Input
                               type="text"
                               value={formatCurrencyInput(item.offInvoice || 0)}
                               onChange={(e) => updateItemOffInvoice(index, parseCurrency(e.target.value))}
-                              className="w-24 text-right"
+                              className="w-full text-right"
                               placeholder="0.00"
                             />
                           </td>
-                          <td className="py-2 px-2">
+                          <td className="border border-gray-300 py-2 px-2" style={{width: '100px'}}>
                             <Input
                               type="text"
                               value={formatCurrencyInput(item.billBack || 0)}
                               onChange={(e) => updateItemBillBack(index, parseCurrency(e.target.value))}
-                              className="w-24 text-right"
+                              className="w-full text-right"
                               placeholder="0.00"
                             />
                           </td>
-                          <td className="py-2 px-2 text-right font-medium">
+                          <td className="border border-gray-300 py-2 px-2 text-right font-medium bg-green-50" style={{width: '100px'}}>
                             {formatCurrency(netCost)}
                           </td>
-                          <td className="py-2 px-2 text-center">
+                          <td className="border border-gray-300 py-2 px-2 text-center" style={{width: '80px'}}>
                             <Button
                               variant="ghost"
                               size="sm"
