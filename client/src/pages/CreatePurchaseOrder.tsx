@@ -51,8 +51,8 @@ export default function CreatePurchaseOrder() {
   const { data: allVendors = [] } = useQuery({ queryKey: ['/api/vendors'] });
   
   // Filter to show only active vendors
-  const vendors = allVendors.filter((vendor: any) => 
-    vendor.status === 'Active' || vendor.status === 'active' || !vendor.status
+  const vendors = (allVendors as any[]).filter((vendor: any) => 
+    vendor.isActive === true || vendor.isActive === 1
   );
   const { data: locations = [] } = useQuery({ queryKey: ['/api/locations'] });
   const { data: stores = [] } = useQuery({ queryKey: ['/api/stores'] });
@@ -85,8 +85,8 @@ export default function CreatePurchaseOrder() {
   useEffect(() => {
     const products = vendorProducts as any[];
     if (products.length > 0) {
-      if (products.length <= 12) {
-        // Automatically show all products for vendors with ≤12 products
+      if (products.length <= 50) {
+        // Automatically show all products for vendors with ≤50 products
         setEntryMethod('list');
         const initialItems = products.map((product: any) => ({
           productId: product.productId || product.id,
@@ -98,7 +98,7 @@ export default function CreatePurchaseOrder() {
         }));
         setPOItems(initialItems);
       } else {
-        // For vendors with >12 products, default to 10-key rapid entry
+        // For vendors with >50 products, default to 10-key rapid entry
         setEntryMethod('rapid');
         setPOItems([]);
       }
