@@ -39,6 +39,12 @@ interface PurchaseOrder {
   }>;
 }
 
+interface ConfigurationCount {
+  configuration_name: string;
+  item_count: number;
+  total_quantity: number;
+}
+
 
 
 const getStatusBadge = (status: string) => {

@@ -1490,6 +1490,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Purchase Order Configuration Counts using authentic product_purchases data
+  app.get("/api/purchase-orders/:id/configurations", async (req, res) => {
+    try {
+      const poId = parseInt(req.params.id);
+      const { pool } = await import("./db.js");
+      
+      const result = await pool.query(`
+        SELECT 
+          pp.ship_cfg as configuration_name,
+          COUNT(*) as item_count,
+          SUM(poi.quantity_ordered) as total_quantity
+        FROM purchase_order_items poi
+        JOIN product_purchases pp ON poi.product_id = pp.product_id
+        WHERE poi.po_id = $1 
+          AND pp.ship_cfg IS NOT NULL 
+          AND pp.ship_cfg != ''
+        GROUP BY pp.ship_cfg
+        ORDER BY pp.ship_cfg
+      `, [poId]);
+      
+      res.json(result.rows);
+    } catch (error) {
+      console.error('PO configuration counts API error:', error);
+      res.status(500).json({ message: "Failed to fetch configuration counts" });
+    }
+  });
+
   // Locations (stores and shipping addresses for Bill To / Ship To)
   app.get("/api/locations", async (req, res) => {
     try {
