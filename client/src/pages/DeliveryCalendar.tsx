@@ -31,7 +31,8 @@ interface DeliverySchedule {
 }
 
 export default function DeliveryCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  // Start with June 2025 to show the scheduled deliveries
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 5, 1)); // June 2025
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<DeliverySchedule | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -63,13 +64,18 @@ export default function DeliveryCalendar() {
 
   // Group schedules by date
   const schedulesByDate = enrichedSchedules.reduce((acc, schedule) => {
-    const dateKey = schedule.scheduledDate;
+    const dateKey = format(new Date(schedule.scheduledDate), 'yyyy-MM-dd');
     if (!acc[dateKey]) {
       acc[dateKey] = [];
     }
     acc[dateKey].push(schedule);
     return acc;
   }, {} as Record<string, DeliverySchedule[]>);
+
+  // Debug logging
+  console.log('Delivery Schedules:', deliverySchedules);
+  console.log('Schedules by Date:', schedulesByDate);
+  console.log('Current Date:', format(currentDate, 'yyyy-MM-dd'));
 
   // Get schedules for a specific date
   const getSchedulesForDate = (date: Date) => {
