@@ -42,6 +42,8 @@ export default function DeliveryCalendar() {
   const [selectedSchedule, setSelectedSchedule] = useState<DeliverySchedule | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPostponeModalOpen, setIsPostponeModalOpen] = useState(false);
+  const [postponeReason, setPostponeReason] = useState('');
   const [editFormData, setEditFormData] = useState({
     scheduledDate: '',
     scheduledTime: '',
@@ -73,6 +75,31 @@ export default function DeliveryCalendar() {
       toast({
         title: "Error",
         description: "Failed to update delivery schedule. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Mutation for deleting delivery schedules
+  const deleteScheduleMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/delivery-schedules/${id}`, 'DELETE');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/delivery-schedules"] });
+      queryClient.refetchQueries({ queryKey: ["/api/delivery-schedules"] });
+      setIsDetailModalOpen(false);
+      setIsPostponeModalOpen(false);
+      setSelectedSchedule(null);
+      toast({
+        title: "Schedule Removed",
+        description: "Delivery schedule has been removed successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to remove delivery schedule. Please try again.",
         variant: "destructive",
       });
     },
@@ -174,6 +201,45 @@ export default function DeliveryCalendar() {
       id: selectedSchedule.id,
       updates
     });
+  };
+
+  const handlePostponeDelivery = () => {
+    if (!selectedSchedule) return;
+    setIsDetailModalOpen(false);
+    setIsPostponeModalOpen(true);
+    setPostponeReason('');
+  };
+
+  const handleConfirmPostpone = () => {
+    if (!selectedSchedule || !postponeReason.trim()) {
+      toast({
+        title: "Error",
+        description: "Please provide a reason for postponing the delivery.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Remove the delivery schedule with reason
+    deleteScheduleMutation.mutate(selectedSchedule.id);
+    
+    // Log the postponement reason (could be saved to database if needed)
+    console.log(`Delivery ${selectedSchedule.id} postponed: ${postponeReason}`);
+  };
+
+  const handleCancelDelivery = () => {
+    if (!selectedSchedule) return;
+    
+    // Check if the associated PO is cancelled
+    const associatedPO = selectedSchedule.purchaseOrder;
+    if (associatedPO?.status === 'CANCELLED') {
+      deleteScheduleMutation.mutate(selectedSchedule.id);
+    } else {
+      // Confirm cancellation for non-cancelled POs
+      if (window.confirm('Are you sure you want to remove this delivery schedule? The purchase order is still active.')) {
+        deleteScheduleMutation.mutate(selectedSchedule.id);
+      }
+    }
   };
 
   const formatCurrency = (amount: string | number) => {
@@ -410,15 +476,35 @@ export default function DeliveryCalendar() {
                 Delivery Schedule Details
               </div>
               {selectedSchedule && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleEditSchedule(selectedSchedule)}
-                  className="flex items-center gap-2"
-                >
-                  <Edit className="h-4 w-4" />
-                  Edit
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditSchedule(selectedSchedule)}
+                    className="flex items-center gap-2"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePostponeDelivery}
+                    className="flex items-center gap-2 text-orange-600 hover:text-orange-700"
+                  >
+                    <Clock className="h-4 w-4" />
+                    Postpone
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancelDelivery}
+                    className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                  >
+                    <Package className="h-4 w-4" />
+                    Cancel
+                  </Button>
+                </div>
               )}
             </DialogTitle>
           </DialogHeader>
