@@ -3841,7 +3841,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertDeliveryScheduleSchema.parse(req.body);
       const schedule = await storage.createDeliverySchedule(validatedData);
       
-      // Update purchase order status to 'scheduled'
+      // Update purchase order status to 'SCHEDULED'
       await storage.updatePurchaseOrder(validatedData.purchaseOrderId, { status: 'SCHEDULED' });
       
       res.status(201).json(schedule);
