@@ -3465,6 +3465,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delivery Schedules API - Complete warehouse scheduling system
+  app.get("/api/delivery-schedules", async (req, res) => {
+    try {
+      const schedules = await storage.getDeliverySchedules();
+      res.json(schedules);
+    } catch (error) {
+      console.error('Delivery schedules API error:', error);
+      res.status(500).json({ message: "Failed to fetch delivery schedules" });
+    }
+  });
+
+  app.get("/api/delivery-schedules/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const schedule = await storage.getDeliverySchedule(id);
+      if (!schedule) {
+        return res.status(404).json({ message: "Delivery schedule not found" });
+      }
+      res.json(schedule);
+    } catch (error) {
+      console.error('Delivery schedule detail API error:', error);
+      res.status(500).json({ message: "Failed to fetch delivery schedule" });
+    }
+  });
+
+  app.post("/api/delivery-schedules", async (req, res) => {
+    try {
+      const validatedData = insertDeliveryScheduleSchema.parse(req.body);
+      const schedule = await storage.createDeliverySchedule(validatedData);
+      
+      // Update purchase order status to 'scheduled'
+      await storage.updatePurchaseOrder(validatedData.purchaseOrderId, { status: 'scheduled' });
+      
+      res.status(201).json(schedule);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid delivery schedule data", errors: error.errors });
+      }
+      console.error('Create delivery schedule error:', error);
+      res.status(500).json({ message: "Failed to create delivery schedule" });
+    }
+  });
+
+  app.patch("/api/delivery-schedules/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      
+      const schedule = await storage.updateDeliverySchedule(id, updates);
+      if (!schedule) {
+        return res.status(404).json({ message: "Delivery schedule not found" });
+      }
+      
+      res.json(schedule);
+    } catch (error) {
+      console.error('Update delivery schedule error:', error);
+      res.status(500).json({ message: "Failed to update delivery schedule" });
+    }
+  });
+
+  app.delete("/api/delivery-schedules/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteDeliverySchedule(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error('Delete delivery schedule error:', error);
+      res.status(500).json({ message: "Failed to delete delivery schedule" });
+    }
+  });
+
+  app.get("/api/purchase-orders/:id/delivery-schedules", async (req, res) => {
+    try {
+      const purchaseOrderId = parseInt(req.params.id);
+      const schedules = await storage.getDeliverySchedulesByPO(purchaseOrderId);
+      res.json(schedules);
+    } catch (error) {
+      console.error('PO delivery schedules API error:', error);
+      res.status(500).json({ message: "Failed to fetch delivery schedules for purchase order" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
