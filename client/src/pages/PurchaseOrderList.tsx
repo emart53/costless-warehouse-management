@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Eye, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, Edit, Search, Filter, Package, Calendar, DollarSign, Truck, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { formatCurrency, formatNumber , formatCurrencyInput, parseCurrency } from "@/lib/formatNumber";
 
@@ -273,13 +273,13 @@ export default function PurchaseOrderList() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>PO Number</TableHead>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Order Date</TableHead>
-                  <TableHead>Expected Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Total Amount</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
+                  <TableHead className="text-lg font-semibold">PO Number</TableHead>
+                  <TableHead className="text-lg font-semibold">Vendor</TableHead>
+                  <TableHead className="text-lg font-semibold">Order Date</TableHead>
+                  <TableHead className="text-lg font-semibold">Expected Date</TableHead>
+                  <TableHead className="text-lg font-semibold">Status</TableHead>
+                  <TableHead className="text-right text-lg font-semibold">Total Amount</TableHead>
+                  <TableHead className="text-center text-lg font-semibold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -291,31 +291,39 @@ export default function PurchaseOrderList() {
                   </TableRow>
                 ) : (
                   paginatedOrders.map((po) => (
-                    <TableRow key={po.id} className="hover:bg-gray-50">
-                      <TableCell className="font-medium">
+                    <TableRow key={po.id} className="hover:bg-gray-50 h-16">
+                      <TableCell className="font-medium text-base py-4">
                         <Link href={`/purchase-orders/${po.id}`} className="text-blue-600 hover:underline">
                           {po.poNumber}
                         </Link>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-base py-4">
                         <div>
-                          <div className="font-medium">{po.vendor.name}</div>
+                          <div className="font-medium text-base">{po.vendor.name}</div>
                           <div className="text-sm text-gray-500">{po.vendor.code}</div>
                         </div>
                       </TableCell>
-                      <TableCell>{format(new Date(po.orderDate), 'MMM dd, yyyy')}</TableCell>
-                      <TableCell>{po.expectedDate ? format(new Date(po.expectedDate), 'MMM dd, yyyy') : '-'}</TableCell>
-                      <TableCell>{getStatusBadge(po.status)}</TableCell>
-                      <TableCell className="text-right font-medium">
+                      <TableCell className="text-base py-4">{format(new Date(po.orderDate), 'MMM dd, yyyy')}</TableCell>
+                      <TableCell className="text-base py-4">{po.expectedDate ? format(new Date(po.expectedDate), 'MMM dd, yyyy') : '-'}</TableCell>
+                      <TableCell className="py-4">{getStatusBadge(po.status)}</TableCell>
+                      <TableCell className="text-right font-medium text-base py-4">
                         {formatCurrency(po.totalAmount)}
                       </TableCell>
-                      <TableCell className="text-center">
-                        <Link href={`/purchase-orders/${po.id}`}>
-                          <Button variant="outline" size="sm" className="flex items-center gap-1">
-                            <Eye className="h-3 w-3" />
-                            View
-                          </Button>
-                        </Link>
+                      <TableCell className="text-center py-4">
+                        <div className="flex items-center justify-center gap-2">
+                          <Link href={`/purchase-orders/${po.id}`}>
+                            <Button variant="outline" size="sm" className="flex items-center gap-1">
+                              <Eye className="h-3 w-3" />
+                              View
+                            </Button>
+                          </Link>
+                          <Link href={`/purchase-orders/edit/${po.id}`}>
+                            <Button variant="outline" size="sm" className="flex items-center gap-1">
+                              <Edit className="h-3 w-3" />
+                              Edit
+                            </Button>
+                          </Link>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
