@@ -60,7 +60,9 @@ export default function DeliveryCalendar() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/delivery-schedules"] });
+      queryClient.refetchQueries({ queryKey: ["/api/delivery-schedules"] });
       setIsEditModalOpen(false);
+      setSelectedSchedule(null);
       toast({
         title: "Schedule Updated",
         description: "Delivery schedule has been successfully updated.",
@@ -78,7 +80,8 @@ export default function DeliveryCalendar() {
   // Fetch delivery schedules
   const { data: deliverySchedules = [], isLoading } = useQuery<DeliverySchedule[]>({
     queryKey: ["/api/delivery-schedules"],
-    staleTime: 30000,
+    staleTime: 0,
+    cacheTime: 0,
   });
 
   // Fetch purchase orders to get vendor and PO details
