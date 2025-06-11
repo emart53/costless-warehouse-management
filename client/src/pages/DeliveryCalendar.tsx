@@ -44,6 +44,7 @@ export default function DeliveryCalendar() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPostponeModalOpen, setIsPostponeModalOpen] = useState(false);
   const [postponeReason, setPostponeReason] = useState('');
+  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({
     scheduledDate: '',
     scheduledTime: '',
@@ -245,17 +246,15 @@ export default function DeliveryCalendar() {
 
   const handleCancelDelivery = () => {
     if (!selectedSchedule) return;
+    setIsCancelConfirmOpen(true);
+  };
+
+  const handleConfirmCancelDelivery = () => {
+    if (!selectedSchedule) return;
     
-    // Check if the associated PO is cancelled
-    const associatedPO = selectedSchedule.purchaseOrder;
-    if (associatedPO?.status === 'CANCELLED') {
-      deleteScheduleMutation.mutate(selectedSchedule.id);
-    } else {
-      // Confirm cancellation for non-cancelled POs
-      if (window.confirm('Are you sure you want to remove this delivery schedule? The purchase order is still active.')) {
-        deleteScheduleMutation.mutate(selectedSchedule.id);
-      }
-    }
+    deleteScheduleMutation.mutate(selectedSchedule.id);
+    setIsCancelConfirmOpen(false);
+    setIsDetailModalOpen(false);
   };
 
   const formatCurrency = (amount: string | number) => {
@@ -486,42 +485,9 @@ export default function DeliveryCalendar() {
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Truck className="h-5 w-5" />
-                Delivery Schedule Details
-              </div>
-              {selectedSchedule && (
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEditSchedule(selectedSchedule)}
-                    className="flex items-center gap-2"
-                  >
-                    <Edit className="h-4 w-4" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handlePostponeDelivery}
-                    className="flex items-center gap-2 text-orange-600 hover:text-orange-700"
-                  >
-                    <Clock className="h-4 w-4" />
-                    Postpone
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCancelDelivery}
-                    className="flex items-center gap-2 text-red-600 hover:text-red-700"
-                  >
-                    <Package className="h-4 w-4" />
-                    Cancel
-                  </Button>
-                </div>
-              )}
+            <DialogTitle className="flex items-center gap-2">
+              <Truck className="h-5 w-5" />
+              Delivery Schedule Details
             </DialogTitle>
           </DialogHeader>
           
@@ -605,6 +571,36 @@ export default function DeliveryCalendar() {
                   </div>
                 </div>
               )}
+
+              {/* Action Buttons - Separated from close button */}
+              <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => handleEditSchedule(selectedSchedule)}
+                    className="flex items-center gap-2"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit Schedule
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handlePostponeDelivery}
+                    className="flex items-center gap-2 text-orange-600 hover:text-orange-700"
+                  >
+                    <Clock className="h-4 w-4" />
+                    Postpone
+                  </Button>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={handleCancelDelivery}
+                  className="flex items-center gap-2"
+                >
+                  <Package className="h-4 w-4" />
+                  Cancel Delivery
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>
@@ -775,6 +771,57 @@ export default function DeliveryCalendar() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Cancel Confirmation Dialog */}
+      <Dialog open={isCancelConfirmOpen} onOpenChange={setIsCancelConfirmOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Package className="h-5 w-5" />
+              Cancel Delivery Schedule
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {selectedSchedule && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="text-sm font-medium text-red-800">
+                  {selectedSchedule.purchaseOrder?.poNumber || `PO-${selectedSchedule.purchaseOrderId}`}
+                </div>
+                <div className="text-sm text-red-600">
+                  {selectedSchedule.purchaseOrder?.vendor?.name || 'Unknown Vendor'}
+                </div>
+                <div className="text-sm text-red-600 mt-1">
+                  Scheduled: {format(new Date(selectedSchedule.scheduledDate), 'MMM dd, yyyy')} at {selectedSchedule.scheduledTime}
+                </div>
+              </div>
+            )}
+
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded text-sm">
+              <div className="font-medium text-yellow-800 mb-2">⚠️ Warning</div>
+              <div className="text-yellow-700">
+                This will permanently remove the delivery schedule. The purchase order will remain active but will need to be rescheduled for delivery.
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setIsCancelConfirmOpen(false)}
+              >
+                Keep Schedule
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleConfirmCancelDelivery}
+                disabled={deleteScheduleMutation.isPending}
+              >
+                {deleteScheduleMutation.isPending ? "Canceling..." : "Cancel Delivery"}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
