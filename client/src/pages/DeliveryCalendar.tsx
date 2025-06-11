@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
-import { Calendar, ChevronLeft, ChevronRight, Clock, Truck, Package, Edit } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Clock, Truck, Package, Edit, List, CalendarDays } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -186,36 +187,51 @@ export default function DeliveryCalendar() {
 
   return (
     <div className="space-y-6">
-      {/* Calendar Header */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Delivery Schedule Calendar
+            Delivery Schedule Management
           </CardTitle>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentDate(subMonths(currentDate, 1))}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div className="min-w-[200px] text-center font-semibold">
-              {format(currentDate, 'MMMM yyyy')}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentDate(addMonths(currentDate, 1))}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
         </CardHeader>
         <CardContent>
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1">
+          <Tabs defaultValue="calendar" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="calendar" className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4" />
+                Calendar View
+              </TabsTrigger>
+              <TabsTrigger value="list" className="flex items-center gap-2">
+                <List className="h-4 w-4" />
+                List View
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="calendar" className="mt-6">
+              <div className="space-y-4">
+                {/* Calendar Navigation */}
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <div className="text-lg font-semibold">
+                    {format(currentDate, 'MMMM yyyy')}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 gap-1">
             {/* Day headers */}
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
               <div key={day} className="p-2 text-center font-medium text-gray-500 text-sm">
@@ -269,7 +285,107 @@ export default function DeliveryCalendar() {
                 </div>
               );
             })}
-          </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="list" className="mt-6">
+              <div className="space-y-4">
+                {/* List Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">All Delivery Schedules</h3>
+                  <Badge variant="secondary">{enrichedSchedules.length} total</Badge>
+                </div>
+                
+                {/* Delivery Schedules List */}
+                <div className="space-y-3">
+                  {enrichedSchedules.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500">
+                      <Truck className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                      <div className="text-lg font-medium">No delivery schedules found</div>
+                      <div className="text-sm">Create a purchase order to schedule deliveries</div>
+                    </div>
+                  ) : (
+                    enrichedSchedules.map((schedule) => (
+                      <Card key={schedule.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="flex-shrink-0">
+                                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                  <Package className="h-6 w-6 text-green-600" />
+                                </div>
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h4 className="font-semibold text-lg">
+                                    {schedule.purchaseOrder?.poNumber || `PO-${schedule.purchaseOrderId}`}
+                                  </h4>
+                                  <Badge variant="outline">
+                                    {schedule.purchaseOrder?.vendor?.name || 'Unknown Vendor'}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center gap-4 text-sm text-gray-600">
+                                  <div className="flex items-center gap-1">
+                                    <Calendar className="h-4 w-4" />
+                                    {format(new Date(schedule.scheduledDate), 'EEEE, MMMM d, yyyy')}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="h-4 w-4" />
+                                    {schedule.scheduledTime}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Truck className="h-4 w-4" />
+                                    {schedule.deliveryDuration} min delivery
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditSchedule(schedule)}
+                                className="flex items-center gap-2"
+                              >
+                                <Edit className="h-4 w-4" />
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleScheduleClick(schedule)}
+                              >
+                                View Details
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          {/* Additional Details */}
+                          {(schedule.carrierName || schedule.specialInstructions) && (
+                            <div className="mt-3 pt-3 border-t border-gray-100">
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                {schedule.carrierName && (
+                                  <div>
+                                    <span className="text-gray-600">Carrier:</span> {schedule.carrierName}
+                                  </div>
+                                )}
+                                {schedule.specialInstructions && (
+                                  <div>
+                                    <span className="text-gray-600">Instructions:</span> {schedule.specialInstructions}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
