@@ -104,29 +104,23 @@ export function PurchaseOrderDetailTable({
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300 table-fixed">
+        <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-50">
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-16">Qty</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-20">Config</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium">Product Description</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">List Cost</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Off Invoice</th>
-              {hasBillBackValues && (
-                <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Bill Back</th>
-              )}
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Net Cost</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-20">Weight</th>
-              {hasCrvValues && (
-                <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-20">CRV</th>
-              )}
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. Net</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. Weight</th>
-              {hasCrvValues && (
-                <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. CRV</th>
-              )}
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-24">Ext. List</th>
-              <th className="border border-gray-300 px-2 py-1 text-xs font-medium w-16">Actions</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-center" style={{width: '60px'}}>Qty</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-center" style={{width: '80px'}}>Config</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-left" style={{minWidth: '250px'}}>Product Description</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>List Cost</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Off Invoice</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Bill Back</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Net Cost</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '80px'}}>Weight</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '70px'}}>CRV</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Ext. Net</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Ext. Weight</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Ext. CRV</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-right" style={{width: '90px'}}>Ext. List</th>
+              <th className="border border-gray-300 px-2 py-1 text-xs font-medium text-center" style={{width: '60px'}}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -136,18 +130,18 @@ export function PurchaseOrderDetailTable({
               return (
                 <tr key={index} className="hover:bg-gray-50">
                   {/* Qty → quantity_ordered */}
-                  <td className="border border-gray-300 px-1 py-1">
+                  <td className="border border-gray-300 px-1 py-1 text-center" style={{width: '60px'}}>
                     <Input
                       type="number"
                       value={item.quantityOrdered || ''}
                       onChange={(e) => handleFieldUpdate(index, 'quantityOrdered', parseInt(e.target.value) || 0)}
-                      className="w-full h-8 text-xs"
+                      className="w-full h-8 text-xs text-center"
                       min="0"
                     />
                   </td>
                   
                   {/* Config → configurations.configuration_name via purchase_cfg */}
-                  <td className="border border-gray-300 px-1 py-1">
+                  <td className="border border-gray-300 px-1 py-1" style={{width: '80px'}}>
                     <select
                       value={item.purchaseCfg || ''}
                       onChange={(e) => handleFieldUpdate(index, 'purchaseCfg', parseInt(e.target.value) || undefined)}
@@ -163,106 +157,100 @@ export function PurchaseOrderDetailTable({
                   </td>
                   
                   {/* Product Description → concatenated product_description, case_pack, /, size */}
-                  <td className="border border-gray-300 px-2 py-1 text-xs">
+                  <td className="border border-gray-300 px-2 py-1 text-xs" style={{minWidth: '250px'}}>
                     <div className="truncate" title={getProductDescription(item)}>
                       {getProductDescription(item)}
                     </div>
                   </td>
                   
                   {/* List Cost → list_cost */}
-                  <td className="border border-gray-300 px-1 py-1">
+                  <td className="border border-gray-300 px-1 py-1" style={{width: '90px'}}>
                     <Input
                       type="number"
                       step="0.0001"
                       value={item.listCost || ''}
                       onChange={(e) => handleFieldUpdate(index, 'listCost', parseFloat(e.target.value) || 0)}
-                      className="w-full h-8 text-xs"
+                      className="w-full h-8 text-xs text-right"
                       min="0"
                     />
                   </td>
                   
                   {/* Off Invoice → off_invoice */}
-                  <td className="border border-gray-300 px-1 py-1">
+                  <td className="border border-gray-300 px-1 py-1" style={{width: '90px'}}>
                     <Input
                       type="number"
                       step="0.0001"
                       value={item.offInvoice || ''}
                       onChange={(e) => handleFieldUpdate(index, 'offInvoice', parseFloat(e.target.value) || 0)}
-                      className="w-full h-8 text-xs"
+                      className="w-full h-8 text-xs text-right"
                       min="0"
                     />
                   </td>
                   
-                  {/* Bill Back → bill_back (conditional) */}
-                  {hasBillBackValues && (
-                    <td className="border border-gray-300 px-1 py-1">
-                      <Input
-                        type="number"
-                        step="0.0001"
-                        value={item.billBack || ''}
-                        onChange={(e) => handleFieldUpdate(index, 'billBack', parseFloat(e.target.value) || 0)}
-                        className="w-full h-8 text-xs"
-                        min="0"
-                      />
-                    </td>
-                  )}
+                  {/* Bill Back → bill_back */}
+                  <td className="border border-gray-300 px-1 py-1" style={{width: '90px'}}>
+                    <Input
+                      type="number"
+                      step="0.0001"
+                      value={item.billBack || ''}
+                      onChange={(e) => handleFieldUpdate(index, 'billBack', parseFloat(e.target.value) || 0)}
+                      className="w-full h-8 text-xs text-right"
+                      min="0"
+                    />
+                  </td>
                   
                   {/* Net Cost → net_cost (list_cost - off_invoice) */}
-                  <td className="border border-gray-300 px-2 py-1 text-xs bg-gray-100">
+                  <td className="border border-gray-300 px-2 py-1 text-xs text-right bg-gray-100" style={{width: '90px'}}>
                     {formatCurrency(extValues.netCost.toFixed(4))}
                   </td>
                   
                   {/* Weight → purchase_weight */}
-                  <td className="border border-gray-300 px-1 py-1">
+                  <td className="border border-gray-300 px-1 py-1" style={{width: '80px'}}>
                     <Input
                       type="number"
                       step="0.0001"
                       value={item.purchaseWeight || ''}
                       onChange={(e) => handleFieldUpdate(index, 'purchaseWeight', parseFloat(e.target.value) || 0)}
-                      className="w-full h-8 text-xs"
+                      className="w-full h-8 text-xs text-right"
                       min="0"
                     />
                   </td>
                   
-                  {/* CRV → purchase_crv (conditional) */}
-                  {hasCrvValues && (
-                    <td className="border border-gray-300 px-1 py-1">
-                      <Input
-                        type="number"
-                        step="0.0001"
-                        value={extValues.crvPerUnit || ''}
-                        onChange={(e) => handleFieldUpdate(index, 'purchaseCrv', parseFloat(e.target.value) || 0)}
-                        className="w-full h-8 text-xs"
-                        min="0"
-                        placeholder={item.product?.crv || '0'}
-                      />
-                    </td>
-                  )}
+                  {/* CRV → purchase_crv */}
+                  <td className="border border-gray-300 px-1 py-1" style={{width: '70px'}}>
+                    <Input
+                      type="number"
+                      step="0.0001"
+                      value={extValues.crvPerUnit || ''}
+                      onChange={(e) => handleFieldUpdate(index, 'purchaseCrv', parseFloat(e.target.value) || 0)}
+                      className="w-full h-8 text-xs text-right"
+                      min="0"
+                      placeholder={item.product?.crv || '0'}
+                    />
+                  </td>
                   
                   {/* Ext. Net → (billed_cost * qty_ordered) */}
-                  <td className="border border-gray-300 px-2 py-1 text-xs bg-blue-50 font-medium">
+                  <td className="border border-gray-300 px-2 py-1 text-xs text-right bg-blue-50 font-medium" style={{width: '90px'}}>
                     ${extValues.extNet.toFixed(2)}
                   </td>
                   
                   {/* Ext. Weight → purchase_weight * qty_ordered */}
-                  <td className="border border-gray-300 px-2 py-1 text-xs bg-blue-50">
+                  <td className="border border-gray-300 px-2 py-1 text-xs text-right bg-blue-50" style={{width: '90px'}}>
                     {extValues.extWeight.toFixed(4)}
                   </td>
                   
-                  {/* Ext. CRV → purchase_crv * qty_ordered (conditional) */}
-                  {hasCrvValues && (
-                    <td className="border border-gray-300 px-2 py-1 text-xs bg-blue-50">
-                      ${extValues.extCrv.toFixed(4)}
-                    </td>
-                  )}
+                  {/* Ext. CRV → purchase_crv * qty_ordered */}
+                  <td className="border border-gray-300 px-2 py-1 text-xs text-right bg-blue-50" style={{width: '90px'}}>
+                    ${extValues.extCrv.toFixed(4)}
+                  </td>
                   
                   {/* Ext. List → list_cost * qty_ordered */}
-                  <td className="border border-gray-300 px-2 py-1 text-xs bg-blue-50">
+                  <td className="border border-gray-300 px-2 py-1 text-xs text-right bg-blue-50" style={{width: '90px'}}>
                     ${extValues.extList.toFixed(2)}
                   </td>
                   
                   {/* Actions */}
-                  <td className="border border-gray-300 px-1 py-1">
+                  <td className="border border-gray-300 px-1 py-1 text-center" style={{width: '60px'}}>
                     <Button
                       variant="ghost"
                       size="sm"
