@@ -19,6 +19,7 @@ interface PurchaseOrderItem {
     productDescription: string;
     casePack: number;
     size: string;
+    crv?: string;
   };
   configuration?: {
     configurationName: string;
@@ -45,19 +46,28 @@ export function PurchaseOrderDetailTable({
   
   // Check if any items have bill back or CRV values
   const hasBillBackValues = items.some(item => item.billBack && item.billBack > 0);
-  const hasCrvValues = items.some(item => item.purchaseCrv && item.purchaseCrv > 0);
+  const hasCrvValues = items.some(item => 
+    (item.purchaseCrv && item.purchaseCrv > 0) || 
+    (item.product && parseFloat(item.product.crv || '0') > 0)
+  );
   
   // Calculate extended values
   const calculateExtendedValues = (item: PurchaseOrderItem) => {
     const qty = item.quantityOrdered || 0;
     const netCost = item.listCost - item.offInvoice;
     
+    // Use product CRV if purchaseCrv is 0 or missing
+    const crvPerUnit = item.purchaseCrv && item.purchaseCrv > 0 
+      ? item.purchaseCrv 
+      : parseFloat(item.product?.crv || '0');
+    
     return {
       extNet: netCost * qty,
       extWeight: item.purchaseWeight * qty,
-      extCrv: item.purchaseCrv * qty,
+      extCrv: crvPerUnit * qty,
       extList: item.listCost * qty,
-      netCost
+      netCost,
+      crvPerUnit
     };
   };
 

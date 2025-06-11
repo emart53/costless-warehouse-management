@@ -33,6 +33,9 @@ interface PurchaseOrderItem {
     name?: string;
     description?: string;
     offInvoice?: string;
+    crv?: string;
+    caseUpc?: string;
+    weight?: number;
   };
   configuration?: {
     configurationName: string;
@@ -175,7 +178,10 @@ export default function PurchaseOrderEdit() {
     
     const totalCrv = items.reduce((sum, item) => {
       const qty = Number(item.quantityOrdered || 0);
-      const crvPerUnit = Number(item.purchaseCrv || 0);
+      // Use product CRV if purchaseCrv is 0 or missing
+      const crvPerUnit = (item.purchaseCrv && Number(item.purchaseCrv) > 0) 
+        ? Number(item.purchaseCrv) 
+        : Number(item.product?.crv || 0);
       return sum + (crvPerUnit * qty);
     }, 0);
     
