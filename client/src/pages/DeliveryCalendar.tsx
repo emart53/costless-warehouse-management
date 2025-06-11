@@ -97,26 +97,27 @@ export default function DeliveryCalendar() {
       });
     },
     onError: (error: any) => {
-      let errorMessage = "Failed to remove delivery schedule. Please try again.";
-      
-      if (error?.status === 404) {
-        errorMessage = "This delivery schedule has already been removed or doesn't exist.";
-      }
-      
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      
-      // If it's a 404, refresh the data to sync the UI
+      // If it's a 404, the delivery was already removed - treat as success
       if (error?.status === 404) {
         queryClient.invalidateQueries({ queryKey: ["/api/delivery-schedules"] });
         queryClient.refetchQueries({ queryKey: ["/api/delivery-schedules"] });
         setIsDetailModalOpen(false);
         setIsPostponeModalOpen(false);
         setSelectedSchedule(null);
+        
+        toast({
+          title: "Schedule Removed",
+          description: "Delivery schedule has been successfully postponed and removed.",
+        });
+        return;
       }
+      
+      // Only show error for actual failures
+      toast({
+        title: "Error",
+        description: "Failed to remove delivery schedule. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -235,11 +236,11 @@ export default function DeliveryCalendar() {
       return;
     }
 
+    // Log the postponement reason before attempting deletion
+    console.log(`Delivery ${selectedSchedule.id} postponed: ${postponeReason}`);
+    
     // Remove the delivery schedule with reason
     deleteScheduleMutation.mutate(selectedSchedule.id);
-    
-    // Log the postponement reason (could be saved to database if needed)
-    console.log(`Delivery ${selectedSchedule.id} postponed: ${postponeReason}`);
   };
 
   const handleCancelDelivery = () => {
