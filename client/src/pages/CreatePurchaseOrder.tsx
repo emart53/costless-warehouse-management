@@ -186,8 +186,9 @@ export default function CreatePurchaseOrder() {
     const vendorDiscountPercent = parseFloat((selectedVendor as any)?.discount_percent || '0');
     const vendorDiscountAmount = (totalListCost * vendorDiscountPercent) / 100;
 
-    const netCost = totalListCost - totalOffInvoice - totalBillBack - vendorDiscountAmount;
-    const total = netCost + totalCrv + deliveryCharge - lumpSumDiscount;
+    // Net cost should only deduct Off Invoice, not Bill Back (Bill Back shows in totals section)
+    const netCost = totalListCost - totalOffInvoice - vendorDiscountAmount;
+    const total = netCost + totalCrv + deliveryCharge - totalBillBack - lumpSumDiscount;
     
     return { 
       itemCount: itemsWithQuantity.length,
@@ -719,9 +720,9 @@ export default function CreatePurchaseOrder() {
                     <span>Less: Bill Back Allowances:</span>
                     <span className="font-medium">-{formatCurrency(totalBillBack)}</span>
                   </div>
-                  {vendorDiscountAmount > 0 && (
+                  {(selectedVendor as any)?.discount_percent && parseFloat((selectedVendor as any).discount_percent) > 0 && (
                     <div className="flex justify-between text-green-700">
-                      <span>Less: Vendor Discount ({parseFloat((selectedVendor as any)?.discount_percent || '0')}%):</span>
+                      <span>Less: Vendor Discount ({parseFloat((selectedVendor as any).discount_percent).toFixed(1)}%):</span>
                       <span className="font-medium">-{formatCurrency(vendorDiscountAmount)}</span>
                     </div>
                   )}
